@@ -119,7 +119,7 @@
          <img class="it-breadcrumb-shape-3" src="{{ asset('assets/img/shape/breadcrumb-1-2.png') }}" alt="">
          <div class="container">
             <div class="row align-items-center">
-               <div class="col-xxl-6 col-xl-7 col-lg-8 col-md-12">
+               <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-12">
                   <div class="it-breadcrumb-content z-index-1">
                      <div class="it-breadcrumb-list-2 d-none d-md-block">
                         <span><a href="{{ route('frontend.home') }}">Home</a></span>
@@ -162,7 +162,7 @@
                            <span>Đánh giá</span>
                            <span>
                               <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                 <path d="M20.8895 7.48386C20.7195 6.96254 20.2687 6.58354 19.7255 6.50442L14.223 5.70487L11.7643 0.736734C11.2774 -0.245578 9.66836 -0.245578 9.18151 0.736734L6.72275 5.70487L1.23329 6.50442C0.691637 6.58354 0.240812 6.96386 0.0708685 7.48541C-0.0990748 8.0054 0.0421395 8.57733 0.435285 8.96031L4.41669 12.8409L3.47747 18.316C3.38532 18.8561 3.60719 19.4035 4.05072 19.7262C4.4958 20.0473 5.08497 20.0893 5.56894 19.8343L10.4723 17.2486L15.3901 19.8343C15.6005 19.9452 15.831 20 16.0599 20C16.358 20 16.6561 19.9063 16.9083 19.7264C17.352 19.4022 17.5737 18.8564 17.4816 18.3163L16.5439 12.8412L20.5253 8.96053C20.9184 8.57866 21.0594 8.0054 20.8895 7.48386Z" fill="#1a2c5e" />
+                                 <path d="M20.8895 7.48386C20.7195 6.96254 20.2687 6.58354 19.7255 6.50442L14.223 5.70487L11.7643 0.736734C11.2774 -0.245578 9.66836 -0.245578 9.18151 0.736734L6.72275 5.70487L1.23329 6.50442C0.691637 6.58354 0.240812 6.96386 0.0708685 7.48541C-0.0990748 8.0054 0.0421395 8.57733 0.435285 8.96031L4.41669 12.8409L3.47747 18.316C3.38532 18.8561 3.60719 19.4035 4.05072 19.7262C4.4958 20.0473 5.08497 20.0893 5.56894 19.8343L10.4723 17.2486L15.3901 19.8343C15.6005 19.9452 15.831 20 16.0599 20C16.358 20 16.6561 19.9063 16.9083 19.7264C17.352 19.4022 17.5737 18.8564 17.4816 18.3163L16.5439 12.8412L20.5253 8.96053C20.9184 8.57866 21.0594 8.0054 20.8895 7.48386Z" fill="#ffffff" />
                               </svg>
                               (5.0) Rating
                            </span>
@@ -662,18 +662,6 @@
                            </a>
                         </div>
                         <div class="price-section-box">
-                           <div class="price-section d-flex justify-content-between align-items-center mb-30">
-                              <div class="it-course-details-price">
-                                 @if ($post->price && $post->price > 0)
-                                    <span class="price" style="font-size: 28px; font-weight: 700; color: #03594E;">{{ number_format($post->price, 0, ',', '.') }} VNĐ</span>
-                                 @else
-                                    <span class="price" style="font-size: 28px; font-weight: 700; color: #03594E;">Miễn phí</span>
-                                 @endif
-                              </div>
-                              <div class="it-course-details-badge">
-                                 <span class="badge bg-danger">Ưu đãi trọn gói</span>
-                              </div>
-                           </div>
                            <div class="it-course-btn mb-20">
                               <a href="{{ $post->learn_url }}" class="it-btn-yellow w-100 text-center">
                                  <span>
@@ -682,56 +670,9 @@
                                  </span>
                               </a>
                            </div>
-                           <p class="guarantee text-center mt-15 mb-30">
-                              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                 <g clip-path="url(#clip0_1307_4557)">
-                                    <path d="M7 0C5.27654 0.00122871 3.61441 0.639696 2.33333 1.79258V0.583333C2.33333 0.428624 2.27188 0.280251 2.16248 0.170854C2.05308 0.0614582 1.90471 0 1.75 0C1.59529 0 1.44692 0.0614582 1.33752 0.170854C1.22812 0.280251 1.16667 0.428624 1.16667 0.583333V2.33333C1.16667 2.79746 1.35104 3.24258 1.67923 3.57077C2.00742 3.89896 2.45254 4.08333 2.91667 4.08333H4.66667C4.82138 4.08333 4.96975 4.02188 5.07915 3.91248C5.18854 3.80308 5.25 3.65471 5.25 3.5C5.25 3.34529 5.18854 3.19692 5.07915 3.08752C4.96975 2.97813 4.82138 2.91667 4.66667 2.91667H2.91667C2.897 2.91375 2.87752 2.90966 2.85833 2.90442C3.80889 1.94707 5.06224 1.34929 6.40445 1.21314C7.74667 1.07698 9.09453 1.41088 10.218 2.15784C11.3414 2.90481 12.1708 4.01852 12.5645 5.30889C12.9583 6.59925 12.892 7.98628 12.3769 9.2332C11.8619 10.4801 10.93 11.5096 9.74047 12.146C8.5509 12.7824 7.17733 12.9862 5.85423 12.7226C4.53112 12.4591 3.34051 11.7444 2.48562 10.7008C1.63072 9.65712 1.16455 8.3491 1.16667 7C1.16667 6.84529 1.10521 6.69692 0.995812 6.58752C0.886416 6.47813 0.738043 6.41667 0.583333 6.41667C0.428624 6.41667 0.280251 6.47813 0.170854 6.58752C0.0614582 6.69692 0 6.84529 0 7C0 8.38447 0.410543 9.73785 1.17971 10.889C1.94888 12.0401 3.04213 12.9373 4.32122 13.4672C5.6003 13.997 7.00777 14.1356 8.36563 13.8655C9.7235 13.5954 10.9708 12.9287 11.9497 11.9497C12.9287 10.9708 13.5954 9.7235 13.8655 8.36563C14.1356 7.00777 13.997 5.6003 13.4672 4.32122C12.9373 3.04213 12.0401 1.94888 10.889 1.17971C9.73785 0.410543 8.38447 0 7 0Z" fill="#03594E" />
-                                    <path d="M6.99935 3.5C6.84464 3.5 6.69627 3.56146 6.58687 3.67085C6.47747 3.78025 6.41602 3.92862 6.41602 4.08333V7C6.41605 7.1547 6.47753 7.30305 6.58693 7.41242L8.33693 9.16242C8.44695 9.26868 8.5943 9.32747 8.74725 9.32614C8.9002 9.32481 9.0465 9.26347 9.15466 9.15531C9.26281 9.04716 9.32416 8.90085 9.32549 8.7479C9.32682 8.59495 9.26802 8.4476 9.16177 8.33758L7.58268 6.7585V4.08333C7.58268 3.92862 7.52122 3.78025 7.41183 3.67085C7.30243 3.56146 7.15406 3.5 6.99935 3.5Z" fill="#03594E" />
-                                 </g>
-                              </svg>
-                              Cam kết hoàn tiền trong 30 ngày
-                           </p>
-                        </div>
-                        <div class="coupon-section">
-                           <h5 class="it-details-title-sm mb-20">Mã ưu đãi</h5>
-                           <div class="coupon-input d-flex">
-                              <input type="text" placeholder="Nhập mã ưu đãi">
-                              <button type="submit" class="it-btn-yellow theme-bg ml-10">
-                                 <span>
-                                    <span class="text-1">Áp dụng</span>
-                                    <span class="text-2">Áp dụng</span>
-                                 </span>
-                              </button>
-                           </div>
-                        </div>
-                        <div class="course-info">
-                           <h5 class="it-details-title-sm mb-20">Quyền lợi khóa học:</h5>
-                           <ul>
-                              <li>
-                                 <i class="fa-regular fa-video me-2" style="color: #03594E;"></i>
-                                 <span>Giảng viên: <strong>{{ $post->seller?->name ?? ($post->instructor ?? 'Educeet') }}</strong></span>
-                              </li>
-                              <li>
-                                 <i class="fa-regular fa-clock me-2" style="color: #03594E;"></i>
-                                 <span>Thời lượng: <strong>12 Tuần</strong></span>
-                              </li>
-                              <li>
-                                 <i class="fa-regular fa-book-open me-2" style="color: #03594E;"></i>
-                                 <span>Bài học: <strong>{{ $post->unit_count ?: 12 }} Bài</strong></span>
-                              </li>
-                              <li>
-                                 <i class="fa-regular fa-users me-2" style="color: #03594E;"></i>
-                                 <span>Học viên: <strong>50+ Đang học</strong></span>
-                              </li>
-                              <li>
-                                 <i class="fa-regular fa-certificate me-2" style="color: #03594E;"></i>
-                                 <span>Chứng chỉ: <strong>Cấp sau tốt nghiệp</strong></span>
-                              </li>
-                           </ul>
                         </div>
                         <div class="contact-section-wrap gray-bg mt-20">
                            <div class="contact-section text-center">
-                              <p class="mb-20">Cần tư vấn thêm về khóa học?</p>
                               <div class="call-box w-100">
                                  <i class="fa-solid fa-phone-volume me-2" style="color: #03594E;"></i>
                                  Hotline: <a href="tel:0900123456">0900 123 456</a>

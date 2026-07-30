@@ -2153,7 +2153,7 @@ input[type=color] {
 .it-breadcrumb-author-info span {
   display: block;
   font-size: 14px;
-  color: var(--it-theme-2);
+  color: #fff;
 }
 .it-breadcrumb-author-info span:last-child {
   margin-top: 8px;
@@ -10349,12 +10349,12 @@ input[type=radio] {
 }
 @media only screen and (min-width: 1400px) and (max-width: 1599px) {
   .it-header-menu > nav > ul > li {
-    margin: 0px 10px;
+    margin: 0px 30px;
   }
 }
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
   .it-header-menu > nav > ul > li {
-    margin: 0px 10px;
+    margin: 0px 30px;
   }
 }
 .it-header-menu > nav > ul > li:first-child {
@@ -17800,7 +17800,7 @@ input[type=radio] {
   width: 21px;
 }
 .it-course-sidebar .contact-section {
-  padding: 0 30px 60px 30px;
+  padding: 30px;
 }
 .it-course-sidebar .contact-section .call-box {
   border-radius: 8px;
@@ -17903,7 +17903,7 @@ input[type=radio] {
 .it-course-details-style-2 .it-course-sidebar-wrap {
   position: sticky;
   z-index: 9;
-  top: 120px;
+  top: 90px;
 }
 .it-course-details-nav-box {
   padding: 3px;
@@ -25933,6 +25933,14 @@ input[type=radio] {
   .it-policy-area .postbox-dsc p br {
     display: none;
   }
+}
+
+/* Custom Sticky Header Top */
+.it-header-sticky-top {
+  position: sticky;
+  z-index: 9;
+  top: 0px;
+  background-color: #fff;
 }
 
 /*# sourceMappingURL=main.css.map */

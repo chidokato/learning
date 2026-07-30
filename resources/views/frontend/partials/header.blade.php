@@ -1,6 +1,4 @@
-<header class="it-header-height">
-      <!-- header-top-area-start -->
-      <div class="it-header-top-area  black-bg it-header-top-ptb">
+<div class="it-header-top-area  black-bg it-header-top-ptb">
          <div class="container">
             <div class="row align-items-center">
                <div class="col-xl-4 col-lg-5 col-md-4 col-sm-5">
@@ -74,6 +72,9 @@
          </div>
       </div>
       <!-- header-top-area-end -->
+<header class="it-header-height it-header-sticky-top">
+      <!-- header-top-area-start -->
+      
 
             <!-- header-area-start -->
       <div id="header-sticky" class="it-header-area it-header-ptb p-relative it-header-shadow">
