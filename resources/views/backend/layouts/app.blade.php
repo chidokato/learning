@@ -25,18 +25,18 @@
                         <div class="navbar-brand-box horizontal-logo">
                             <a href="{{ route('backend.admin.dashboard') }}" class="logo logo-dark">
                                 <span class="logo-sm">
-                                    <img src="{{ asset('admin-assets/images/logo-sm.png') }}" alt="" height="22">
+                                    <img src="{{ asset('admin-assets/images/logo-sm.png') }}" alt="" height="50">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{ asset('admin-assets/images/logo-dark.png') }}" alt="" height="17">
+                                    <img src="{{ $siteSetting->logo_url }}" alt="" height="50">
                                 </span>
                             </a>
                             <a href="{{ route('backend.admin.dashboard') }}" class="logo logo-light">
                                 <span class="logo-sm">
-                                    <img src="{{ asset('admin-assets/images/logo-sm.png') }}" alt="" height="22">
+                                    <img src="{{ asset('admin-assets/images/logo-sm.png') }}" alt="" height="50">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{ asset('admin-assets/images/logo-light.png') }}" alt="" height="17">
+                                    <img src="{{ $siteSetting->logo_url }}" alt="" height="50">
                                 </span>
                             </a>
                         </div>
@@ -103,20 +103,20 @@
 
         <div class="app-menu navbar-menu">
             <div class="navbar-brand-box">
-                <a href="{{ route('backend.admin.dashboard') }}" class="logo logo-dark">
+                <a target="_blank" href="{{ route('frontend.home') }}" class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="{{ asset('admin-assets/images/logo-sm.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('admin-assets/images/logo-dark.png') }}" alt="" height="17">
+                        <img src="{{ $siteSetting->logo_url }}" alt="" height="50">
                     </span>
                 </a>
-                <a href="{{ route('backend.admin.dashboard') }}" class="logo logo-light">
+                <a target="_blank" href="{{ route('frontend.home') }}" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="{{ asset('admin-assets/images/logo-sm.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('admin-assets/images/logo-light.png') }}" alt="" height="17">
+                        <img src="{{ $siteSetting->logo_url }}" alt="" height="50">
                     </span>
                 </a>
                 <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
@@ -138,12 +138,13 @@
                                 ['label' => 'Customer inquiry', 'icon' => 'ri-customer-service-2-line', 'route' => 'backend.customer-inquiries.index'],
                                 ['label' => 'SEO', 'icon' => 'ri-search-eye-line', 'route' => 'backend.seo.edit'],
                                 ['label' => 'Setting', 'icon' => 'ri-settings-3-line', 'route' => 'backend.settings.edit'],
+                                ['label' => 'AI ChatBot', 'icon' => 'ri-robot-line', 'route' => 'backend.chatbot.edit'],
                                 ['label' => 'User', 'icon' => 'ri-user-3-line', 'route' => 'backend.users.index'],
                             ];
                         @endphp
                         @foreach ($menuItems as $item)
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ $item['label'] === 'Course' && (request()->routeIs('backend.courses.*') || request()->routeIs('backend.products.*')) ? 'active' : '' }} {{ $item['label'] === 'News' && request()->routeIs('backend.news.*') ? 'active' : '' }} {{ $item['label'] === 'Menu' && request()->routeIs('backend.menus.*') ? 'active' : '' }} {{ $item['label'] === 'Category' && request()->routeIs('backend.categories.*') ? 'active' : '' }} {{ $item['label'] === 'User' && request()->routeIs('backend.users.*') ? 'active' : '' }} {{ $item['label'] === 'Customer inquiry' && request()->routeIs('backend.customer-inquiries.*') ? 'active' : '' }} {{ $item['label'] === 'SEO' && request()->routeIs('backend.seo.*') ? 'active' : '' }} {{ $item['label'] === 'Setting' && request()->routeIs('backend.settings.*') ? 'active' : '' }}" href="{{ $item['route'] ? route($item['route']) : '#' }}">
+                                <a class="nav-link menu-link {{ $item['label'] === 'Course' && (request()->routeIs('backend.courses.*') || request()->routeIs('backend.products.*')) ? 'active' : '' }} {{ $item['label'] === 'News' && request()->routeIs('backend.news.*') ? 'active' : '' }} {{ $item['label'] === 'Menu' && request()->routeIs('backend.menus.*') ? 'active' : '' }} {{ $item['label'] === 'Category' && request()->routeIs('backend.categories.*') ? 'active' : '' }} {{ $item['label'] === 'User' && request()->routeIs('backend.users.*') ? 'active' : '' }} {{ $item['label'] === 'Customer inquiry' && request()->routeIs('backend.customer-inquiries.*') ? 'active' : '' }} {{ $item['label'] === 'SEO' && request()->routeIs('backend.seo.*') ? 'active' : '' }} {{ $item['label'] === 'Setting' && request()->routeIs('backend.settings.*') ? 'active' : '' }} {{ $item['label'] === 'AI ChatBot' && request()->routeIs('backend.chatbot.*') ? 'active' : '' }}" href="{{ $item['route'] ? route($item['route']) : '#' }}">
                                     <i class="{{ $item['icon'] }}"></i>
                                     <span>{{ $item['label'] }}</span>
                                 </a>

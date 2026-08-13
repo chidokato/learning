@@ -71,38 +71,14 @@
                     <div class="col-12">
                         <div class="mb-3">
                             <label for="summary" class="form-label">{{ $isCourse ? 'Short Description / Overview' : 'Mo ta ngan' }}</label>
-                            <textarea id="summary" name="summary" rows="3" class="form-control editor @error('summary') is-invalid @enderror">{{ old('summary', $post->summary ?? '') }}</textarea>
+                            <textarea id="summary" name="summary" rows="3" class="form-control @error('summary') is-invalid @enderror">{{ old('summary', $post->summary ?? '') }}</textarea>
                             @error('summary')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
 
-                    @if ($isCourse)
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="price" class="form-label">Tuition Fee (Price)</label>
-                                <input type="number" step="0.01" min="0" id="price" name="price" class="form-control @error('price') is-invalid @enderror" value="{{ old('price', $post->price ?? '') }}" placeholder="0.00">
-                                @error('price')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="seller_id" class="form-label">Instructor / Teacher</label>
-                                <select id="seller_id" name="seller_id" class="form-select @error('seller_id') is-invalid @enderror">
-                                    <option value="">Select Instructor / Teacher</option>
-                                    @foreach ($sellerOptions as $id => $name)
-                                        <option value="{{ $id }}" {{ (string) old('seller_id', $post->seller_id ?? '') === (string) $id ? 'selected' : '' }}>{{ $name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('seller_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    @endif
+
 
                     @if (! $isCourse && $type === 'product')
                         <div class="col-12">
@@ -407,6 +383,21 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+
+                @if ($isCourse)
+                    <div class="mb-3">
+                        <label for="seller_id" class="form-label">Instructor / Teacher</label>
+                        <select id="seller_id" name="seller_id" class="form-select @error('seller_id') is-invalid @enderror">
+                            <option value="">Select Instructor / Teacher</option>
+                            @foreach ($sellerOptions as $id => $name)
+                                <option value="{{ $id }}" {{ (string) old('seller_id', $post->seller_id ?? '') === (string) $id ? 'selected' : '' }}>{{ $name }}</option>
+                            @endforeach
+                        </select>
+                        @error('seller_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                @endif
 
 
                 <div class="card border mb-3">

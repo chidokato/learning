@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminChatbotController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SettingController;
@@ -134,6 +137,26 @@ Route::get('courses/{slug}', fn (string $slug) => $postDetailHandler($slug))->na
 Route::get('products/{slug}', fn (string $slug) => $postDetailHandler($slug))->name('frontend.products.show.legacy');
 Route::get('news/{slug}', fn () => view('frontend.home'))->name('frontend.news.show.legacy');
 
+// Frontend Authentication Routes (Tạm ẩn Đăng nhập & Đăng ký cho người dùng)
+Route::controller(AuthController::class)->group(function () {
+    Route::get('login', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'))->name('frontend.login');
+    Route::post('login', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'))->name('frontend.login.post');
+    Route::get('sign-in.html', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'));
+    Route::get('dang-nhap', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'));
+
+    Route::get('register', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'))->name('frontend.register');
+    Route::post('register', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'))->name('frontend.register.post');
+    Route::get('sign-up.html', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'));
+    Route::get('dang-ky', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'));
+
+    Route::post('logout', 'logout')->name('frontend.logout');
+    Route::get('logout', 'logout')->name('frontend.logout.get');
+    Route::post('forgot-password', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'))->name('frontend.forgot-password');
+});
+
+// AI Chatbot Widget API Route
+Route::post('/api/chatbot/ask', [ChatbotController::class, 'ask'])->name('api.chatbot.ask');
+
 
 Route::prefix('admin')->name('backend.')->group(function () {
     Route::controller(AdminController::class)->name('admin.')->group(function () {
@@ -198,6 +221,11 @@ Route::prefix('admin')->name('backend.')->group(function () {
     Route::controller(SettingController::class)->group(function () {
         Route::get('settings', 'edit')->name('settings.edit');
         Route::put('settings', 'update')->name('settings.update');
+    });
+
+    Route::controller(AdminChatbotController::class)->group(function () {
+        Route::get('chatbot', 'edit')->name('chatbot.edit');
+        Route::put('chatbot', 'update')->name('chatbot.update');
     });
 
     Route::controller(UserController::class)->group(function () {
@@ -282,7 +310,7 @@ Route::get('category/{categorySlug}', $categoryHandler);
 Route::get('category/{categorySlug}/{slug}/hoc', fn (string $categorySlug, string $slug) => $courseLearnHandler($slug));
 Route::get('category/{categorySlug}/{slug}', fn (string $categorySlug, string $slug) => $postDetailHandler($slug));
 Route::get('{categorySlug}', $categoryHandler)
-    ->where('categorySlug', '(?!admin|api|assets|storage|vendor|login|logout|register|password|email|courses-v1\.html|courses-details-v2\.html)[^/]+')
+    ->where('categorySlug', '(?!admin|api|assets|storage|vendor|login|logout|register|dang-nhap|dang-ky|sign-in\.html|sign-up\.html|password|email|courses-v1\.html|courses-details-v2\.html)[^/]+')
     ->name('frontend.category.show');
 
 Route::get('{categorySlug}/{slug}/hoc', fn (string $categorySlug, string $slug) => $courseLearnHandler($slug))

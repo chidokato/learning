@@ -525,7 +525,7 @@
                      {{ $post->title }}
                   </h3>
                   <div class="d-flex align-items-center gap-4 text-muted mb-25" style="font-size: 14.5px;">
-                     <span><i class="fa-solid fa-chalkboard-user text-danger me-2"></i> Giảng viên: <strong>Educeet Instructor</strong></span>
+                     <span><i class="fa-solid fa-chalkboard-user text-danger me-2"></i> Giảng viên: <strong>Indochine Instructor</strong></span>
                      <span><i class="fa-solid fa-file-pdf text-danger me-2"></i> Tài liệu chính thức</span>
                      <span><i class="fa-solid fa-clock text-info me-2"></i> Cập nhật liên tục 24/7</span>
                   </div>
@@ -560,7 +560,7 @@
                            <p class="mb-2" style="font-size: 14.5px; color: #333;">Giảng viên cho em hỏi ở chương 2 trang 15, phần cú pháp xử lý dữ liệu có áp dụng được cho phiên bản mới nhất không ạ?</p>
                            <div class="p-3 bg-light rounded-2 mt-2">
                               <div class="d-flex align-items-center gap-2 mb-1">
-                                 <strong class="text-danger" style="font-size: 14px;">Educeet Instructor (Giảng viên)</strong>
+                                 <strong class="text-danger" style="font-size: 14px;">Indochine Instructor (Giảng viên)</strong>
                                  <span class="badge bg-danger" style="font-size: 11px;">Quản trị viên</span>
                               </div>
                               <p class="mb-0" style="font-size: 14px;">Chào bạn, hoàn toàn áp dụng được nhé! Bạn có thể xem ví dụ bổ sung ở phần thực hành chương 3.</p>
@@ -634,7 +634,7 @@
                      <i class="fa-solid fa-award text-warning mb-3" style="font-size: 60px;"></i>
                      <h4 style="font-size: 22px; font-weight: 700;">Chứng nhận hoàn thành khóa học</h4>
                      <p class="text-muted mb-4" style="font-size: 15px; max-width: 550px; margin: 0 auto;">
-                        Hoàn thành 100% các bài học và bài kiểm tra để mở khóa và tải xuống chứng nhận chính thức từ Educeet.
+                        Hoàn thành 100% các bài học và bài kiểm tra để mở khóa và tải xuống chứng nhận chính thức từ Indochine.
                      </p>
                      <button class="btn btn-danger px-4 py-2" disabled style="font-weight: 600; font-size: 15px;">
                         <i class="fa-solid fa-lock me-2"></i> Chưa đủ điều kiện tải chứng nhận

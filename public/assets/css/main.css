@@ -10253,9 +10253,7 @@ input[type=radio] {
   color: var(--it-common-white);
 }
 .it-header-top-login-box {
-  padding-right: 30px;
-  margin-right: 30px;
-  border-right: 1px solid var(--it-text-body);
+  
 }
 @media only screen and (min-width: 576px) and (max-width: 767px) {
   .it-header-top-login-box {

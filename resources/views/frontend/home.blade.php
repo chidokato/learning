@@ -1,10 +1,10 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
-<!-- Mirrored from ordainit.com/html/educeet/educeet/courses-v1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 28 Jul 2026 03:47:47 GMT -->
+<!-- Mirrored from ordainit.com/html/indochine/indochine/courses-v1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 28 Jul 2026 03:47:47 GMT -->
 <head>
    <meta charset="utf-8">
    <meta http-equiv="x-ua-compatible" content="ie=edge">
-   <title>Educeet -- Online Education & Courses Template</title>
+   <title>Indochine -- Online Education & Courses Template</title>
    <meta name="description" content="">
    <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -154,6 +154,6 @@
 </body>
 
 
-<!-- Mirrored from ordainit.com/html/educeet/educeet/courses-v1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 28 Jul 2026 03:47:48 GMT -->
+<!-- Mirrored from ordainit.com/html/indochine/indochine/courses-v1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 28 Jul 2026 03:47:48 GMT -->
 </html>
 

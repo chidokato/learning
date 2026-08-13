@@ -99,7 +99,7 @@
                         <div class="it-footer-widget-contact mb-25">
                            <ul>
                               <li><span>Phone:</span><a href="tel:+91123456789">(+91) 123-456-789</a></li>
-                              <li><span>Email:</span><a href="mailto:educeet@gmail.com">educeet@gmail.com</a></li>
+                              <li><span>Email:</span><a href="mailto:indochine@gmail.com">indochine@gmail.com</a></li>
                               <li><span>Location:</span><a target="_blank" href="https://www.google.com/maps/dir///@24.4503253,17.1644279,4.17z?entry=ttu&amp;g_ep=EgoyMDI0MTAwOS4wIKXMDSoASAFQAw%3D%3D">North America, USA</a></li>
                            </ul>
                         </div>
@@ -154,4 +154,7 @@
    </section>
    <!-- footer-area-end -->
 
+   @include('frontend.partials.chatbot-widget')
+
    </footer>
+

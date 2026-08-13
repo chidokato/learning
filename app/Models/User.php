@@ -28,6 +28,7 @@ class User extends Authenticatable
         'secondary_phone',
         'whatsapp_phone',
         'avatar',
+        'permission',
     ];
 
     /**
@@ -48,4 +49,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isAdmin(): bool
+    {
+        return in_array($this->permission, [1, 2, 3]);
+    }
+
+    public function isExternalUser(): bool
+    {
+        return in_array($this->permission, [4, 5, 6]);
+    }
 }

@@ -3,7 +3,7 @@
 <head>
    <meta charset="utf-8">
    <meta http-equiv="x-ua-compatible" content="ie=edge">
-   <title>{{ $post->seo_title ?: $post->title }} -- Educeet</title>
+   <title>{{ $post->seo_title ?: $post->title }} -- Indochine</title>
    <meta name="description" content="{{ $post->seo_description ?: Str::limit(strip_tags($post->description ?? $post->summary ?? $post->content), 150) }}">
    <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -44,6 +44,50 @@
       }
       .it-course-item:hover .it-course-thumb img {
          transform: scale(1.05);
+      }
+      .btn-beautiful {
+         background: linear-gradient(135deg, #03594E 0%, #067869 100%);
+         color: #fff !important;
+         border: none;
+         box-shadow: 0 4px 15px rgba(3, 89, 78, 0.3);
+         padding: 15px 30px;
+         border-radius: 8px;
+         font-weight: bold;
+         font-size: 16px;
+         transition: all 0.3s ease;
+         display: inline-block;
+         position: relative;
+         overflow: hidden;
+         z-index: 1;
+      }
+      .btn-beautiful::before {
+         content: '';
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         background: linear-gradient(135deg, #067869 0%, #03594E 100%);
+         z-index: -1;
+         transition: opacity 0.3s ease;
+         opacity: 0;
+      }
+      .btn-beautiful:hover::before {
+         opacity: 1;
+      }
+      .btn-beautiful:hover {
+         transform: translateY(-2px);
+         box-shadow: 0 6px 20px rgba(3, 89, 78, 0.4);
+      }
+      .btn-beautiful-login {
+         background: linear-gradient(135deg, #f5a623 0%, #ff8b00 100%);
+         box-shadow: 0 4px 15px rgba(245, 166, 35, 0.3);
+      }
+      .btn-beautiful-login::before {
+         background: linear-gradient(135deg, #ff8b00 0%, #f5a623 100%);
+      }
+      .btn-beautiful-login:hover {
+         box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4);
       }
    </style>
 </head>
@@ -91,7 +135,7 @@
                </div>
                <div class="itoffcanvas__info-address">
                   <span>Email</span>
-                  <a href="mailto:info@educeet.com">info@educeet.com</a>
+                  <a href="mailto:info@indochine.com">info@indocqqqhine.com</a>
                </div>
             </div>
             <div class="it-info-wrapper mb-20 d-flex align-items-center">
@@ -151,22 +195,14 @@
                            </div>
                            <div class="it-breadcrumb-author-info">
                               <span>Giảng viên</span>
-                              <span class="name">{{ $post->seller?->name ?? ($post->instructor ?? 'Educeet Instructor') }}</span>
+                              <span class="name">{{ $post->seller?->name ?? ($post->instructor ?? 'Indochine Instructor') }}</span>
                            </div>
                         </div>
                         <div class="it-breadcrumb-author-info border-style mb-20">
                            <span>Cập nhật gần nhất</span>
                            <span>{{ $post->updated_at ? $post->updated_at->format('d/m/Y') : now()->format('d/m/Y') }}</span>
                         </div>
-                        <div class="it-breadcrumb-author-info mb-20">
-                           <span>Đánh giá</span>
-                           <span>
-                              <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                 <path d="M20.8895 7.48386C20.7195 6.96254 20.2687 6.58354 19.7255 6.50442L14.223 5.70487L11.7643 0.736734C11.2774 -0.245578 9.66836 -0.245578 9.18151 0.736734L6.72275 5.70487L1.23329 6.50442C0.691637 6.58354 0.240812 6.96386 0.0708685 7.48541C-0.0990748 8.0054 0.0421395 8.57733 0.435285 8.96031L4.41669 12.8409L3.47747 18.316C3.38532 18.8561 3.60719 19.4035 4.05072 19.7262C4.4958 20.0473 5.08497 20.0893 5.56894 19.8343L10.4723 17.2486L15.3901 19.8343C15.6005 19.9452 15.831 20 16.0599 20C16.358 20 16.6561 19.9063 16.9083 19.7264C17.352 19.4022 17.5737 18.8564 17.4816 18.3163L16.5439 12.8412L20.5253 8.96053C20.9184 8.57866 21.0594 8.0054 20.8895 7.48386Z" fill="#ffffff" />
-                              </svg>
-                              (5.0) Rating
-                           </span>
-                        </div>
+                        
                      </div>
                   </div>
                </div>
@@ -193,7 +229,6 @@
                         </nav>
                      </div>
                      <div id="overview">
-                        <h4 class="it-details-title">Giới thiệu khóa học</h4>
                         <div class="postbox-dsc mb-55">
                            @if ($post->summary)
                               <p class="mb-20"><strong>{{ $post->summary }}</strong></p>
@@ -514,7 +549,7 @@
                                        </div>
                                        <div class="mt-20">
                                           <div class="postbox-user-info mb-20">
-                                             <h4 class="user-title">{{ $post->seller?->name ?? ($post->instructor ?? 'Educeet Instructor') }}</h4>
+                                             <h4 class="user-title">{{ $post->seller?->name ?? ($post->instructor ?? 'Indochine Instructor') }}</h4>
                                              <span>Chuyên gia & Giảng viên thỉnh giảng</span>
                                           </div>
                                            <div class="postbox-user-meta mb-20">
@@ -663,12 +698,26 @@
                         </div>
                         <div class="price-section-box">
                            <div class="it-course-btn mb-20">
-                              <a href="{{ $post->learn_url }}" class="it-btn-yellow w-100 text-center">
-                                 <span>
-                                    <span class="text-1">Vào Học Ngay</span>
-                                    <span class="text-2">Vào Học Ngay</span>
-                                 </span>
+                              @auth
+                              <a href="{{ $post->learn_url }}" class="btn-beautiful w-100 text-center">
+                                 <span>Vào Học Ngay</span>
                               </a>
+                              @else
+                              <a href="javascript:void(0)" onclick="showInternalNotice()" class="btn-beautiful btn-beautiful-login w-100 text-center">
+                                 <span>Đăng Nhập Để Vào Học</span>
+                              </a>
+                              <script>
+                                 function showInternalNotice() {
+                                    Swal.fire({
+                                       icon: 'info',
+                                       title: 'Thông báo',
+                                       text: 'Các khóa học lưu hành nội bộ. Bạn cần truy cập web từ link nội bộ để được vào học',
+                                       confirmButtonColor: '#03594E',
+                                       confirmButtonText: 'Đã hiểu'
+                                    });
+                                 }
+                              </script>
+                              @endauth
                            </div>
                         </div>
                         <div class="contact-section-wrap gray-bg mt-20">
