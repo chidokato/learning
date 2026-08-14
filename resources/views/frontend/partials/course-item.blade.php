@@ -18,28 +18,19 @@
       <div class="it-course-content p-relative">
          <div class="d-flex justify-content-between align-items-center mb-20">
             <div class="it-course-author">
-               <img src="{{ $course->seller?->avatar ? asset($course->seller->avatar) : asset('assets/img/avatar/avatar-1-' . ((($index ?? 0) % 6) + 1) . '.png') }}" alt="{{ $course->seller?->name ?? 'Samantha' }}">
-               <span>{{ $course->seller?->name ?? 'Samantha' }}</span>
+               <img src="{{ $course->seller?->avatar ? asset($course->seller->avatar) : asset('assets/img/avatar/avatar-1-' . ((($index ?? 0) % 6) + 1) . '.png') }}" alt="{{ $course->seller?->name ?? 'Giảng viên' }}">
+               <span>{{ $course->seller?->name ?? 'Giảng viên' }}</span>
             </div>
-            <div class="it-course-price-box">
+            <!-- <div class="it-course-price-box">
                @if ($course->price && $course->price > 0)
                   <span>{{ number_format($course->price, 0, ',', '.') }} đ</span>
                @else
                   <span>Free</span>
                @endif
-            </div>
+            </div> -->
          </div>
          <h5 class="it-course-title mb-20"><a class="border-line" href="{{ $course->frontend_url }}">{{ $course->title }}</a></h5>
-         <div class="it-course-rating mb-10">
-            <div>
-               <i class="fa-sharp fa-solid fa-star"></i>
-               <i class="fa-sharp fa-solid fa-star"></i>
-               <i class="fa-sharp fa-solid fa-star"></i>
-               <i class="fa-sharp fa-solid fa-star"></i>
-               <i class="fa-sharp fa-regular fa-star"></i>
-               <span>(5.0/5 Customer Rating)</span>
-            </div>
-         </div>
+         
          <div class="it-course-meta mb-30 d-flex justify-content-between">
             <span>
                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

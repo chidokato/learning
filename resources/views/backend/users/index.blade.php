@@ -20,6 +20,7 @@
                             <th>Chuc danh</th>
                             <th>So dien thoai</th>
                             <th>Email</th>
+                            <th>Quyen</th>
                             <th>Ngay tao</th>
                             <th class="text-end">Thao tac</th>
                         </tr>
@@ -32,6 +33,7 @@
                                 <td>{{ $user->job_title }}</td>
                                 <td>{{ $user->phone }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td><span class="badge bg-secondary">{{ $user->permission_label }}</span></td>
                                 <td>{{ $user->created_at ? $user->created_at->format('d/m/Y H:i') : '' }}</td>
                                 <td class="text-end">
                                     <a href="{{ route('backend.users.edit', $user) }}" class="btn btn-sm btn-soft-warning">Sua</a>
@@ -44,7 +46,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-muted py-4">Chua co user nao.</td>
+                                <td colspan="8" class="text-center text-muted py-4">Chua co user nao.</td>
                             </tr>
                         @endforelse
                     </tbody>

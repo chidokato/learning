@@ -3,7 +3,7 @@
       <div class="container">
          <div class="row">
             <div class="col-12">
-               <div class="it-shop-top-wrap d-flex justify-content-between align-items-center mb-60">
+               <div class="it-shop-top-wrap d-none justify-content-between align-items-center mb-60">
                   <div class="it-shop-text">
                      <span>Showing all {{ isset($courses) ? $courses->total() : 0 }} results</span>
                   </div>

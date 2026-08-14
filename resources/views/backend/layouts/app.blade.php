@@ -77,7 +77,7 @@
                         <div class="dropdown ms-sm-3 header-item topbar-user">
                             <button type="button" class="btn material-shadow-none" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
-                                    <img class="rounded-circle header-profile-user" src="{{ asset('admin-assets/images/users/avatar-1.jpg') }}" alt="Header Avatar">
+                                    <img class="rounded-circle header-profile-user" src="{{ auth()->user()?->avatar ? asset(auth()->user()->avatar) : asset('admin-assets/images/users/avatar-1.jpg') }}" alt="Header Avatar" style="object-fit: cover;">
                                     <span class="text-start ms-xl-2">
                                         <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()?->name ?? 'Admin' }}</span>
                                         <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">Administrator</span>

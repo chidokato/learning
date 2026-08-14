@@ -59,4 +59,17 @@ class User extends Authenticatable
     {
         return in_array($this->permission, [4, 5, 6]);
     }
+
+    public function getPermissionLabelAttribute(): string
+    {
+        $permissions = [
+            1 => 'Super Admin',
+            2 => 'Admin',
+            3 => 'Moderator',
+            4 => 'Instructor',
+            5 => 'Student',
+            6 => 'Guest',
+        ];
+        return $permissions[$this->permission] ?? 'Guest';
+    }
 }

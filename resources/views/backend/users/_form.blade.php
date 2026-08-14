@@ -22,7 +22,7 @@
                     <div class="col-lg-6">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->email ?? '') }}">
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->email ?? '') }}" readonly>
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -34,6 +34,23 @@
                             <label for="job_title" class="form-label">Chuc danh</label>
                             <input type="text" class="form-control @error('job_title') is-invalid @enderror" id="job_title" name="job_title" value="{{ old('job_title', $user->job_title ?? '') }}">
                             @error('job_title')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="permission" class="form-label">Quyen (Permission)</label>
+                            <select class="form-select @error('permission') is-invalid @enderror" id="permission" name="permission">
+                                <option value="1" {{ old('permission', $user->permission ?? 6) == 1 ? 'selected' : '' }}>Quan tri vien cap cao (Super Admin)</option>
+                                <option value="2" {{ old('permission', $user->permission ?? 6) == 2 ? 'selected' : '' }}>Quan tri vien (Admin)</option>
+                                <option value="3" {{ old('permission', $user->permission ?? 6) == 3 ? 'selected' : '' }}>Quan ly (Moderator)</option>
+                                <option value="4" {{ old('permission', $user->permission ?? 6) == 4 ? 'selected' : '' }}>Giang vien (Instructor)</option>
+                                <option value="5" {{ old('permission', $user->permission ?? 6) == 5 ? 'selected' : '' }}>Hoc vien (Student)</option>
+                                <option value="6" {{ old('permission', $user->permission ?? 6) == 6 ? 'selected' : '' }}>Khach (Guest)</option>
+                            </select>
+                            @error('permission')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -116,20 +133,29 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6">
+                    @if(isset($user))
+                        <div class="col-12 mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="toggle-password-change">
+                                <label class="form-check-label" for="toggle-password-change">Sửa mật khẩu</label>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="col-lg-6 password-fields">
                         <div class="mb-0">
                             <label for="password" class="form-label">Mat khau {{ isset($user) ? '(de trong neu khong doi)' : '' }}</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" autocomplete="new-password" {{ isset($user) ? 'disabled' : '' }}>
                             @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 password-fields">
                         <div class="mb-0">
                             <label for="password_confirmation" class="form-label">Nhap lai mat khau</label>
-                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" autocomplete="new-password" {{ isset($user) ? 'disabled' : '' }}>
                         </div>
                     </div>
                 </div>
@@ -155,6 +181,25 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        var togglePasswordChange = document.getElementById('toggle-password-change');
+        if (togglePasswordChange) {
+            togglePasswordChange.addEventListener('change', function() {
+                var passwordInput = document.getElementById('password');
+                var passwordConfirmInput = document.getElementById('password_confirmation');
+                
+                if (this.checked) {
+                    passwordInput.removeAttribute('disabled');
+                    passwordConfirmInput.removeAttribute('disabled');
+                    passwordInput.focus();
+                } else {
+                    passwordInput.setAttribute('disabled', 'disabled');
+                    passwordConfirmInput.setAttribute('disabled', 'disabled');
+                    passwordInput.value = '';
+                    passwordConfirmInput.value = '';
+                }
+            });
+        }
+
         document.querySelectorAll('.image-upload-trigger').forEach(function (button) {
             button.addEventListener('click', function () {
                 var inputId = button.getAttribute('data-input');

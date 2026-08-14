@@ -135,7 +135,7 @@
                </div>
                <div class="itoffcanvas__info-address">
                   <span>Email</span>
-                  <a href="mailto:info@indochine.com">info@indocqqqhine.com</a>
+                  <a href="mailto:{{ $siteSetting->email }}">{{ $siteSetting->email }}</a>
                </div>
             </div>
             <div class="it-info-wrapper mb-20 d-flex align-items-center">
@@ -144,7 +144,7 @@
                </div>
                <div class="itoffcanvas__info-address">
                   <span>Phone</span>
-                  <a href="tel:(705)569-0123">(705) 569-0123</a>
+                  <a href="tel:{{ preg_replace('/[^0-9]/', '', $siteSetting->hotline) }}">{{ $siteSetting->hotline }}</a>
                </div>
             </div>
          </div>

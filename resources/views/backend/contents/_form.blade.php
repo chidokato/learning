@@ -260,15 +260,62 @@
                         </div>
                     @endif
 
-                    <div class="col-12">
-                        <div class="mb-0">
-                            <label for="content" class="form-label">Noi dung</label>
-                            <textarea id="content" name="content" rows="8" class="form-control editor @error('content') is-invalid @enderror">{{ old('content', $post->content ?? '') }}</textarea>
-                            @error('content')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                    @if ($isCourse)
+                        <div class="col-12">
+                            <div class="mb-0">
+                                <ul class="nav nav-tabs" id="courseContentTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content-tab-pane" type="button" role="tab" aria-controls="content-tab-pane" aria-selected="true">Nội dung khóa học</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="what-to-learn-tab" data-bs-toggle="tab" data-bs-target="#what-to-learn-tab-pane" type="button" role="tab" aria-controls="what-to-learn-tab-pane" aria-selected="false">Bạn sẽ học được gì</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="course-includes-tab" data-bs-toggle="tab" data-bs-target="#course-includes-tab-pane" type="button" role="tab" aria-controls="course-includes-tab-pane" aria-selected="false">Khóa học này bao gồm</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="course-requirements-tab" data-bs-toggle="tab" data-bs-target="#course-requirements-tab-pane" type="button" role="tab" aria-controls="course-requirements-tab-pane" aria-selected="false">Yêu cầu khóa học</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content border border-top-0 p-3" id="courseContentTabsContent">
+                                    <div class="tab-pane fade show active" id="content-tab-pane" role="tabpanel" aria-labelledby="content-tab" tabindex="0">
+                                        <textarea id="content" name="content" rows="8" class="form-control editor @error('content') is-invalid @enderror">{{ old('content', $post->content ?? '') }}</textarea>
+                                        @error('content')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="tab-pane fade" id="what-to-learn-tab-pane" role="tabpanel" aria-labelledby="what-to-learn-tab" tabindex="0">
+                                        <textarea id="what_to_learn" name="what_to_learn" rows="8" class="form-control editor @error('what_to_learn') is-invalid @enderror">{{ old('what_to_learn', $post->what_to_learn ?? '') }}</textarea>
+                                        @error('what_to_learn')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="tab-pane fade" id="course-includes-tab-pane" role="tabpanel" aria-labelledby="course-includes-tab" tabindex="0">
+                                        <textarea id="course_includes" name="course_includes" rows="8" class="form-control editor @error('course_includes') is-invalid @enderror">{{ old('course_includes', $post->course_includes ?? '') }}</textarea>
+                                        @error('course_includes')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="tab-pane fade" id="course-requirements-tab-pane" role="tabpanel" aria-labelledby="course-requirements-tab" tabindex="0">
+                                        <textarea id="course_requirements" name="course_requirements" rows="8" class="form-control editor @error('course_requirements') is-invalid @enderror">{{ old('course_requirements', $post->course_requirements ?? '') }}</textarea>
+                                        @error('course_requirements')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    @else
+                        <div class="col-12">
+                            <div class="mb-0">
+                                <label for="content" class="form-label">Noi dung</label>
+                                <textarea id="content" name="content" rows="8" class="form-control editor @error('content') is-invalid @enderror">{{ old('content', $post->content ?? '') }}</textarea>
+                                @error('content')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

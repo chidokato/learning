@@ -16322,7 +16322,7 @@ input[type=radio] {
   }
 }
 .it-course-btn .it-btn-yellow {
-  background-color: var(--it-text-body);
+  background-color: var(--it-theme-5);
 }
 .it-course-btn .it-btn-yellow span {
   color: var(--it-common-white);
@@ -16915,7 +16915,7 @@ input[type=radio] {
 }
 .it-course-style-10 .it-course-btn .it-btn-yellow {
   border-radius: 0;
-  background-color: var(--it-text-body);
+  background-color: var(--it-theme-5);
 }
 .it-course-style-11 .circle {
   position: absolute;
