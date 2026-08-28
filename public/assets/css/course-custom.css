@@ -1,0 +1,139 @@
+/* Đồng bộ kích thước ảnh khóa học bằng nhau */
+.it-course-thumb {
+   position: relative;
+   overflow: hidden;
+   border-radius: 20px;
+}
+.it-course-thumb a {
+   display: block;
+   width: 100%;
+}
+.it-course-thumb img {
+   width: 100% !important;
+   height: 230px !important;
+   object-fit: cover !important;
+   object-position: center !important;
+   display: block !important;
+   transition: transform 0.4s ease;
+}
+.it-course-item:hover .it-course-thumb img {
+   transform: scale(1.05);
+}
+.btn-beautiful {
+   background: linear-gradient(135deg, #03594E 0%, #067869 100%);
+   color: #fff !important;
+   border: none;
+   box-shadow: 0 4px 15px rgba(3, 89, 78, 0.3);
+   padding: 15px 30px;
+   border-radius: 8px;
+   font-weight: bold;
+   font-size: 16px;
+   transition: all 0.3s ease;
+   display: inline-block;
+   position: relative;
+   overflow: hidden;
+   z-index: 1;
+}
+.btn-beautiful::before {
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background: linear-gradient(135deg, #067869 0%, #03594E 100%);
+   z-index: -1;
+   transition: opacity 0.3s ease;
+   opacity: 0;
+}
+.btn-beautiful:hover::before {
+   opacity: 1;
+}
+.btn-beautiful:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 6px 20px rgba(3, 89, 78, 0.4);
+}
+.btn-beautiful-login {
+   background: linear-gradient(135deg, #f5a623 0%, #ff8b00 100%);
+   box-shadow: 0 4px 15px rgba(245, 166, 35, 0.3);
+}
+.btn-beautiful-login::before {
+   background: linear-gradient(135deg, #ff8b00 0%, #f5a623 100%);
+}
+.btn-beautiful-login:hover {
+   box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4);
+}
+/* Định dạng danh sách CKEditor trên frontend */
+.ck-content-list ul {
+   list-style-type: none !important;
+   padding-left: 0 !important;
+   margin-bottom: 0 !important;
+}
+.ck-content-list.style-2-col ul {
+   column-count: 2;
+   column-gap: 30px;
+}
+@media (max-width: 767px) {
+   .ck-content-list.style-2-col ul {
+      column-count: 1;
+   }
+}
+.ck-content-list ul li {
+   position: relative !important;
+   padding-left: 35px !important;
+   margin-bottom: 15px !important;
+   font-size: 16px !important;
+   color: #1c2733 !important;
+   line-height: 1.6 !important;
+}
+.ck-content-list ul li::before {
+   content: '' !important;
+   position: absolute !important;
+   left: 0 !important;
+   top: 5px !important;
+   width: 20px !important;
+   height: 16px !important;
+   background-image: url("data:image/svg+xml,%3Csvg width='20' height='16' viewBox='0 0 20 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.71195 16C5.58634 16 5.48163 15.9144 5.43976 15.8073C5.41885 15.7644 3.618 11.0101 0.833023 9.21113C0.288584 8.86848 -0.130124 8.50439 0.0373593 7.69056C0.204843 6.89818 0.728376 6.44844 1.67062 6.23426C3.34575 5.87017 5.14655 8.52577 5.81666 9.61804C8.16184 6.12724 12.8523 0.644689 19.6786 0.00221658C20.0079 -0.037266 20.1297 0.461976 19.8252 0.601865C19.7205 0.644689 9.96258 5.20638 6.00505 15.8287C5.94227 15.9357 5.83756 16 5.71195 16Z' fill='%2303594E' /%3E%3C/svg%3E") !important;
+   background-repeat: no-repeat !important;
+   background-size: contain !important;
+}
+
+/* Ẩn các icon SVG/hình ảnh cũ (nếu có do copy/paste) để tránh bị lặp 2 icon */
+.ck-content-list ul li svg, 
+.ck-content-list ul li img,
+.ck-content-list ul li i {
+   display: none !important;
+}
+
+/* Căn chỉnh khoảng cách dãn dòng cho nội dung Chương trình học (Accordion) */
+.it-custom-accordion-2 .accordion-content {
+   /*padding: 15px 25px 25px 25px !important;*/
+}
+.it-custom-accordion-2 .accordion-content ul {
+   margin: 0 !important;
+   padding: 0 !important;
+   list-style: none !important;
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
+}
+.it-custom-accordion-2 .accordion-content ul li {
+   margin: 0 !important;
+   padding: 0 !important;
+   list-style: none !important;
+   display: flex !important;
+   align-items: flex-start !important;
+   gap: 10px;
+   line-height: 1.6;
+}
+.it-custom-accordion-2 .accordion-content ul li i {
+   margin-top: 4px;
+}
+.it-custom-accordion-2 .accordion-content ul li .lesson-text {
+   flex: 1;
+}
+.it-custom-accordion-2 .accordion-content ul li p {
+   margin: 0;
+   padding: 0;
+   display: inline;
+}

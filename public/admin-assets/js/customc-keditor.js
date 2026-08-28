@@ -212,8 +212,8 @@ function initEditor() {
                     {
                         name: /.*/,
                         attributes: true,
-                        classes: true,
-                        styles: true
+                        classes: false,
+                        styles: false
                     }
                 ]
             },
