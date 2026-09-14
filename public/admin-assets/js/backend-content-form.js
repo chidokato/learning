@@ -5,6 +5,18 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    var instructorSelect = formRoot.querySelector('#seller_id');
+
+    if (instructorSelect && window.jQuery && window.jQuery.fn.select2) {
+        window.jQuery(instructorSelect).select2({
+            width: '100%',
+            placeholder: 'Select Instructor / Teacher',
+            allowClear: true,
+            minimumResultsForSearch: 0,
+            dropdownParent: window.jQuery(instructorSelect).parent()
+        });
+    }
+
     var wardMap = {};
 
     try {

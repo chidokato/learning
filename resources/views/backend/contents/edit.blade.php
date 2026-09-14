@@ -9,10 +9,17 @@
 @section('breadcrumb', $isCourse ? 'Edit Course' : 'Sua ' . $typeLabel)
 
 @push('styles')
+    @if ($isCourse)
+        <link href="{{ asset('admin-assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    @endif
     <link href="{{ asset('admin-assets/css/backend-content-form.css') }}" rel="stylesheet" type="text/css" />
 @endpush
 
 @push('scripts')
+    @if ($isCourse)
+        <script src="{{ asset('assets/js/jquery.js') }}"></script>
+        <script src="{{ asset('admin-assets/libs/select2/select2.min.js') }}"></script>
+    @endif
     <script src="{{ asset('admin-assets/js/backend-content-form.js') }}"></script>
 @endpush
 
