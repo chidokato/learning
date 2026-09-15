@@ -107,6 +107,7 @@
          </div>
       </div>
       <!-- header-area-end -->
+ </header>
 
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    @if(session('info') || session('success') || session('error') || session('login_notice'))

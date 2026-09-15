@@ -41,6 +41,21 @@ class AppServiceProvider extends ServiceProvider
         });
 
         View::composer('frontend.home', function ($view) {
+            $categoriesWithCourses = \App\Models\Category::query()
+                ->where('is_active', true)
+                ->whereHas('posts', function($query) {
+                    $query->where('type', \App\Models\Post::TYPE_COURSE)->where('is_active', true);
+                })
+                ->with(['posts' => function($query) {
+                    $query->where('type', \App\Models\Post::TYPE_COURSE)
+                          ->where('is_active', true)
+                          ->latest('published_at')
+                          ->latest('id')
+                          ->take(3);
+                }, 'posts.seller'])
+                ->orderBy('sort_order')
+                ->get();
+
             $view->with('courses', Post::query()
                 ->where('type', Post::TYPE_COURSE)
                 ->where('is_active', true)
@@ -48,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
                 ->latest('published_at')
                 ->latest('id')
                 ->paginate(9)
-            );
+            )->with('categoriesWithCourses', $categoriesWithCourses);
         });
     }
 }
