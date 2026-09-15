@@ -34,6 +34,9 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('total-chapters-count').innerText = chapters.length;
 
     chapters.forEach((chap, idx) => {
+        const chapterTitle = document.createElement('span');
+        chapterTitle.textContent = chap.title.toLocaleLowerCase('vi-VN')
+            .replace(/\p{L}/u, letter => letter.toLocaleUpperCase('vi-VN'));
         let isShow = idx === 0 ? 'show' : '';
         let isCollapsed = idx === 0 ? '' : 'collapsed';
         let ariaExpanded = idx === 0 ? 'true' : 'false';
@@ -57,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <button class="accordion-buttons ${isCollapsed}" type="button" data-bs-toggle="collapse"
                    data-bs-target="#${collapseId}" aria-expanded="${ariaExpanded}"
                    aria-controls="${collapseId}">
-                   <span>${chap.title}</span>    
+                   ${chapterTitle.outerHTML}
                    <span>${chap.lessons.length} bài học</span>                 
                 </button>
              </h4>

@@ -122,6 +122,7 @@
 .course-curriculum .accordion-header { margin: 0; }
 .course-curriculum .accordion-buttons { border: 0; border-bottom: 1px solid rgba(108,117,125,.2); gap: 12px; }
 .course-curriculum .accordion-buttons span { line-height: 1.5; }
+.course-curriculum .accordion-buttons span:first-child { text-transform: none; }
 .course-curriculum .accordion-buttons span:last-child { flex-shrink: 0; font-size: 14px; }
 .course-curriculum img, .course-curriculum iframe { max-width: 100%; }
 .course-curriculum img { height: auto; }
