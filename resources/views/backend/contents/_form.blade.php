@@ -68,6 +68,7 @@
                         </div>
                     </div>
 
+                    @if (! $isCourse)
                     <div class="col-12">
                         <div class="mb-3">
                             <label for="summary" class="form-label">{{ $isCourse ? 'Short Description / Overview' : 'Mo ta ngan' }}</label>
@@ -77,6 +78,7 @@
                             @enderror
                         </div>
                     </div>
+                    @endif
 
 
 
@@ -265,7 +267,10 @@
                             <div class="mb-0">
                                 <ul class="nav nav-tabs" id="courseContentTabs" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content-tab-pane" type="button" role="tab" aria-controls="content-tab-pane" aria-selected="true">Nội dung khóa học</button>
+                                        <button class="nav-link active" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary-tab-pane" type="button" role="tab" aria-controls="summary-tab-pane" aria-selected="true">Short Description / Overview</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="content-tab" data-bs-toggle="tab" data-bs-target="#content-tab-pane" type="button" role="tab" aria-controls="content-tab-pane" aria-selected="false">Nội dung khóa học</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="what-to-learn-tab" data-bs-toggle="tab" data-bs-target="#what-to-learn-tab-pane" type="button" role="tab" aria-controls="what-to-learn-tab-pane" aria-selected="false">Bạn sẽ học được gì</button>
@@ -278,7 +283,14 @@
                                     </li>
                                 </ul>
                                 <div class="tab-content border border-top-0 p-3" id="courseContentTabsContent">
-                                    <div class="tab-pane fade show active" id="content-tab-pane" role="tabpanel" aria-labelledby="content-tab" tabindex="0">
+                                    <div class="tab-pane fade show active" id="summary-tab-pane" role="tabpanel" aria-labelledby="summary-tab" tabindex="0">
+                                        <label for="summary" class="visually-hidden">Short Description / Overview</label>
+                                        <textarea id="summary" name="summary" rows="8" class="form-control editor @error('summary') is-invalid @enderror">{{ old('summary', $post->summary ?? '') }}</textarea>
+                                        @error('summary')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="tab-pane fade" id="content-tab-pane" role="tabpanel" aria-labelledby="content-tab" tabindex="0">
                                         <textarea id="content" name="content" rows="8" class="form-control editor @error('content') is-invalid @enderror">{{ old('content', $post->content ?? '') }}</textarea>
                                         @error('content')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -589,4 +601,3 @@
         </div>
     </div>
 </div>
-

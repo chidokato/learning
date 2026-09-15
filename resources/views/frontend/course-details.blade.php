@@ -169,7 +169,7 @@
                      <div id="summary-section">
                         @if ($post->summary)
                         <div class="postbox-dsc mb-55">
-                           <p class="mb-20"><strong>{{ $post->summary }}</strong></p>
+                           <div class="course-summary-content">{!! $post->summary !!}</div>
                         </div>
                         @endif
                      </div>
