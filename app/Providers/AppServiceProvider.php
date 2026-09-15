@@ -46,15 +46,20 @@ class AppServiceProvider extends ServiceProvider
                 ->whereHas('posts', function($query) {
                     $query->where('type', \App\Models\Post::TYPE_COURSE)->where('is_active', true);
                 })
-                ->with(['posts' => function($query) {
-                    $query->where('type', \App\Models\Post::TYPE_COURSE)
-                          ->where('is_active', true)
-                          ->latest('published_at')
-                          ->latest('id')
-                          ->take(3);
-                }, 'posts.seller'])
                 ->orderBy('sort_order')
                 ->get();
+
+            // Laravel 9 applies eager-load limits across all parents, not per category.
+            foreach ($categoriesWithCourses as $category) {
+                $category->setRelation('posts', $category->posts()
+                    ->where('type', Post::TYPE_COURSE)
+                    ->where('is_active', true)
+                    ->with(['category', 'seller'])
+                    ->latest('published_at')
+                    ->latest('id')
+                    ->take(3)
+                    ->get());
+            }
 
             $view->with('courses', Post::query()
                 ->where('type', Post::TYPE_COURSE)
@@ -67,4 +72,3 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 }
-
