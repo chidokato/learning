@@ -143,7 +143,7 @@ class Post extends Model
             return asset(ltrim($this->pdf_file, '/'));
         }
 
-        return asset('uploads/posts/pdf/posts-pdf-KmnoBohwP6yPsx3ZuNUt.pdf');
+        return '';
     }
 
     public function getLearnUrlAttribute(): string

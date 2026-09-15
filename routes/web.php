@@ -15,34 +15,12 @@ $postDetailHandler = function (string $slug) {
     $cleanSlug = trim(urldecode($slug));
 
     $post = \App\Models\Post::query()
-        ->where(function ($query) use ($cleanSlug) {
-            $query->where('slug', $cleanSlug)
-                ->orWhere('slug', 'like', '%' . $cleanSlug . '%')
-                ->orWhere('title', 'like', '%' . str_replace('-', ' ', $cleanSlug) . '%');
-        })
+        ->where('slug', $cleanSlug)
         ->with(['category', 'seller'])
         ->first();
 
-    if (! $post) {
-        $post = \App\Models\Post::query()
-            ->whereIn('type', [\App\Models\Post::TYPE_COURSE, \App\Models\Post::TYPE_PRODUCT])
-            ->where('is_active', true)
-            ->with(['category', 'seller'])
-            ->latest('published_at')
-            ->first();
-    }
 
-    if (! $post) {
-        $post = new \App\Models\Post([
-            'title' => 'Design Thinking Researching for Better UX',
-            'slug' => $cleanSlug ?: 'design-thinking-researching-for-better-ux',
-            'summary' => 'This course takes you from beginner to advanced developer. Learn modern skills and build real-world projects.',
-            'content' => '<p>Throughout this course, you will work on hands-on projects and gain confidence to build complex applications from scratch.</p>',
-            'price' => 500000,
-            'type' => 'course',
-            'is_active' => true,
-        ]);
-    }
+    abort_unless($post, 404);
 
     $relatedCourses = \App\Models\Post::query()
         ->whereIn('type', [\App\Models\Post::TYPE_COURSE, \App\Models\Post::TYPE_PRODUCT])
@@ -64,34 +42,12 @@ $courseLearnHandler = function (string $slug) {
     $cleanSlug = trim(urldecode($slug));
 
     $post = \App\Models\Post::query()
-        ->where(function ($query) use ($cleanSlug) {
-            $query->where('slug', $cleanSlug)
-                ->orWhere('slug', 'like', '%' . $cleanSlug . '%')
-                ->orWhere('title', 'like', '%' . str_replace('-', ' ', $cleanSlug) . '%');
-        })
+        ->where('slug', $cleanSlug)
         ->with(['category', 'seller'])
         ->first();
 
-    if (! $post) {
-        $post = \App\Models\Post::query()
-            ->whereIn('type', [\App\Models\Post::TYPE_COURSE, \App\Models\Post::TYPE_PRODUCT])
-            ->where('is_active', true)
-            ->with(['category', 'seller'])
-            ->latest('published_at')
-            ->first();
-    }
 
-    if (! $post) {
-        $post = new \App\Models\Post([
-            'title' => 'Design Thinking Researching for Better UX',
-            'slug' => $cleanSlug ?: 'design-thinking-researching-for-better-ux',
-            'summary' => 'This React course takes you from beginner to advanced developer. Learn modern React, hooks, state management, and build real-world projects.',
-            'content' => '<p>Throughout this course, you will work on hands-on projects including a social media app, e-commerce platform, and task management system.</p>',
-            'price' => 500000,
-            'type' => 'course',
-            'is_active' => true,
-        ]);
-    }
+    abort_unless($post, 404);
 
     return view('frontend.course-learn', compact('post'));
 };
@@ -104,17 +60,7 @@ $fallbackCourseDetailHandler = function () {
         ->latest('published_at')
         ->first();
 
-    if (! $post) {
-        $post = new \App\Models\Post([
-            'title' => 'Design Thinking Researching for Better UX',
-            'slug' => 'design-thinking-researching-for-better-ux',
-            'summary' => 'This React course takes you from beginner to advanced developer. Learn modern React, hooks, state management, and build real-world projects.',
-            'content' => '<p>Throughout this course, you will work on hands-on projects including a social media app, e-commerce platform, and task management system. By the end, you will have the confidence to build complex React applications from scratch.</p>',
-            'price' => 500000,
-            'type' => 'course',
-            'is_active' => true,
-        ]);
-    }
+    abort_unless($post, 404);
 
     $relatedCourses = \App\Models\Post::query()
         ->where('type', \App\Models\Post::TYPE_COURSE)

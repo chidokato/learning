@@ -14,6 +14,8 @@
    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome-pro.css') }}">
    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">
+   <link rel="stylesheet" href="{{ asset('assets/css/course-curriculum.css') }}">
+   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}">
 
    <style>
       * {
@@ -117,40 +119,52 @@
       .gitiho-workspace {
          display: flex;
          height: calc(100vh - 60px);
+         height: calc(100dvh - 60px);
          margin-top: 60px;
          overflow: hidden;
          position: relative;
          width: 100%;
       }
 
-      /* Fullscreen Main Pane (Player + Tabs) */
+      /* Lesson and independently scrolling course information */
       .gitiho-main-pane {
          flex: 1;
          width: 100%;
          display: flex;
-         flex-direction: column;
-         overflow-y: auto;
+         min-width: 0;
+         overflow: hidden;
          background: #ffffff;
       }
       .gitiho-player-container {
          background-color: #121315;
-         width: 100%;
-         height: calc(100vh - 60px);
-         min-height: 650px;
+         flex: 1;
+         min-width: 0;
+         height: 100%;
+         min-height: 0;
+         flex-shrink: 0;
          display: flex;
          flex-direction: column;
          position: relative;
       }
+      .gitiho-course-panel {
+         flex: 0 0 clamp(360px, 25%, 460px);
+         min-width: 0;
+         height: 100%;
+         display: flex;
+         flex-direction: column;
+         border-left: 1px solid #e5e5e5;
+         background: #fff;
+      }
 
       /* Top Toolbar inside Player */
       .player-toolbar {
-         height: 52px;
+         min-height: 52px;
          background: #1c1d20;
          border-bottom: 1px solid #2d2e32;
          display: flex;
          align-items: center;
          justify-content: space-between;
-         padding: 0 25px;
+         padding: 8px 25px;
          color: #fff;
          z-index: 20;
          flex-wrap: wrap;
@@ -225,6 +239,7 @@
       /* Viewer Body Area (FULLSCREEN HEIGHT & WIDTH) */
       .player-viewer-area {
          flex: 1;
+         min-height: 0;
          position: relative;
          display: flex;
          align-items: center;
@@ -233,7 +248,6 @@
          padding: 15px 40px;
          background-color: #121315;
          width: 100%;
-         height: 100%;
       }
 
       /* Loading State */
@@ -327,7 +341,7 @@
       #scrollModeContainer iframe {
          width: 100%;
          height: 100%;
-         min-height: 680px;
+         min-height: 0;
          border: none;
          background: #fff;
       }
@@ -336,22 +350,60 @@
       .gitiho-tabs-nav {
          background: #ffffff;
          border-bottom: 1px solid #eaeaea;
-         padding: 0 40px;
-         position: sticky;
-         top: 0;
+         padding: 8px 16px 0;
+         flex-shrink: 0;
          z-index: 10;
       }
       .gitiho-tabs-nav .nav-tabs {
          border-bottom: none;
-         gap: 32px;
+         gap: 0 16px;
+         flex-wrap: nowrap;
+         overflow-x: auto;
+         overflow-y: hidden;
+         scrollbar-width: thin;
+         scrollbar-color: #c5d3d0 #f4f7f6;
+         scroll-behavior: smooth;
+         padding-bottom: 8px;
+      }
+      .gitiho-tabs-nav .nav-tabs::-webkit-scrollbar {
+         height: 5px;
+      }
+      .gitiho-tabs-nav .nav-tabs::-webkit-scrollbar-track {
+         background: #f4f7f6;
+         border-radius: 999px;
+      }
+      .gitiho-tabs-nav .nav-tabs::-webkit-scrollbar-thumb {
+         background: #c5d3d0;
+         border-radius: 999px;
+      }
+      .gitiho-tabs-nav .nav-tabs::-webkit-scrollbar-thumb:hover {
+         background: #8daaa3;
+      }
+      .gitiho-tabs-nav .nav-tabs::-webkit-scrollbar-button {
+         display: none;
+         width: 0;
+         height: 0;
+      }
+      @supports selector(::-webkit-scrollbar) {
+         .gitiho-tabs-nav .nav-tabs {
+            scrollbar-width: auto;
+            scrollbar-color: auto;
+         }
+      }
+      @media (prefers-reduced-motion: reduce) {
+         .gitiho-tabs-nav .nav-tabs { scroll-behavior: auto; }
+      }
+      .gitiho-tabs-nav .nav-item {
+         flex: 0 0 auto;
       }
       .gitiho-tabs-nav .nav-link {
+         white-space: nowrap;
          border: none;
          background: transparent;
          color: #555555;
-         font-size: 15.5px;
+         font-size: 14px;
          font-weight: 600;
-         padding: 18px 4px;
+         padding: 12px 0;
          border-bottom: 3px solid transparent;
          margin-bottom: -1px;
          transition: all 0.25s ease;
@@ -366,16 +418,42 @@
 
       /* Tab Content Area */
       .gitiho-tab-content {
-         padding: 35px 40px;
+         padding: 24px 20px;
          flex: 1;
+         min-height: 0;
+         overflow-y: auto;
+         overflow-wrap: anywhere;
          background: #ffffff;
-         max-width: 1300px;
-         margin: 0 auto;
          width: 100%;
       }
+      .gitiho-course-panel .gap-4 { flex-wrap: wrap; gap: 12px !important; }
+      .gitiho-course-panel .col-md-6 { width: 100%; }
+      .gitiho-course-panel .p-5 { padding: 24px !important; }
+      .gitiho-course-panel .avatar { flex-shrink: 0; }
+      .gitiho-course-panel a[download] { flex-shrink: 0; white-space: nowrap; }
+      .course-desc-content img, .course-desc-content iframe { max-width: 100%; }
+      .course-desc-content img { height: auto; }
 
       /* Responsive adjustments */
+      .gitiho-player-container:fullscreen {
+         height: 100vh;
+         height: 100dvh;
+      }
+      @media (max-width: 1399.98px) {
+         .toolbar-left .text-white-50 { display: none !important; }
+      }
+      @media (max-width: 767.98px) {
+         .player-toolbar { padding: 8px 12px; }
+         .toolbar-left { width: 100%; }
+         .player-viewer-area { padding: 12px 0; }
+         #flipbookContainerWrapper { padding: 0 12px; }
+         .flip-nav-btn { width: 36px; height: 36px; }
+      }
       @media (max-width: 991.98px) {
+         .gitiho-main-pane { flex-direction: column; overflow-y: auto; }
+         .gitiho-player-container { flex: 0 0 auto; height: 70vh; height: 70dvh; min-height: 360px; }
+         .gitiho-course-panel { flex: 0 0 auto; height: auto; border-left: 0; border-top: 1px solid #e5e5e5; }
+         .gitiho-tab-content { overflow-y: visible; }
          .gitiho-course-title {
             max-width: 250px;
          }
@@ -399,27 +477,23 @@
       </div>
 
       <div class="gitiho-header-right">
-         <div class="progress-ring-box">
-            <div class="progress-circle" id="headerProgressPercent">5%</div>
-            <span class="progress-text">Hoàn thành</span>
-         </div>
       </div>
    </header>
 
    <!-- Main Fullwidth Workspace (No Sidebar) -->
    <div class="gitiho-workspace">
 
-      <!-- Fullwidth Pane: Player & Horizontal Tabs -->
+      <!-- Left lesson viewer and right course tabs -->
       <div class="gitiho-main-pane" id="mainPaneArea">
          
          <!-- PDF / 3D Book Flipbook Viewer Area -->
-         <div class="gitiho-player-container">
+         <div class="gitiho-player-container" id="lessonPlayer">
             
             <!-- Toolbar control -->
             <div class="player-toolbar">
                <div class="toolbar-left">
                   <span class="badge bg-danger px-3 py-2" style="font-size: 13px;">
-                     <i class="fa-solid fa-book-open me-1"></i> Sách lật 3D (Hiển thị FULL)
+                     <i class="fa-solid fa-book-open me-1"></i> Sách lật 3D (Từng trang)
                   </span>
                   <span class="text-white-50 ms-2 d-none d-md-inline" style="font-size: 13.5px;">
                      Kéo góc sách hoặc bấm phím mũi tên để lật trang
@@ -472,6 +546,7 @@
 
                <!-- 3. Scroll Mode Container (iframe fallback) -->
                <div id="scrollModeContainer">
+                  @if ($post->pdf_url)
                   <iframe id="pdfViewerFrame" src="{{ $post->pdf_url }}#toolbar=1&view=FitH" allowfullscreen>
                      <div class="p-5 text-center bg-white" style="height: 100%;">
                         <h5 class="text-danger mb-3">Trình duyệt không hỗ trợ xem trực tiếp PDF</h5>
@@ -479,17 +554,19 @@
                         <a href="{{ $post->pdf_url }}" download class="btn btn-success">Tải tài liệu PDF ngay</a>
                      </div>
                   </iframe>
+                  @endif
                </div>
 
             </div>
          </div>
 
-         <!-- Horizontal Navigation Tabs -->
+         <aside class="gitiho-course-panel" aria-label="Thông tin khóa học">
+         <!-- Course tabs at the top of the right panel -->
          <div class="gitiho-tabs-nav">
             <ul class="nav nav-tabs" id="learnTabs" role="tablist">
                <li class="nav-item" role="presentation">
                   <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#tab-overview" type="button" role="tab">
-                     Tổng quan
+                     Nội dung
                   </button>
                </li>
                <li class="nav-item" role="presentation">
@@ -497,21 +574,21 @@
                      Hỏi đáp
                   </button>
                </li>
-               <li class="nav-item" role="presentation">
+               <!-- <li class="nav-item" role="presentation">
                   <button class="nav-link" id="articles-tab" data-bs-toggle="tab" data-bs-target="#tab-articles" type="button" role="tab">
-                     Bài viết chuyên môn
+                     Tài liệu
                   </button>
-               </li>
+               </li> -->
                <li class="nav-item" role="presentation">
                   <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#tab-reviews" type="button" role="tab">
                      Đánh giá
                   </button>
                </li>
-               <li class="nav-item" role="presentation">
+               <!-- <li class="nav-item" role="presentation">
                   <button class="nav-link" id="cert-tab" data-bs-toggle="tab" data-bs-target="#tab-cert" type="button" role="tab">
                      Tải chứng nhận
                   </button>
-               </li>
+               </li> -->
             </ul>
          </div>
 
@@ -521,129 +598,23 @@
 
                <!-- 1. TỔNG QUAN -->
                <div class="tab-pane fade show active" id="tab-overview" role="tabpanel">
-                  <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #111;">
-                     {{ $post->title }}
-                  </h3>
-                  <div class="d-flex align-items-center gap-4 text-muted mb-25" style="font-size: 14.5px;">
-                     <span><i class="fa-solid fa-chalkboard-user text-danger me-2"></i> Giảng viên: <strong>Indochine Instructor</strong></span>
-                     <span><i class="fa-solid fa-file-pdf text-danger me-2"></i> Tài liệu chính thức</span>
-                     <span><i class="fa-solid fa-clock text-info me-2"></i> Cập nhật liên tục 24/7</span>
-                  </div>
-                  <div class="course-desc-content" style="font-size: 15.5px; line-height: 1.75; color: #444;">
-                     {!! $post->content ?: '<p>Khóa học này được thiết kế theo phương pháp thực tiễn, giúp bạn nắm vững kiến thức nền tảng và vận dụng thành thạo vào công việc thực tế. Tài liệu PDF kèm theo bao gồm đầy đủ slide bài giảng, hướng dẫn thực hành và bài tập củng cố.</p>' !!}
-                  </div>
+                  @include('frontend.partials.course-curriculum')
                </div>
 
-               <!-- 2. HỎI ĐÁP -->
-               <div class="tab-pane fade" id="tab-qa" role="tabpanel">
-                  <h4 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">
-                     <i class="fa-regular fa-comments text-danger me-2"></i> Thảo luận & Hỏi đáp cùng Giảng viên
-                  </h4>
-                  <div class="mb-4 p-4 bg-light rounded-3 border">
-                     <textarea class="form-control mb-3" rows="3" placeholder="Nhập câu hỏi hoặc thắc mắc của bạn về bài học này..." style="font-size: 14.5px;"></textarea>
-                     <div class="d-flex justify-content-end">
-                        <button class="btn btn-danger px-4 py-2" style="font-size: 14px; font-weight: 600;">
-                           Gửi câu hỏi
-                        </button>
-                     </div>
-                  </div>
-                  <div class="qa-thread-list">
-                     <div class="qa-item d-flex gap-3 mb-3 pb-3 border-bottom">
-                        <div class="avatar" style="width: 44px; height: 44px; border-radius: 50%; background: #03594E; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px;">
-                           H
-                        </div>
-                        <div>
-                           <div class="d-flex align-items-center gap-2 mb-1">
-                              <strong style="font-size: 15px;">Hoàng Minh</strong>
-                              <span class="text-muted" style="font-size: 12.5px;">• 2 ngày trước</span>
-                           </div>
-                           <p class="mb-2" style="font-size: 14.5px; color: #333;">Giảng viên cho em hỏi ở chương 2 trang 15, phần cú pháp xử lý dữ liệu có áp dụng được cho phiên bản mới nhất không ạ?</p>
-                           <div class="p-3 bg-light rounded-2 mt-2">
-                              <div class="d-flex align-items-center gap-2 mb-1">
-                                 <strong class="text-danger" style="font-size: 14px;">Indochine Instructor (Giảng viên)</strong>
-                                 <span class="badge bg-danger" style="font-size: 11px;">Quản trị viên</span>
-                              </div>
-                              <p class="mb-0" style="font-size: 14px;">Chào bạn, hoàn toàn áp dụng được nhé! Bạn có thể xem ví dụ bổ sung ở phần thực hành chương 3.</p>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-
-               <!-- 3. BÀI VIẾT CHUYÊN MÔN / TÀI LIỆU -->
+               <div class="tab-pane fade" id="tab-qa" role="tabpanel"></div>
                <div class="tab-pane fade" id="tab-articles" role="tabpanel">
-                  <h4 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">
-                     <i class="fa-regular fa-file-lines text-danger me-2"></i> Tài liệu đính kèm & Bài viết tham khảo
-                  </h4>
-                  <div class="row g-4">
-                     <div class="col-md-6">
-                        <div class="p-4 border rounded-3 d-flex align-items-center justify-content-between">
-                           <div class="d-flex align-items-center gap-3">
-                              <i class="fa-solid fa-file-pdf text-danger" style="font-size: 32px;"></i>
-                              <div>
-                                 <h6 class="mb-1" style="font-size: 16px; font-weight: 700;">Tài liệu toàn tập khóa học.pdf</h6>
-                                 <span class="text-muted" style="font-size: 13px;">Dung lượng: 4.8 MB • PDF định dạng chuẩn</span>
-                              </div>
-                           </div>
-                           <a href="{{ $post->pdf_url }}" download target="_blank" class="btn btn-outline-danger px-3 py-2">
-                              <i class="fa-solid fa-download me-1"></i> Tải về
-                           </a>
-                        </div>
-                     </div>
-                     <div class="col-md-6">
-                        <div class="p-4 border rounded-3 d-flex align-items-center justify-content-between">
-                           <div class="d-flex align-items-center gap-3">
-                              <i class="fa-solid fa-file-code text-success" style="font-size: 32px;"></i>
-                              <div>
-                                 <h6 class="mb-1" style="font-size: 16px; font-weight: 700;">Bộ file thực hành thực tế.zip</h6>
-                                 <span class="text-muted" style="font-size: 13px;">Dung lượng: 12.4 MB • Kèm hướng dẫn</span>
-                              </div>
-                           </div>
-                           <a href="{{ $post->pdf_url }}" download target="_blank" class="btn btn-outline-success px-3 py-2">
-                              <i class="fa-solid fa-download me-1"></i> Tải về
-                           </a>
-                        </div>
-                     </div>
-                  </div>
+                  @if ($post->pdf_url)
+                     <a href="{{ $post->pdf_url }}" download class="btn btn-outline-danger">
+                        <i class="fa-solid fa-download me-1"></i> {{ basename($post->pdf_file) }}
+                     </a>
+                  @endif
                </div>
-
-               <!-- 4. ĐÁNH GIÁ -->
-               <div class="tab-pane fade" id="tab-reviews" role="tabpanel">
-                  <div class="d-flex align-items-center gap-4 mb-30 p-4 bg-light rounded-3 border">
-                     <div class="text-center">
-                        <div style="font-size: 42px; font-weight: 800; color: #ffc107;">5.0</div>
-                        <div class="text-warning mb-1" style="font-size: 18px;">
-                           <i class="fa-solid fa-star"></i>
-                           <i class="fa-solid fa-star"></i>
-                           <i class="fa-solid fa-star"></i>
-                           <i class="fa-solid fa-star"></i>
-                           <i class="fa-solid fa-star"></i>
-                        </div>
-                        <span class="text-muted" style="font-size: 14px;">(128 lượt đánh giá)</span>
-                     </div>
-                     <div>
-                        <h5 style="font-size: 18px; font-weight: 700;">Khóa học chất lượng cao</h5>
-                        <p class="mb-0 text-muted" style="font-size: 15px;">100% học viên đánh giá hài lòng với nội dung thực tiễn và tài liệu chi tiết của khóa học này.</p>
-                     </div>
-                  </div>
-               </div>
-
-               <!-- 5. TẢI CHỨNG NHẬN -->
-               <div class="tab-pane fade" id="tab-cert" role="tabpanel">
-                  <div class="text-center p-5 border rounded-3 bg-light">
-                     <i class="fa-solid fa-award text-warning mb-3" style="font-size: 60px;"></i>
-                     <h4 style="font-size: 22px; font-weight: 700;">Chứng nhận hoàn thành khóa học</h4>
-                     <p class="text-muted mb-4" style="font-size: 15px; max-width: 550px; margin: 0 auto;">
-                        Hoàn thành 100% các bài học và bài kiểm tra để mở khóa và tải xuống chứng nhận chính thức từ Indochine.
-                     </p>
-                     <button class="btn btn-danger px-4 py-2" disabled style="font-weight: 600; font-size: 15px;">
-                        <i class="fa-solid fa-lock me-2"></i> Chưa đủ điều kiện tải chứng nhận
-                     </button>
-                  </div>
-               </div>
+               <div class="tab-pane fade" id="tab-reviews" role="tabpanel"></div>
+               <div class="tab-pane fade" id="tab-cert" role="tabpanel"></div>
 
             </div>
          </div>
+         </aside>
       </div>
 
    </div>
@@ -660,7 +631,7 @@
       let flipBook = null;
       let totalPagesCount = 1;
 
-      const pdfUrl = "{{ $post->pdf_url }}";
+      const pdfUrl = @json($post->pdf_url);
       const loadingEl = document.getElementById('flipbookLoading');
       const flipbookEl = document.getElementById('flipbook');
       const flipbookWrapper = document.getElementById('flipbookContainerWrapper');
@@ -670,6 +641,12 @@
       const totalPagesText = document.getElementById('totalPagesText');
 
       async function initPdfFlipbook() {
+         if (!pdfUrl) {
+            loadingEl.style.display = 'none';
+            flipbookWrapper.style.display = 'none';
+            document.querySelector('.player-toolbar').style.display = 'none';
+            return;
+         }
          try {
             if (typeof pdfjsLib === 'undefined' || typeof St === 'undefined') {
                throw new Error("Thư viện PDF.js hoặc PageFlip chưa load");
@@ -688,21 +665,20 @@
             const firstViewport = firstPage.getViewport({ scale: 1 });
             const pageRatio = firstViewport.height / firstViewport.width;
 
-            // Tính toán kích thước TRANG SÁCH LẬT TỐI ĐA (FULL) phù hợp 100% với màn hình hiện tại
-            const availWidth = (window.innerWidth - 110) / 2; // vì 2 trang nằm cạnh nhau
-            const availHeight = window.innerHeight - 130;     // trừ chiều cao header 60px + toolbar 52px
-
-            let pageW = Math.floor(availWidth);
-            let pageH = Math.round(pageW * pageRatio);
-
-            if (pageH > availHeight) {
-               pageH = Math.floor(availHeight);
-               pageW = Math.round(pageH / pageRatio);
+            // Keep the host narrower than PageFlip's two-page breakpoint.
+            // Size one page from the actual reading area, including in fullscreen.
+            const maxPageWidth = 2400;
+            function resizeBook() {
+               const style = getComputedStyle(flipbookWrapper);
+               const availableWidth = flipbookWrapper.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+               const availableHeight = flipbookWrapper.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+               const pageWidth = Math.max(1, Math.floor(Math.min(availableWidth, availableHeight / pageRatio, maxPageWidth)));
+               flipbookEl.style.width = pageWidth + 'px';
+               flipbookEl.style.height = Math.max(1, Math.floor(pageWidth * pageRatio)) + 'px';
+               if (flipBook) flipBook.update();
             }
 
-            // Đảm bảo kích thước tối thiểu cho màn hình rất nhỏ
-            if (pageW < 320) pageW = 320;
-            if (pageH < Math.round(320 * pageRatio)) pageH = Math.round(320 * pageRatio);
+            resizeBook();
 
             flipbookEl.innerHTML = "";
 
@@ -737,13 +713,15 @@
 
             // Khởi tạo St.PageFlip với kích thước FULL màn hình
             flipBook = new St.PageFlip(flipbookEl, {
-               width: pageW,
-               height: pageH,
+               width: maxPageWidth,
+               height: Math.round(maxPageWidth * pageRatio),
                size: "stretch",
-               minWidth: Math.round(pageW * 0.5),
-               maxWidth: pageW,
-               minHeight: Math.round(pageH * 0.5),
-               maxHeight: pageH,
+               minWidth: maxPageWidth,
+               maxWidth: maxPageWidth,
+               minHeight: 1,
+               maxHeight: Math.round(maxPageWidth * pageRatio),
+               usePortrait: true,
+               autoSize: false,
                maxShadowOpacity: 0.6,
                showCover: false,
                mobileScrollSupport: false,
@@ -751,12 +729,15 @@
             });
 
             flipBook.loadFromHTML(document.querySelectorAll('.flip-page'));
+            // PageFlip sets this inline minimum when it loads the HTML pages.
+            // Allow the host to shrink while retaining the single-page breakpoint.
+            flipbookEl.style.minWidth = '0';
+            resizeBook();
+            const bookResizeObserver = new ResizeObserver(resizeBook);
+            bookResizeObserver.observe(flipbookWrapper);
 
             flipBook.on("flip", (e) => {
                pageNumInput.value = (e.data + 1);
-               const percentage = Math.round(((e.data + 1) / totalPagesCount) * 100);
-               const percentEl = document.getElementById('headerProgressPercent');
-               if (percentEl) percentEl.innerText = percentage + "%";
             });
 
          } catch (err) {
@@ -809,7 +790,7 @@
 
       // Nút xem Toàn màn hình
       document.getElementById('btnFullscreen')?.addEventListener('click', () => {
-         const elem = document.getElementById('mainPaneArea');
+         const elem = document.getElementById('lessonPlayer');
          if (!document.fullscreenElement) {
             if (elem.requestFullscreen) elem.requestFullscreen();
             else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();

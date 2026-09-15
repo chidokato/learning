@@ -1,0 +1,132 @@
+.course-curriculum .it-custom-accordion-2 {
+  border-radius: 20px;
+  border: 1px solid rgba(108, 117, 125, 0.2);
+}
+.course-curriculum .it-custom-accordion-2 .accordion-items {
+  border-radius: 20px;
+  background-color: var(--it-common-white);
+}
+.course-curriculum .it-custom-accordion-2 .accordion-items:first-child .accordion-buttons.collapsed {
+  border-radius: 20px 20px 0 0;
+}
+.course-curriculum .it-custom-accordion-2 .accordion-items:first-child .accordion-buttons:not(.collapsed) {
+  border-radius: 20px 20px 0 0;
+}
+.course-curriculum .it-custom-accordion-2 .accordion-items:last-child .accordion-buttons.collapsed {
+  border-radius: 0 0 20px 20px;
+}
+.course-curriculum .it-custom-accordion-2 .accordion-buttons {
+  position: relative;
+  text-align: left;
+  padding: 21px 30px;
+  padding-left: 65px;
+  width: 100%;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--it-common-black);
+  background-color: var(--it-gray-1);
+  font-family: var(--it-ff-spartan-semibold);
+  border-bottom: 1px solid rgba(108, 117, 125, 0.2);
+}
+@media (max-width: 767px) {
+  .course-curriculum .it-custom-accordion-2 .accordion-buttons {
+    font-size: 12px;
+    padding-left: 40px;
+  }
+}
+.course-curriculum .it-custom-accordion-2 .accordion-buttons span {
+  line-height: 1;
+}
+.course-curriculum .it-custom-accordion-2 .accordion-buttons span:last-child {
+  font-family: var(--it-ff-spartan-medium);
+}
+.course-curriculum .it-custom-accordion-2 .accordion-buttons::after {
+  position: absolute;
+  content: "\f106";
+  font-family: "Font Awesome 5 Pro";
+  top: 50%;
+  left: 30px;
+  font-weight: 400;
+  font-size: 16px;
+  height: 25px;
+  width: 25px;
+  line-height: 25px;
+  text-align: center;
+  opacity: 1;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  color: var(--it-common-black);
+  background-color: var(--it-common-white);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+@media (max-width: 767px) {
+  .course-curriculum .it-custom-accordion-2 .accordion-buttons::after {
+    left: 8px;
+  }
+}
+.course-curriculum .it-custom-accordion-2 .accordion-buttons.collapsed::after {
+  content: "\f107";
+}
+.course-curriculum .it-custom-accordion-2 .accordion-buttons:not(.collapsed) {
+  padding-bottom: 17px;
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px), only screen and (min-width: 768px) and (max-width: 991px), (max-width: 767px) {
+  .course-curriculum .it-custom-accordion-2 .accordion-buttons:not(.collapsed) {
+    padding-bottom: 12px;
+  }
+}
+.course-curriculum .it-custom-accordion-2 .accordion-body {
+  padding: 30px;
+}
+
+@font-face {
+   font-family: "Spartan-SemiBold";
+   src: url("../fonts/Spartan-SemiBold.woff2") format("woff2");
+   font-weight: 600;
+   font-display: swap;
+}
+@font-face {
+   font-family: "Spartan-Medium";
+   src: url("../fonts/Spartan-Medium.woff2") format("woff2");
+   font-weight: 500;
+   font-display: swap;
+}
+.course-curriculum {
+   --it-common-white: #fff;
+   --it-common-black: #1F2432;
+   --it-gray-1: #F0F4F5;
+   --it-ff-spartan-semibold: 'Spartan-SemiBold', sans-serif;
+   --it-ff-spartan-medium: 'Spartan-Medium', sans-serif;
+   color: #6C757D;
+   font-size: 16px;
+   line-height: 1.6;
+}
+.course-curriculum .it-details-title {
+   font-family: var(--it-ff-spartan-semibold);
+   font-size: 22px;
+   font-weight: 600;
+   line-height: 1.4;
+   color: #0C121D;
+   margin-bottom: 15px;
+}
+.course-curriculum .it-course-faq-top-text { gap: 12px; }
+.course-curriculum .it-course-faq-top-text span { font-family: var(--it-ff-spartan-medium); }
+.course-curriculum .it-course-faq-top-text a {
+   color: #03594E;
+   font-family: var(--it-ff-spartan-semibold);
+   text-decoration: none;
+   flex-shrink: 0;
+}
+.course-curriculum .accordion-header { margin: 0; }
+.course-curriculum .accordion-buttons { border: 0; border-bottom: 1px solid rgba(108,117,125,.2); gap: 12px; }
+.course-curriculum .accordion-buttons span { line-height: 1.5; }
+.course-curriculum .accordion-buttons span:last-child { flex-shrink: 0; font-size: 14px; }
+.course-curriculum img, .course-curriculum iframe { max-width: 100%; }
+.course-curriculum img { height: auto; }
+.gitiho-course-panel .it-course-faq-top-text { flex-wrap: wrap; font-size: 13px; }
+.gitiho-course-panel .course-curriculum .it-details-title { font-size: 20px; }
+.gitiho-course-panel .course-curriculum .accordion-buttons { padding: 16px 14px 16px 46px; font-size: 14px; }
+.gitiho-course-panel .course-curriculum .accordion-buttons::after { left: 12px; }
+.gitiho-course-panel .course-curriculum .accordion-body { padding: 20px 16px; font-size: 14px; }
