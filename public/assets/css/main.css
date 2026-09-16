@@ -16314,9 +16314,9 @@ input[type=radio] {
   }
 }
 .it-course-content {
-  padding: 40px 30px;
-  padding-top: 30px;
+  padding: 20px;
 }
+
 @media only screen and (min-width: 1200px) and (max-width: 1399px), only screen and (min-width: 992px) and (max-width: 1199px), (max-width: 767px) {
   .it-course-content {
     padding: 30px 20px;
