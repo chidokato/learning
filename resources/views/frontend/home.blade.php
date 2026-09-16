@@ -29,7 +29,7 @@
       .it-course-thumb {
          position: relative;
          overflow: hidden;
-         border-radius: 20px;
+         border-radius: 20px 20px 0 0;
       }
       .it-course-thumb a {
          display: block;
@@ -129,7 +129,7 @@
 
    @if(isset($categoriesWithCourses) && $categoriesWithCourses->isNotEmpty())
     @foreach($categoriesWithCourses as $category)
-    <div class="it-blog-area pt-90 pb-90">
+    <div class="it-blog-area pt-50 pb-50">
        <div class="container">
           <div class="mb-65">
              <div class="row align-items-end">
