@@ -249,9 +249,9 @@ $categoryHandler = function (string $categorySlug) use ($postDetailHandler) {
     return view('frontend.category', compact('category', 'courses'));
 };
 
-Route::get('danh-muc/{categorySlug}', $categoryHandler)->name('frontend.category.show.prefix');
-Route::get('danh-muc/{categorySlug}/{slug}/hoc', fn (string $categorySlug, string $slug) => $courseLearnHandler($slug))->name('frontend.course.learn.category.prefix');
-Route::get('danh-muc/{categorySlug}/{slug}', fn (string $categorySlug, string $slug) => $postDetailHandler($slug))->name('frontend.category.content.show.prefix');
+Route::get('danhmuc/{categorySlug}', $categoryHandler)->name('frontend.category.show.prefix');
+Route::get('danhmuc/{categorySlug}/{slug}/hoc', fn (string $categorySlug, string $slug) => $courseLearnHandler($slug))->name('frontend.course.learn.category.prefix');
+Route::get('danhmuc/{categorySlug}/{slug}', fn (string $categorySlug, string $slug) => $postDetailHandler($slug))->name('frontend.category.content.show.prefix');
 Route::get('category/{categorySlug}', $categoryHandler);
 Route::get('category/{categorySlug}/{slug}/hoc', fn (string $categorySlug, string $slug) => $courseLearnHandler($slug));
 Route::get('category/{categorySlug}/{slug}', fn (string $categorySlug, string $slug) => $postDetailHandler($slug));
