@@ -10371,7 +10371,7 @@ input[type=radio] {
   text-transform: capitalize;
   color: var(--it-common-black);
   font-family: var(--it-ff-jost);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 }
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
   .it-header-menu > nav > ul > li > a {
