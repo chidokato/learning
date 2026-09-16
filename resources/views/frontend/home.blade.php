@@ -204,7 +204,7 @@
 {{ $course->seller ? $course->seller->name : 'Admin' }}
 </span>
 </div>
-<h5 class="it-blog-title mb-15">
+<h5 class="it-blog-title mb-15" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; height: 3.2rem; line-height: 1.6rem;">
 <a class="border-line" href="{{ $course->frontend_url }}">{{ $course->title }}</a>
 </h5>
 <div class="it-blog-btn">

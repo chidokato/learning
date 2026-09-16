@@ -539,6 +539,7 @@ input[type=color] {
   background-position: 100% 100%, 0 100%;
   transition: background-size 0.3s linear;
   background-image: linear-gradient(currentcolor, currentcolor), linear-gradient(currentcolor, currentcolor);
+  font-size: 1rem;
 }
 .border-line:hover {
   background-size: 0% 1px, 100% 1px;
@@ -5358,7 +5359,7 @@ body .ui-tooltip {
 /*  06. blog css start
 /*----------------------------------------*/
 .it-blog-item {
-  padding: 30px;
+  padding: 20px;
   transition: 0.3s;
   padding-bottom: 35px;
   border-radius: 20px;
