@@ -37,7 +37,7 @@
       }
       .it-course-thumb img {
          width: 100% !important;
-         height: 190px !important;
+         height: 170px !important;
          object-fit: cover !important;
          object-position: center !important;
          display: block !important;
