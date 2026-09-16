@@ -131,7 +131,7 @@
     @foreach($categoriesWithCourses as $category)
     <div class="it-blog-area pt-50 pb-50">
        <div class="container">
-          <div class="mb-65">
+          <div class="mb-20">
              <div class="row align-items-end">
                 <div class="col-lg-8">
                     <div class="it-blog-section-title-box">
@@ -158,8 +158,8 @@
 <div class="it-blog-btn text-lg-end">
 <a href="{{ route('frontend.category.show.prefix', $category->slug) }}" class="it-btn-yellow theme-bg">
 <span>
-<span class="text-1">See All Articles</span>
-<span class="text-2">See All Articles</span>
+<span class="text-1">Xem tất cả</span>
+<span class="text-2">Xem tất cả</span>
 </span>
 <i>
 <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
