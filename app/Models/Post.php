@@ -124,7 +124,7 @@ class Post extends Model
     public function getFrontendUrlAttribute(): string
     {
         if ($this->category?->slug) {
-            return route('frontend.category.content.show.prefix', [
+            return route('frontend.content.show', [
                 'categorySlug' => $this->category->slug,
                 'slug' => $this->slug,
             ]);
@@ -149,7 +149,7 @@ class Post extends Model
     public function getLearnUrlAttribute(): string
     {
         if ($this->category?->slug) {
-            return route('frontend.course.learn.category.prefix', [
+            return route('frontend.course.learn.category', [
                 'categorySlug' => $this->category->slug,
                 'slug' => $this->slug,
             ]);

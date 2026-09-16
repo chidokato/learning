@@ -599,7 +599,7 @@ input[type=color] {
 -----------------------------------------*/
 .it-btn-yellow {
   font-size: 16px;
-  padding: 15.5px 29px;
+  padding: 10px;
   line-height: 1.1;
   font-weight: 500;
   text-align: center;
@@ -10371,6 +10371,7 @@ input[type=radio] {
   text-transform: capitalize;
   color: var(--it-common-black);
   font-family: var(--it-ff-jost);
+  font-size: 1.5rem;
 }
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
   .it-header-menu > nav > ul > li > a {
@@ -16298,10 +16299,10 @@ input[type=radio] {
   margin-top: -4px;
   margin-right: 6px;
 }
-.it-course-meta span:first-child {
+/*.it-course-meta span:first-child {
   padding-right: 60px;
   border-right: 1px solid var(--it-text-body);
-}
+}*/
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
   .it-course-meta span:first-child {
     padding-right: 22px;
@@ -16314,7 +16315,7 @@ input[type=radio] {
   }
 }
 .it-course-content {
-  padding: 20px;
+  padding: 15px;
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1399px), only screen and (min-width: 992px) and (max-width: 1199px), (max-width: 767px) {
