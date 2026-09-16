@@ -240,7 +240,7 @@
                      <div class="it-course-sidebar">
                         @if ($post->image)
                         <div class="it-course-sidebar-thumb thumb-overlay z-index-1" style="border-radius: 15px; overflow: hidden; margin-bottom: 25px;">
-                           <img style="width: 100%; height: 240px; object-fit: cover;" src="{{ asset($post->image) }}" alt="{{ $post->title }}">
+                           <img style="width: 100%; height: 220px; object-fit: cover;" src="{{ asset($post->image) }}" alt="{{ $post->title }}">
                         </div>
                         @endif
                         <div class="price-section-box">
