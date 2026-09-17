@@ -10371,7 +10371,7 @@ input[type=radio] {
   text-transform: capitalize;
   color: var(--it-common-black);
   font-family: var(--it-ff-jost);
-  font-size: 1.3rem;
+  font-size: 1rem;
 }
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
   .it-header-menu > nav > ul > li > a {
@@ -11019,7 +11019,7 @@ input[type=radio] {
 .it-header-menu nav ul li .submenu li {
   list-style: none;
   display: block;
-  padding: 0 30px;
+  padding: 0 20px;
 }
 .it-header-menu nav ul li .submenu li:not(:last-child) {
   margin-bottom: 13px;
