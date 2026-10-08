@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
                     ->with(['category', 'seller'])
                     ->latest('published_at')
                     ->latest('id')
-                    ->take(3)
+                    ->take(4)
                     ->get());
             }
 
