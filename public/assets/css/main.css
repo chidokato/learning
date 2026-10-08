@@ -25945,3 +25945,58 @@ input[type=radio] {
 
 /*# sourceMappingURL=main.css.map */
 
+
+/* ===== CUSTOM MONTSERRAT FONT APPLIED GLOBALLY ===== */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-ExtraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-Medium.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-SemiBold_0.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat Extra Bold.OTF') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+:root {
+    --it-ff-body: 'Montserrat', sans-serif !important;
+    --it-ff-heading: 'Montserrat', sans-serif !important;
+    --it-ff-jost: 'Montserrat', sans-serif !important;
+    --it-ff-spartan-semibold: 'Montserrat', sans-serif !important;
+    --it-ff-spartan-medium: 'Montserrat', sans-serif !important;
+    --it-ff-spartan-regular: 'Montserrat', sans-serif !important;
+    --it-ff-newyork: 'Montserrat', sans-serif !important;
+    --it-ff-oxanium: 'Montserrat', sans-serif !important;
+    --it-ff-edensor-regular: 'Montserrat', sans-serif !important;
+    --it-ff-edensor-semibold: 'Montserrat', sans-serif !important;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-hero-12-subtitle {
+    font-family: 'Montserrat', sans-serif !important;
+}

@@ -69,4 +69,33 @@ class AuthController extends Controller
         return redirect()->route('frontend.home')
             ->with('info', 'Tính năng Đăng nhập đang được tạm ẩn.');
     }
+    /**
+     * Cập nhật thông tin cá nhân
+     */
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'password' => ['nullable', 'string', 'min:6', 'confirmed'],
+        ]);
+
+        $data = [
+            'name' => $validated['name'],
+            'phone' => $validated['phone'] ?? null,
+            'address' => $validated['address'] ?? null,
+        ];
+
+        if (! empty($validated['password'])) {
+            $data['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($data);
+
+        return redirect()->route('frontend.profile')
+            ->with('success', 'Cập nhật thông tin thành công.');
+    }
 }

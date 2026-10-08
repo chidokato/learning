@@ -34,7 +34,7 @@
                      <div class="it-header-top-login-box d-none d-sm-block">
                         @auth
                            <div class="d-inline-flex align-items-center gap-2">
-                              <a href="{{ route('frontend.home') }}" class="d-flex align-items-center gap-2 text-white text-decoration-none">
+                              <a href="{{ route('frontend.profile') }}" class="d-flex align-items-center gap-2 text-white text-decoration-none">
                                  <span class="fw-bold" style="color: #ffb400;">{{ Auth::user()->name }}</span>
                               </a>
                               <span class="text-white-50">|</span>

@@ -113,6 +113,10 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('logout', 'logout')->name('frontend.logout');
     Route::get('logout', 'logout')->name('frontend.logout.get');
     Route::post('forgot-password', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'))->name('frontend.forgot-password');
+    Route::middleware('auth')->group(function () {
+        Route::get('profile', fn () => view('frontend.profile'))->name('frontend.profile');
+        Route::post('profile', 'updateProfile')->name('frontend.profile.update');
+    });
 });
 
 // AI Chatbot Widget API Route
@@ -196,6 +200,15 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::get('users/{user}/edit', 'edit')->name('users.edit');
         Route::put('users/{user}', 'update')->name('users.update');
         Route::delete('users/{user}', 'destroy')->name('users.destroy');
+    });
+
+    Route::controller(\App\Http\Controllers\SliderController::class)->group(function () {
+        Route::get('sliders', 'index')->name('sliders.index');
+        Route::get('sliders/create', 'create')->name('sliders.create');
+        Route::post('sliders', 'store')->name('sliders.store');
+        Route::get('sliders/{slider}/edit', 'edit')->name('sliders.edit');
+        Route::put('sliders/{slider}', 'update')->name('sliders.update');
+        Route::delete('sliders/{slider}', 'destroy')->name('sliders.destroy');
     });
 });
 

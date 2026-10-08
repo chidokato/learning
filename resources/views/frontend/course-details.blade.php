@@ -21,7 +21,7 @@
 
    <!-- Theme / Main CSS -->
    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">          
-   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">   
+   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v={{ time() }}">   
 
    <link rel="stylesheet" href="{{ asset('assets/css/course-curriculum.css') }}">
    <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}">

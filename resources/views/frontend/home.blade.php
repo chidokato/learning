@@ -22,7 +22,7 @@
 
    <!-- Theme / Main CSS -->
    <link rel="stylesheet" href="assets/css/spacing.css">          
-   <link rel="stylesheet" href="assets/css/main.css">   
+   <link rel="stylesheet" href="assets/css/main.css?v={{ time() }}">   
 
    <style>
       /* Đồng bộ kích thước ảnh khóa học bằng nhau */
@@ -124,6 +124,8 @@
    @include('frontend.partials.header')
 
    <main>
+
+   @include('frontend.partials.hero-slider')
 
    {{-- @include('frontend.partials.course-area') --}}
 
