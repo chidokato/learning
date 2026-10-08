@@ -157,4 +157,53 @@ class Post extends Model
 
         return route('frontend.course.learn', ['slug' => $this->slug]);
     }
+
+    public function getLessonCountAttribute(): int
+    {
+        // First, check if unit_count is explicitly set and > 0
+        if ($this->unit_count > 0) {
+            return (int) $this->unit_count;
+        }
+
+        $content = $this->content ?? '';
+        if (empty(trim($content))) {
+            return 0;
+        }
+
+        $dom = new \DOMDocument();
+        // Suppress errors for malformed HTML
+        @$dom->loadHTML('<?xml encoding="UTF-8"><body>' . $content . '</body>');
+        
+        $body = $dom->getElementsByTagName('body')->item(0);
+        $lessonCount = 0;
+        $currentChapter = false;
+
+        if ($body) {
+            foreach ($body->childNodes as $node) {
+                if ($node->nodeType !== XML_ELEMENT_NODE) continue;
+                
+                $tagName = strtolower($node->nodeName);
+                if ($tagName === 'h3') {
+                    $currentChapter = true;
+                } elseif ($tagName === 'ul' && $currentChapter) {
+                    foreach ($node->childNodes as $li) {
+                        if ($li->nodeType === XML_ELEMENT_NODE && strtolower($li->nodeName) === 'li') {
+                            $lessonCount++;
+                        }
+                    }
+                } elseif ($currentChapter && trim($node->textContent) !== '') {
+                    $lessonCount++;
+                }
+            }
+        }
+
+        // Fallback for custom formatted texts
+        if ($lessonCount === 0) {
+            preg_match_all('/(\d+)\s*bài\s*học/ui', $content, $matches);
+            $sum = !empty($matches[1]) ? array_sum($matches[1]) : 0;
+            return max($sum, substr_count($content, 'fa-play-circle'));
+        }
+
+        return $lessonCount;
+    }
 }

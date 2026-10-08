@@ -49,6 +49,21 @@ $courseLearnHandler = function (string $slug) {
 
     abort_unless($post, 404);
 
+    if (auth()->check()) {
+        $userId = auth()->id();
+        $cacheKey = "user_{$userId}_learned_post_{$post->id}";
+        if (!cache()->has($cacheKey)) {
+            $post->increment('view_count');
+            cache()->put($cacheKey, true, now()->addYears(10));
+        }
+    } else {
+        $sessionKey = "guest_learned_post_{$post->id}";
+        if (!session()->has($sessionKey)) {
+            $post->increment('view_count');
+            session()->put($sessionKey, true);
+        }
+    }
+
     return view('frontend.course-learn', compact('post'));
 };
 
