@@ -18,7 +18,7 @@
                     <div class="col-lg-4">
                         <div class="mb-0">
                             <label for="slug" class="form-label">Slug</label>
-                            <input type="text" id="slug" name="slug" class="form-control" value="{{ old('slug', $menu->slug ?? '') }}" readonly>
+                            <input type="text" id="slug" name="slug" class="form-control" value="{{ old('slug', $menu->slug ?? '') }}">
                             <div class="form-text">Slug tu dong cap nhat theo ten menu va chinh la duong dan menu.</div>
                         </div>
                     </div>
@@ -90,11 +90,22 @@
                 .replace(/^-+|-+$/g, '');
         }
 
+        var isSlugEdited = slugInput.value !== '';
+
+        slugInput.addEventListener('input', function() {
+            isSlugEdited = true;
+        });
+
         function updateSlug() {
-            slugInput.value = slugify(nameInput.value);
+            if (!isSlugEdited) {
+                slugInput.value = slugify(nameInput.value);
+            }
         }
 
         nameInput.addEventListener('input', updateSlug);
-        updateSlug();
+        
+        if (!isSlugEdited) {
+            updateSlug();
+        }
     });
 </script>

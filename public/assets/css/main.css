@@ -10380,11 +10380,11 @@ input[type=radio] {
 .it-header-menu > nav > ul > li {
   list-style-type: none;
   display: inline-block;
-  margin: 0px 30px;
+  margin: 0px 15px;
 }
 @media only screen and (min-width: 1400px) and (max-width: 1599px) {
   .it-header-menu > nav > ul > li {
-    margin: 0px 30px;
+    margin: 0px 15px;
   }
 }
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
@@ -10401,13 +10401,13 @@ input[type=radio] {
 .it-header-menu > nav > ul > li > a {
   line-height: 1;
   font-weight: 500;
-  padding: 32px 0;
+  padding: 25px 0;
   position: relative;
   display: inline-block;
   text-transform: capitalize;
   color: var(--it-common-black);
   font-family: var(--it-ff-jost);
-  font-size: 1rem;
+  font-size: .9rem;
 }
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
   .it-header-menu > nav > ul > li > a {
