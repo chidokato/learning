@@ -29,15 +29,17 @@ class PostController extends Controller
         return view('backend.contents.index', compact('type', 'typeLabel', 'posts'));
     }
 
-        public function create(Request $request): View
+            public function create(Request $request): View
     {
         $type = $this->getType($request);
         $typeLabel = $this->getTypeLabel($type);
 
         $categories = $this->getCategoryOptions($type);
         $sellerOptions = User::orderBy('name')->pluck('name', 'id');
+        $topicOptions = \App\Models\Topic::orderBy('name')->pluck('name', 'id');
+        $selectedTopics = [];
 
-        return view('backend.contents.create', compact('type', 'typeLabel', 'categories', 'sellerOptions'));
+        return view('backend.contents.create', compact('type', 'typeLabel', 'categories', 'sellerOptions', 'topicOptions', 'selectedTopics'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -175,15 +177,17 @@ class PostController extends Controller
             ->with('success', 'Them ' . strtolower($typeLabel) . ' thanh cong.');
     }
 
-        public function edit(Request $request, Post $post): View
+            public function edit(Request $request, Post $post): View
     {
         $type = $post->type;
         $typeLabel = $this->getTypeLabel($type);
 
         $categories = $this->getCategoryOptions($type);
         $sellerOptions = User::orderBy('name')->pluck('name', 'id');
+        $topicOptions = \App\Models\Topic::orderBy('name')->pluck('name', 'id');
+        $selectedTopics = $post->topics->pluck('id')->toArray();
 
-        return view('backend.contents.edit', compact('type', 'typeLabel', 'categories', 'sellerOptions', 'post'));
+        return view('backend.contents.edit', compact('type', 'typeLabel', 'categories', 'sellerOptions', 'topicOptions', 'selectedTopics', 'post'));
     }
 
     public function update(Request $request, Post $post): RedirectResponse
