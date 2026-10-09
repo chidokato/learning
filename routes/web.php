@@ -295,3 +295,8 @@ Route::get('{categorySlug}/{slug}', fn (string $categorySlug, string $slug) => $
     ->where('categorySlug', '(?!admin|api|assets|storage|vendor)[^/]+')
     ->name('frontend.content.show');
 
+
+Route::get('/run-symlink', function () {
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    return 'Storage link created successfully!';
+});
