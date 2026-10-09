@@ -132,8 +132,11 @@
                         @php
                             $menuItems = [
                                 ['label' => 'Slider', 'icon' => 'ri-image-line', 'route' => 'backend.sliders.index'],
+                                  ['label' => 'Homepage Categories', 'icon' => 'ri-layout-grid-line', 'route' => 'backend.homepage_categories.index'],
+
                                 ['label' => 'Menu', 'icon' => 'ri-menu-line', 'route' => 'backend.menus.index'],
                                 ['label' => 'Category', 'icon' => 'ri-folder-2-line', 'route' => 'backend.categories.index'],
+                                ['label' => 'Topic', 'icon' => 'ri-price-tag-3-line', 'route' => 'backend.topics.index'],
                                 ['label' => 'Course', 'icon' => 'ri-book-open-line', 'route' => 'backend.courses.index'],
                                 ['label' => 'News', 'icon' => 'ri-newspaper-line', 'route' => 'backend.news.index'],
                                 ['label' => 'Customer inquiry', 'icon' => 'ri-customer-service-2-line', 'route' => 'backend.customer-inquiries.index'],
@@ -145,7 +148,7 @@
                         @endphp
                         @foreach ($menuItems as $item)
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ $item['label'] === 'Course' && (request()->routeIs('backend.courses.*') || request()->routeIs('backend.products.*')) ? 'active' : '' }} {{ $item['label'] === 'News' && request()->routeIs('backend.news.*') ? 'active' : '' }} {{ $item['label'] === 'Menu' && request()->routeIs('backend.menus.*') ? 'active' : '' }} {{ $item['label'] === 'Category' && request()->routeIs('backend.categories.*') ? 'active' : '' }} {{ $item['label'] === 'User' && request()->routeIs('backend.users.*') ? 'active' : '' }} {{ $item['label'] === 'Customer inquiry' && request()->routeIs('backend.customer-inquiries.*') ? 'active' : '' }} {{ $item['label'] === 'SEO' && request()->routeIs('backend.seo.*') ? 'active' : '' }} {{ $item['label'] === 'Setting' && request()->routeIs('backend.settings.*') ? 'active' : '' }} {{ $item['label'] === 'Slider' && request()->routeIs('backend.sliders.*') ? 'active' : '' }} {{ $item['label'] === 'AI ChatBot' && request()->routeIs('backend.chatbot.*') ? 'active' : '' }}" href="{{ $item['route'] ? route($item['route']) : '#' }}">
+                                <a class="nav-link menu-link {{ $item['label'] === 'Course' && (request()->routeIs('backend.courses.*') || request()->routeIs('backend.products.*')) ? 'active' : '' }} {{ $item['label'] === 'News' && request()->routeIs('backend.news.*') ? 'active' : '' }} {{ $item['label'] === 'Menu' && request()->routeIs('backend.menus.*') ? 'active' : '' }} {{ $item['label'] === 'Category' && request()->routeIs('backend.categories.*') ? 'active' : '' }} {{ $item['label'] === 'Topic' && request()->routeIs('backend.topics.*') ? 'active' : '' }} {{ $item['label'] === 'User' && request()->routeIs('backend.users.*') ? 'active' : '' }} {{ $item['label'] === 'Customer inquiry' && request()->routeIs('backend.customer-inquiries.*') ? 'active' : '' }} {{ $item['label'] === 'SEO' && request()->routeIs('backend.seo.*') ? 'active' : '' }} {{ $item['label'] === 'Setting' && request()->routeIs('backend.settings.*') ? 'active' : '' }} {{ $item['label'] === 'Slider' && request()->routeIs('backend.sliders.*') ? 'active' : '' }} {{ $item['label'] === 'AI ChatBot' && request()->routeIs('backend.chatbot.*') ? 'active' : '' }}" href="{{ $item['route'] ? route($item['route']) : '#' }}">
                                     <i class="{{ $item['icon'] }}"></i>
                                     <span>{{ $item['label'] }}</span>
                                 </a>
@@ -184,7 +187,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
-                            {{ now()->year }} © NhaDatVN.
+                            {{ now()->year }} Â© NhaDatVN.
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
@@ -227,3 +230,4 @@
     @stack('scripts')
 </body>
 </html>
+

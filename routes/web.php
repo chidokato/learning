@@ -98,21 +98,21 @@ Route::get('courses/{slug}', fn (string $slug) => $postDetailHandler($slug))->na
 Route::get('products/{slug}', fn (string $slug) => $postDetailHandler($slug))->name('frontend.products.show.legacy');
 Route::get('news/{slug}', fn () => view('frontend.home'))->name('frontend.news.show.legacy');
 
-// Frontend Authentication Routes (Tạm ẩn Đăng nhập & Đăng ký cho người dùng)
+// Frontend Authentication Routes (Táº¡m áº©n ÄÄƒng nháº­p & ÄÄƒng kÃ½ cho ngÆ°á»i dÃ¹ng)
 Route::controller(AuthController::class)->group(function () {
-    Route::get('login', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'))->name('frontend.login');
-    Route::post('login', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'))->name('frontend.login.post');
-    Route::get('sign-in.html', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'));
-    Route::get('dang-nhap', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'));
+    Route::get('login', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'))->name('frontend.login');
+    Route::post('login', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'))->name('frontend.login.post');
+    Route::get('sign-in.html', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'));
+    Route::get('dang-nhap', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'));
 
-    Route::get('register', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'))->name('frontend.register');
-    Route::post('register', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'))->name('frontend.register.post');
-    Route::get('sign-up.html', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'));
-    Route::get('dang-ky', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'));
+    Route::get('register', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'))->name('frontend.register');
+    Route::post('register', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'))->name('frontend.register.post');
+    Route::get('sign-up.html', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'));
+    Route::get('dang-ky', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'));
 
     Route::post('logout', 'logout')->name('frontend.logout');
     Route::get('logout', 'logout')->name('frontend.logout.get');
-    Route::post('forgot-password', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cập web từ link nội bộ để được đăng nhập tự động'))->name('frontend.forgot-password');
+    Route::post('forgot-password', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'))->name('frontend.forgot-password');
     Route::middleware('auth')->group(function () {
         Route::get('profile', fn () => view('frontend.profile'))->name('frontend.profile');
         Route::post('profile', 'updateProfile')->name('frontend.profile.update');
@@ -197,9 +197,20 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::get('users', 'index')->name('users.index');
         Route::get('users/create', 'create')->name('users.create');
         Route::post('users', 'store')->name('users.store');
+        Route::post('users/quick-add', 'quickAdd')->name('users.quick-add');
         Route::get('users/{user}/edit', 'edit')->name('users.edit');
         Route::put('users/{user}', 'update')->name('users.update');
         Route::delete('users/{user}', 'destroy')->name('users.destroy');
+    });
+
+    Route::controller(\App\Http\Controllers\Backend\TopicController::class)->group(function () {
+        Route::get('topics', 'index')->name('topics.index');
+        Route::get('topics/create', 'create')->name('topics.create');
+        Route::post('topics', 'store')->name('topics.store');
+        Route::get('topics/{topic}/edit', 'edit')->name('topics.edit');
+        Route::put('topics/{topic}', 'update')->name('topics.update');
+        Route::delete('topics/{topic}', 'destroy')->name('topics.destroy');
+        Route::post('topics/quick-add', 'quickAdd')->name('topics.quick-add');
     });
 
     Route::controller(\App\Http\Controllers\SliderController::class)->group(function () {
@@ -209,6 +220,14 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::get('sliders/{slider}/edit', 'edit')->name('sliders.edit');
         Route::put('sliders/{slider}', 'update')->name('sliders.update');
         Route::delete('sliders/{slider}', 'destroy')->name('sliders.destroy');
+    });
+    Route::controller(\App\Http\Controllers\HomepageCategoryController::class)->group(function () {
+        Route::get('homepage-categories', 'index')->name('homepage_categories.index');
+        Route::get('homepage-categories/create', 'create')->name('homepage_categories.create');
+        Route::post('homepage-categories', 'store')->name('homepage_categories.store');
+        Route::get('homepage-categories/{homepageCategory}/edit', 'edit')->name('homepage_categories.edit');
+        Route::put('homepage-categories/{homepageCategory}', 'update')->name('homepage_categories.update');
+        Route::delete('homepage-categories/{homepageCategory}', 'destroy')->name('homepage_categories.destroy');
     });
 });
 
@@ -250,11 +269,23 @@ $categoryHandler = function (string $categorySlug) use ($postDetailHandler) {
             return $postDetailHandler($categorySlug);
         }
 
-        abort(404);
+        $topic = \App\Models\Topic::where('slug', $categorySlug)->first();
+        if ($topic) {
+            $category = new \App\Models\Category([
+                'name' => $topic->name,
+                'slug' => $topic->slug,
+                'seo_title' => $topic->seo_title,
+                'seo_description' => $topic->seo_description,
+            ]);
+            $category->is_topic = true;
+            $category->topic_id = $topic->id;
+        } else {
+            abort(404);
+        }
     }
 
-    $categoryIds = [$category->id];
-    if ($category->exists) {
+    $categoryIds = [$category->id ?? 0];
+    if ($category->exists && !isset($category->is_topic)) {
         $childIds = \App\Models\Category::query()
             ->where('parent_id', $category->id)
             ->where('is_active', true)
@@ -266,8 +297,14 @@ $categoryHandler = function (string $categorySlug) use ($postDetailHandler) {
     $courses = \App\Models\Post::query()
         ->where('type', \App\Models\Post::TYPE_COURSE)
         ->where('is_active', true)
-        ->when($category->exists, function ($query) use ($categoryIds) {
-            $query->whereIn('category_id', $categoryIds);
+        ->when(isset($category->topic_id), function ($query) use ($category) {
+            $query->whereHas('topics', function($q) use ($category) {
+                $q->where('topics.id', $category->topic_id);
+            });
+        }, function ($query) use ($category, $categoryIds) {
+            $query->when($category->exists, function ($q) use ($categoryIds) {
+                $q->whereIn('category_id', $categoryIds);
+            });
         })
         ->with(['category', 'seller'])
         ->latest('published_at')
@@ -300,3 +337,4 @@ Route::get('/run-symlink', function () {
     \Illuminate\Support\Facades\Artisan::call('storage:link');
     return 'Storage link created successfully!';
 });
+

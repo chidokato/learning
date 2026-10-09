@@ -116,4 +116,11 @@
    .it-hero-12-area .it-btn-yellow:hover {
        background-color: #e66c1f !important; /* Slightly darker orange on hover */
    }
+
+   /* Change slider arrows hover color */
+   .it-slider-arrow-wrap button:hover {
+       border-color: var(--it-theme-5) !important;
+       background-color: var(--it-theme-5) !important;
+       color: #ffffff !important;
+   }
 </style>

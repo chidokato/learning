@@ -1,9 +1,4 @@
 ﻿<?php
-require __DIR__.'/vendor/autoload.php';
-$app = require_once __DIR__.'/bootstrap/app.php';
-$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
-$kernel->bootstrap();
-
 $bladePath = 'C:\\xampp\\htdocs\\www\\learning\\resources\\views\\frontend\\partials\\categories-area.blade.php';
 $bladeContent = file_get_contents($bladePath);
 
@@ -19,7 +14,9 @@ if ($idx !== false) {
             <div class="col wow itfadeUp" data-wow-duration=".9s" data-wow-delay=".{{ 3 + ($index % 4) }}s" style="visibility: visible; animation-duration: 0.9s; animation-delay: 0.3s; animation-name: itfadeUp;">
                <div class="it-categories-item item-style-1 text-center">
                   <span>
-                     @if($cat->svg_icon)
+                     @if($cat->image)
+                        <img src="{{ asset($cat->image) }}" alt="icon" style="max-width: 60px; max-height: 60px;">
+                     @elseif($cat->svg_icon)
                         {!! $cat->svg_icon !!}
                      @else
                         <!-- Add a default icon or an image icon here if you want -->

@@ -446,15 +446,49 @@
                 @if ($isCourse)
                     <div class="mb-3">
                         <label for="seller_id" class="form-label">Instructor / Teacher</label>
-                        <select id="seller_id" name="seller_id" class="form-select @error('seller_id') is-invalid @enderror">
-                            <option value="">Select Instructor / Teacher</option>
-                            @foreach ($sellerOptions as $id => $name)
-                                <option value="{{ $id }}" {{ (string) old('seller_id', $post->seller_id ?? '') === (string) $id ? 'selected' : '' }}>{{ $name }}</option>
-                            @endforeach
-                        </select>
-                        @error('seller_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <div class="d-flex gap-2 align-items-start">
+                            <div class="flex-grow-1">
+                                <select id="seller_id" name="seller_id" class="form-select @error('seller_id') is-invalid @enderror">
+                                    <option value="">Select Instructor / Teacher</option>
+                                    @foreach ($sellerOptions as $id => $name)
+                                        <option value="{{ $id }}" {{ (string) old('seller_id', $post->seller_id ?? '') === (string) $id ? 'selected' : '' }}>{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('seller_id')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#quickAddInstructorModal" title="Thêm nhanh">
+                                <i class="ri-add-line"></i> Thêm
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="topic_ids" class="form-label">Topic (Chủ đề)</label>
+                        <div class="d-flex gap-2 align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="border rounded p-2 @error('topic_ids') border-danger @enderror" style="max-height: 200px; overflow-y: auto;" id="topic_checkboxes_container">
+                                    @php
+                                        $currentTopics = old('topic_ids', $selectedTopics ?? []);
+                                    @endphp
+                                    @foreach ($topicOptions ?? [] as $id => $name)
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="topic_ids[]" value="{{ $id }}" id="topic_{{ $id }}" {{ in_array($id, $currentTopics) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="topic_{{ $id }}">
+                                                {{ $name }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @error('topic_ids')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#quickAddTopicModal" title="Thêm nhanh">
+                                <i class="ri-add-line"></i> Thêm
+                            </button>
+                        </div>
                     </div>
                 @endif
 
@@ -601,3 +635,169 @@
         </div>
     </div>
 </div>
+
+
+@if ($isCourse)
+    <div class="modal fade" id="quickAddInstructorModal" tabindex="-1" aria-labelledby="quickAddInstructorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="quickAddInstructorModalLabel">Thêm nhanh Instructor / Teacher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="quick_add_instructor_name" class="form-label">Tên Instructor</label>
+                        <input type="text" class="form-control" id="quick_add_instructor_name" placeholder="Nhập tên...">
+                        <div class="invalid-feedback" id="quick_add_instructor_error"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="btn-quick-add-instructor">Lưu và Chọn</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                $('#btn-quick-add-instructor').on('click', function() {
+                    const nameInput = $('#quick_add_instructor_name');
+                    const name = nameInput.val().trim();
+                    const errorFeedback = $('#quick_add_instructor_error');
+                    
+                    if (!name) {
+                        nameInput.addClass('is-invalid');
+                        errorFeedback.text('Vui lòng nhập tên Instructor.');
+                        return;
+                    }
+                    
+                    nameInput.removeClass('is-invalid');
+                    errorFeedback.text('');
+                    
+                    const btn = $(this);
+                    btn.prop('disabled', true).text('Đang lưu...');
+                    
+                    $.ajax({
+                        url: '{{ route("backend.users.quick-add") }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            name: name
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Add to select
+                                const newOption = new Option(response.user.name, response.user.id, true, true);
+                                $('#seller_id').append(newOption).trigger('change');
+                                
+                                // Close modal & reset
+                                $('#quickAddInstructorModal').modal('hide');
+                                nameInput.val('');
+                            }
+                        },
+                        error: function(xhr) {
+                            nameInput.addClass('is-invalid');
+                            if (xhr.responseJSON && xhr.responseJSON.errors && xhr.responseJSON.errors.name) {
+                                errorFeedback.text(xhr.responseJSON.errors.name[0]);
+                            } else {
+                                errorFeedback.text('Có lỗi xảy ra, vui lòng thử lại.');
+                            }
+                        },
+                        complete: function() {
+                            btn.prop('disabled', false).text('Lưu và Chọn');
+                        }
+                    });
+                });
+            });
+        </script>
+    @endpush
+@endif
+
+@if ($isCourse)
+    <div class="modal fade" id="quickAddTopicModal" tabindex="-1" aria-labelledby="quickAddTopicModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="quickAddTopicModalLabel">Thêm nhanh Topic (Chủ đề)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="quick_add_topic_name" class="form-label">Tên Chủ đề</label>
+                        <input type="text" class="form-control" id="quick_add_topic_name" placeholder="Nhập tên chủ đề...">
+                        <div class="invalid-feedback" id="quick_add_topic_error"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="btn-quick-add-topic">Lưu và Chọn</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                $('#btn-quick-add-topic').on('click', function() {
+                    const nameInput = $('#quick_add_topic_name');
+                    const name = nameInput.val().trim();
+                    const errorFeedback = $('#quick_add_topic_error');
+                    
+                    if (!name) {
+                        nameInput.addClass('is-invalid');
+                        errorFeedback.text('Vui lòng nhập tên Chủ đề.');
+                        return;
+                    }
+                    
+                    nameInput.removeClass('is-invalid');
+                    errorFeedback.text('');
+                    
+                    const btn = $(this);
+                    btn.prop('disabled', true).text('Đang lưu...');
+                    
+                    $.ajax({
+                        url: '{{ route("backend.topics.quick-add") }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            name: name
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Add to checkboxes
+                                const newCheckboxHtml = `
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="topic_ids[]" value="${response.topic.id}" id="topic_${response.topic.id}" checked>
+                                        <label class="form-check-label" for="topic_${response.topic.id}">
+                                            ${response.topic.name}
+                                        </label>
+                                    </div>
+                                `;
+                                $('#topic_checkboxes_container').append(newCheckboxHtml);
+                                
+                                // Close modal & reset
+                                $('#quickAddTopicModal').modal('hide');
+                                nameInput.val('');
+                            }
+                        },
+                        error: function(xhr) {
+                            nameInput.addClass('is-invalid');
+                            if (xhr.responseJSON && xhr.responseJSON.errors && xhr.responseJSON.errors.name) {
+                                errorFeedback.text(xhr.responseJSON.errors.name[0]);
+                            } else {
+                                errorFeedback.text('Có lỗi xảy ra, vui lòng thử lại.');
+                            }
+                        },
+                        complete: function() {
+                            btn.prop('disabled', false).text('Lưu và Chọn');
+                        }
+                    });
+                });
+            });
+        </script>
+    @endpush
+@endif

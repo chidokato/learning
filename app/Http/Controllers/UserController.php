@@ -174,4 +174,26 @@ class UserController extends Controller
             File::delete($fullPath);
         }
     }
+
+    public function quickAdd(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => 'user_' . Str::random(10) . '@example.com', // Auto generated email
+            'password' => Hash::make(Str::random(16)),
+            'permission' => 4, // Instructor
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+            ]
+        ]);
+    }
 }

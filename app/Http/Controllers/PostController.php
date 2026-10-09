@@ -52,6 +52,8 @@ class PostController extends Controller
             ];
         })->toArray();
         $sellerOptions = User::orderBy('name')->pluck('name', 'id');
+        $topicOptions = \App\Models\Topic::orderBy('name')->pluck('name', 'id');
+        $selectedTopics = [];
 
         return view('backend.contents.create', compact(
             'type',
@@ -60,7 +62,9 @@ class PostController extends Controller
             'provinceOptions',
             'wardOptions',
             'wardMap',
-            'sellerOptions'
+            'sellerOptions',
+            'topicOptions',
+            'selectedTopics'
         ));
     }
 
@@ -101,6 +105,8 @@ class PostController extends Controller
             'bedroom_count_to' => ['nullable', 'integer', 'min:0'],
             'bathroom_count_from' => ['nullable', 'integer', 'min:0'],
             'bathroom_count_to' => ['nullable', 'integer', 'min:0'],
+            'topic_ids' => ['nullable', 'array'],
+            'topic_ids.*' => ['exists:topics,id'],
         ]);
 
         $slugInput = $request->input('slug');
@@ -175,6 +181,12 @@ class PostController extends Controller
             'published_at' => now(),
         ]);
 
+        if ($request->has('topic_ids')) {
+            $post->topics()->sync($request->input('topic_ids'));
+        } else {
+            $post->topics()->sync([]);
+        }
+
         if ($type === Post::TYPE_PRODUCT) {
             $this->storeGalleryImages($post, $request);
             $this->storeFloorPlans($post, $request);
@@ -214,6 +226,8 @@ class PostController extends Controller
             ];
         })->toArray();
         $sellerOptions = User::orderBy('name')->pluck('name', 'id');
+        $topicOptions = \App\Models\Topic::orderBy('name')->pluck('name', 'id');
+        $selectedTopics = $post->topics->pluck('id')->toArray();
         $galleryImages = $post->galleryImages;
         $floorPlans = $post->floorPlans;
 
@@ -226,6 +240,8 @@ class PostController extends Controller
             'wardOptions',
             'wardMap',
             'sellerOptions',
+            'topicOptions',
+            'selectedTopics',
             'galleryImages',
             'floorPlans'
         ));
@@ -268,6 +284,8 @@ class PostController extends Controller
             'bedroom_count_to' => ['nullable', 'integer', 'min:0'],
             'bathroom_count_from' => ['nullable', 'integer', 'min:0'],
             'bathroom_count_to' => ['nullable', 'integer', 'min:0'],
+            'topic_ids' => ['nullable', 'array'],
+            'topic_ids.*' => ['exists:topics,id'],
         ]);
 
         $slugInput = $request->input('slug');
@@ -354,6 +372,12 @@ class PostController extends Controller
             'is_active' => $request->boolean('is_active', true),
             'is_featured' => ($type === Post::TYPE_PRODUCT) ? $request->boolean('is_featured', false) : false,
         ]);
+
+        if ($request->has('topic_ids')) {
+            $post->topics()->sync($request->input('topic_ids'));
+        } else {
+            $post->topics()->sync([]);
+        }
 
         if ($type === Post::TYPE_PRODUCT) {
             if ($request->filled('remove_gallery_images')) {

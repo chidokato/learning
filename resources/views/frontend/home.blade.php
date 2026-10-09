@@ -126,6 +126,7 @@
    <main>
 
    @include('frontend.partials.hero-slider')
+   @include('frontend.partials.categories-area')
 
    {{-- @include('frontend.partials.course-area') --}}
 

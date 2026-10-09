@@ -116,6 +116,11 @@ class Post extends Model
         return $this->hasMany(Apartment::class, 'project_id')->latest();
     }
 
+    public function topics()
+    {
+        return $this->belongsToMany(Topic::class);
+    }
+
     public function customerInquiries()
     {
         return $this->hasMany(CustomerInquiry::class)->latest();
