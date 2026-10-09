@@ -32,7 +32,10 @@ class SliderController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('sliders', 'public');
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/sliders'), $filename);
+            $data['image'] = 'uploads/sliders/' . $filename;
         }
 
         Slider::create($data);
@@ -58,10 +61,13 @@ class SliderController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($slider->image) {
-                Storage::disk('public')->delete($slider->image);
+            if ($slider->image && file_exists(public_path($slider->image))) {
+                @unlink(public_path($slider->image));
             }
-            $data['image'] = $request->file('image')->store('sliders', 'public');
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/sliders'), $filename);
+            $data['image'] = 'uploads/sliders/' . $filename;
         }
 
         $slider->update($data);
@@ -71,8 +77,8 @@ class SliderController extends Controller
 
     public function destroy(Slider $slider)
     {
-        if ($slider->image) {
-            Storage::disk('public')->delete($slider->image);
+        if ($slider->image && file_exists(public_path($slider->image))) {
+            @unlink(public_path($slider->image));
         }
         $slider->delete();
 
