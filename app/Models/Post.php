@@ -28,26 +28,6 @@ class Post extends Model
         'what_to_learn',
         'course_includes',
         'course_requirements',
-        'address',
-        'province_id',
-        'ward_id',
-        'map_embed',
-        'location_image',
-        'area',
-        'area_from',
-        'area_to',
-        'floor_count',
-        'floor_count_from',
-        'floor_count_to',
-        'unit_count',
-        'unit_count_from',
-        'unit_count_to',
-        'bedroom_count',
-        'bedroom_count_from',
-        'bedroom_count_to',
-        'bathroom_count',
-        'bathroom_count_from',
-        'bathroom_count_to',
         'image',
         'pdf_file',
         'price',
@@ -82,38 +62,6 @@ class Post extends Model
     public function seller()
     {
         return $this->belongsTo(User::class, 'seller_id');
-    }
-
-    public function province()
-    {
-        return $this->belongsTo(Province::class);
-    }
-
-    public function ward()
-    {
-        return $this->belongsTo(Ward::class);
-    }
-
-    public function galleryImages()
-    {
-        return $this->hasMany(PostImage::class)->orderBy('sort_order')->orderBy('id');
-    }
-
-    public function floorPlans()
-    {
-        $relation = $this->hasMany(PostFloorPlan::class)->orderBy('sort_order')->orderBy('id');
-
-        if (! Schema::hasTable('post_floor_plans')) {
-            $relation->getQuery()->from('post_images as post_floor_plans');
-            $relation->whereRaw('1 = 0');
-        }
-
-        return $relation;
-    }
-
-    public function apartments()
-    {
-        return $this->hasMany(Apartment::class, 'project_id')->latest();
     }
 
     public function topics()
