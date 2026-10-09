@@ -1,3 +1,39 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../../font/Montserrat/Montserrat-ExtraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../../font/Montserrat/Montserrat-ExtraLightItalic.ttf') format('truetype');
+    font-weight: 200;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../../font/Montserrat/Montserrat-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../../font/Montserrat/Montserrat-SemiBold_0.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../../font/Montserrat/Montserrat-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../../font/Montserrat/Montserrat Extra Bold.OTF') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+}
 @charset "UTF-8";
 /*-----------------------------------------------------------------------------------
 
@@ -113,16 +149,16 @@
   /**
   @font family declaration
   */
-  --it-ff-body: 'Open Sans', sans-serif;
-  --it-ff-heading: 'Spartan-Bold', sans-serif;
-  --it-ff-jost: 'Jost', sans-serif;
+  --it-ff-body: 'Montserrat', sans-serif;
+  --it-ff-heading: 'Montserrat', sans-serif;
+  --it-ff-jost: 'Montserrat', sans-serif;
   --it-ff-newyork: 'NewYork-Regular', serif;
   --it-ff-schoolbell: 'Schoolbell', scursive;
   --it-ff-cinzel-decorative: 'Cinzel Decorative', scursive;
   --it-ff-oxanium: 'Oxanium', sans-serif;
-  --it-ff-spartan-semibold: 'Spartan-SemiBold', sans-serif;
-  --it-ff-spartan-medium: 'Spartan-Medium', sans-serif;
-  --it-ff-spartan-regular: 'Spartan-Regular', sans-serif;
+  --it-ff-spartan-semibold: 'Montserrat', sans-serif;
+  --it-ff-spartan-medium: 'Montserrat', sans-serif;
+  --it-ff-spartan-regular: 'Montserrat', sans-serif;
   --it-ff-edensor-regular: 'Edensor-Regular', sans-serif;
   --it-ff-edensor-semibold: 'Edensor-Semibold', sans-serif;
   --it-ff-fontawesome: Font Awesome 6 Pro;
@@ -25985,12 +26021,12 @@ input[type=radio] {
 }
 
 :root {
-    --it-ff-body: 'Montserrat', sans-serif !important;
-    --it-ff-heading: 'Montserrat', sans-serif !important;
-    --it-ff-jost: 'Montserrat', sans-serif !important;
-    --it-ff-spartan-semibold: 'Montserrat', sans-serif !important;
-    --it-ff-spartan-medium: 'Montserrat', sans-serif !important;
-    --it-ff-spartan-regular: 'Montserrat', sans-serif !important;
+    --it-ff-body: 'Montserrat', sans-serif;
+    --it-ff-heading: 'Montserrat', sans-serif;
+    --it-ff-jost: 'Montserrat', sans-serif;
+    --it-ff-spartan-semibold: 'Montserrat', sans-serif;
+    --it-ff-spartan-medium: 'Montserrat', sans-serif;
+    --it-ff-spartan-regular: 'Montserrat', sans-serif;
     --it-ff-newyork: 'Montserrat', sans-serif !important;
     --it-ff-oxanium: 'Montserrat', sans-serif !important;
     --it-ff-edensor-regular: 'Montserrat', sans-serif !important;

@@ -98,27 +98,26 @@ Route::get('courses/{slug}', fn (string $slug) => $postDetailHandler($slug))->na
 Route::get('products/{slug}', fn (string $slug) => $postDetailHandler($slug))->name('frontend.products.show.legacy');
 Route::get('news/{slug}', fn () => view('frontend.home'))->name('frontend.news.show.legacy');
 
-// Frontend Authentication Routes (Táº¡m áº©n ÄÄƒng nháº­p & ÄÄƒng kÃ½ cho ngÆ°á»i dÃ¹ng)
+// Frontend Authentication Routes
 Route::controller(AuthController::class)->group(function () {
-    Route::get('login', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'))->name('frontend.login');
-    Route::post('login', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'))->name('frontend.login.post');
-    Route::get('sign-in.html', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'));
-    Route::get('dang-nhap', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'));
+    Route::get('login', 'showLoginForm')->name('frontend.login');
+    Route::post('login', 'login')->name('frontend.login.post');
+    Route::get('sign-in.html', 'showLoginForm');
+    Route::get('dang-nhap', 'showLoginForm');
 
-    Route::get('register', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'))->name('frontend.register');
-    Route::post('register', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'))->name('frontend.register.post');
-    Route::get('sign-up.html', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'));
-    Route::get('dang-ky', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'));
+    Route::get('register', 'showRegisterForm')->name('frontend.register');
+    Route::post('register', 'register')->name('frontend.register.post');
+    Route::get('sign-up.html', 'showRegisterForm');
+    Route::get('dang-ky', 'showRegisterForm');
 
     Route::post('logout', 'logout')->name('frontend.logout');
     Route::get('logout', 'logout')->name('frontend.logout.get');
-    Route::post('forgot-password', fn () => redirect()->route('frontend.home')->with('login_notice', 'Truy cáº­p web tá»« link ná»™i bá»™ Ä‘á»ƒ Ä‘Æ°á»£c Ä‘Äƒng nháº­p tá»± Ä‘á»™ng'))->name('frontend.forgot-password');
+    Route::post('forgot-password', 'forgotPassword')->name('frontend.forgot-password');
     Route::middleware('auth')->group(function () {
         Route::get('profile', fn () => view('frontend.profile'))->name('frontend.profile');
         Route::post('profile', 'updateProfile')->name('frontend.profile.update');
     });
 });
-
 // AI Chatbot Widget API Route
 Route::post('/api/chatbot/ask', [ChatbotController::class, 'ask'])->name('api.chatbot.ask');
 

@@ -14,37 +14,63 @@ class AuthController extends Controller
     /**
      * Hiển thị trang đăng nhập cho người dùng
      */
-    public function showLoginForm(): View|RedirectResponse
+        public function showLoginForm(): View|RedirectResponse
     {
-        return redirect()->route('frontend.home')
-            ->with('info', 'Tính năng Đăng nhập đang được tạm ẩn.');
+        return view('frontend.auth.login');
     }
 
     /**
      * Xử lý đăng nhập
      */
-    public function login(Request $request): RedirectResponse
+        public function login(Request $request): RedirectResponse
     {
-        return redirect()->route('frontend.home')
-            ->with('info', 'Tính năng Đăng nhập đang được tạm ẩn.');
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
+            return redirect()->intended(route('frontend.home'))
+                ->with('success', 'Đăng nhập thành công.');
+        }
+
+        return back()->withErrors([
+            'email' => 'Thông tin đăng nhập không chính xác.',
+        ])->onlyInput('email');
     }
 
     /**
      * Hiển thị trang đăng ký
      */
-    public function showRegisterForm(): View|RedirectResponse
+        public function showRegisterForm(): View|RedirectResponse
     {
-        return redirect()->route('frontend.home')
-            ->with('info', 'Tính năng Đăng ký đang được tạm ẩn.');
+        return view('frontend.auth.register');
     }
 
     /**
      * Xử lý đăng ký tài khoản mới
      */
-    public function register(Request $request): RedirectResponse
+        public function register(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'phone' => $validated['phone'] ?? null,
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        Auth::login($user);
+
         return redirect()->route('frontend.home')
-            ->with('info', 'Tính năng Đăng ký đang được tạm ẩn.');
+            ->with('success', 'Đăng ký tài khoản thành công.');
     }
 
     /**
