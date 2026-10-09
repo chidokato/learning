@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
         View::share('siteSetting', Setting::query()->firstOrCreate([]));
 
-        View::composer('frontend.*', function ($view) {
+        View::composer(['frontend.partials.header', 'frontend.layouts.app'], function ($view) {
             $view->with('headerMenus', Menu::query()
                 ->whereNull('parent_id')
                 ->active()
@@ -47,9 +47,9 @@ class AppServiceProvider extends ServiceProvider
                     $query->where('type', \App\Models\Post::TYPE_COURSE)->where('is_active', true);
                 })
                 ->orderBy('sort_order')
+                ->take(5) // Limit to avoid redundant queries
                 ->get();
 
-            // Laravel 9 applies eager-load limits across all parents, not per category.
             foreach ($categoriesWithCourses as $category) {
                 $category->setRelation('posts', $category->posts()
                     ->where('type', Post::TYPE_COURSE)
@@ -61,14 +61,16 @@ class AppServiceProvider extends ServiceProvider
                     ->get());
             }
 
-            $view->with('courses', Post::query()
+            // The main courses list for the homepage
+            $courses = Post::query()
                 ->where('type', Post::TYPE_COURSE)
                 ->where('is_active', true)
                 ->with(['category', 'seller'])
                 ->latest('published_at')
                 ->latest('id')
-                ->paginate(9)
-            )->with('categoriesWithCourses', $categoriesWithCourses);
+                ->paginate(9);
+
+            $view->with('courses', $courses)->with('categoriesWithCourses', $categoriesWithCourses);
         });
     }
 }
