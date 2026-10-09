@@ -4,11 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
-use App\Models\PostFloorPlan;
-use App\Models\PostImage;
-use App\Models\Province;
 use App\Models\User;
-use App\Models\Ward;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,46 +22,22 @@ class PostController extends Controller
 
         $posts = Post::query()
             ->whereIn('type', $type === Post::TYPE_COURSE ? [Post::TYPE_COURSE, Post::TYPE_PRODUCT] : [$type])
-            ->with(['category', 'seller', 'province', 'ward'])
+            ->with(['category', 'seller'])
             ->latest()
             ->paginate(15);
 
         return view('backend.contents.index', compact('type', 'typeLabel', 'posts'));
     }
 
-    public function create(Request $request): View
+        public function create(Request $request): View
     {
         $type = $this->getType($request);
         $typeLabel = $this->getTypeLabel($type);
 
         $categories = $this->getCategoryOptions($type);
-        $provinceOptions = Province::orderBy('name')->pluck('name', 'id');
-        $wardOptions = collect();
-        $wardMap = Province::with('wards')->get()->mapWithKeys(function ($province) {
-            return [
-                $province->id => $province->wards->map(function ($ward) {
-                    return [
-                        'id' => $ward->id,
-                        'name' => $ward->name,
-                    ];
-                })->values(),
-            ];
-        })->toArray();
-        $sellerOptions = User::orderBy('name')->pluck('name', 'id');
-        $topicOptions = \App\Models\Topic::orderBy('name')->pluck('name', 'id');
-        $selectedTopics = [];
+        $users = User::orderBy('name')->pluck('name', 'id');
 
-        return view('backend.contents.create', compact(
-            'type',
-            'typeLabel',
-            'categories',
-            'provinceOptions',
-            'wardOptions',
-            'wardMap',
-            'sellerOptions',
-            'topicOptions',
-            'selectedTopics'
-        ));
+        return view('backend.contents._form', compact('type', 'typeLabel', 'categories', 'users'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -203,46 +175,15 @@ class PostController extends Controller
             ->with('success', 'Them ' . strtolower($typeLabel) . ' thanh cong.');
     }
 
-    public function edit(Request $request, Post $post): View
+        public function edit(Request $request, Post $post): View
     {
         $type = $post->type;
         $typeLabel = $this->getTypeLabel($type);
 
         $categories = $this->getCategoryOptions($type);
-        $provinceOptions = Province::orderBy('name')->pluck('name', 'id');
-        $wardOptions = $post->province_id
-            ? Ward::where('province_id', $post->province_id)->orderBy('name')->pluck('name', 'id')
-            : collect();
-        $wardMap = Province::with('wards')->get()->mapWithKeys(function ($province) {
-            return [
-                $province->id => $province->wards->map(function ($ward) {
-                    return [
-                        'id' => $ward->id,
-                        'name' => $ward->name,
-                    ];
-                })->values(),
-            ];
-        })->toArray();
-        $sellerOptions = User::orderBy('name')->pluck('name', 'id');
-        $topicOptions = \App\Models\Topic::orderBy('name')->pluck('name', 'id');
-        $selectedTopics = $post->topics->pluck('id')->toArray();
-        $galleryImages = $post->galleryImages;
-        $floorPlans = $post->floorPlans;
+        $users = User::orderBy('name')->pluck('name', 'id');
 
-        return view('backend.contents.edit', compact(
-            'post',
-            'type',
-            'typeLabel',
-            'categories',
-            'provinceOptions',
-            'wardOptions',
-            'wardMap',
-            'sellerOptions',
-            'topicOptions',
-            'selectedTopics',
-            'galleryImages',
-            'floorPlans'
-        ));
+        return view('backend.contents._form', compact('type', 'typeLabel', 'categories', 'users', 'post'));
     }
 
     public function update(Request $request, Post $post): RedirectResponse
@@ -419,16 +360,6 @@ class PostController extends Controller
 
         $this->deleteImageIfExists($post->image);
         $this->deleteImageIfExists($post->location_image);
-
-        foreach ($post->galleryImages as $img) {
-            $this->deleteImageIfExists($img->image);
-            $img->delete();
-        }
-
-        foreach ($post->floorPlans as $fp) {
-            $this->deleteImageIfExists($fp->image);
-            $fp->delete();
-        }
 
         $post->delete();
 
