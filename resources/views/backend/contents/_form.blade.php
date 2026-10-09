@@ -3,34 +3,12 @@
 @php
     $currentImage = old('existing_image', $post->image ?? '');
     $imagePreview = $currentImage ? asset($currentImage) : '';
-    $currentLocationImage = old('existing_location_image', $post->location_image ?? '');
-    $locationImagePreview = $currentLocationImage ? asset($currentLocationImage) : '';
-    
-    
-                        ->filter(fn ($image) => ($image->image_type ?? \App\Models\PostImage::TYPE_PERSPECTIVE) === $typeKey)
-                    ->values(),
-            ];
-        });
-                        $isCourse = in_array($type, ['course', 'product']);
-
-    $oldFloorPlans = old('floor_plans');
-    if ($oldFloorPlans !== null) {
-        $floorPlanItems = collect($oldFloorPlans)->values();
-    } else {
-        $floorPlanItems = $existingFloorPlans
-            ->map(fn ($floorPlan) => [
-                'id' => $floorPlan->id,
-                'name' => $floorPlan->name,
-                'existing_image' => $floorPlan->image,
-            ])
-            ->values();
-    }
+    $isCourse = in_array($type, ['course', 'product']);
 @endphp
 
 <div
     class="row backend-content-form"
     id="backend-content-form"
-    data-ward-map='@json($wardMap)'
     data-url-base="{{ url('/') }}"
     data-slug-prefix="{{ $isCourse ? 'courses' : 'tin-tuc' }}"
 >

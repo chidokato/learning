@@ -35,9 +35,9 @@ class PostController extends Controller
         $typeLabel = $this->getTypeLabel($type);
 
         $categories = $this->getCategoryOptions($type);
-        $users = User::orderBy('name')->pluck('name', 'id');
+        $sellerOptions = User::orderBy('name')->pluck('name', 'id');
 
-        return view('backend.contents._form', compact('type', 'typeLabel', 'categories', 'users'));
+        return view('backend.contents.create', compact('type', 'typeLabel', 'categories', 'sellerOptions'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -181,9 +181,9 @@ class PostController extends Controller
         $typeLabel = $this->getTypeLabel($type);
 
         $categories = $this->getCategoryOptions($type);
-        $users = User::orderBy('name')->pluck('name', 'id');
+        $sellerOptions = User::orderBy('name')->pluck('name', 'id');
 
-        return view('backend.contents._form', compact('type', 'typeLabel', 'categories', 'users', 'post'));
+        return view('backend.contents.edit', compact('type', 'typeLabel', 'categories', 'sellerOptions', 'post'));
     }
 
     public function update(Request $request, Post $post): RedirectResponse
