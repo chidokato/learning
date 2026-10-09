@@ -332,6 +332,18 @@ Route::get('{categorySlug}/{slug}', fn (string $categorySlug, string $slug) => $
     ->name('frontend.content.show');
 
 
+Route::get('/run-setup', function () {
+    try {
+        if (!\Illuminate\Support\Facades\Schema::hasTable('post_topic')) {
+            \Illuminate\Support\Facades\DB::statement('CREATE TABLE post_topic (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, post_id BIGINT UNSIGNED NOT NULL, topic_id BIGINT UNSIGNED NOT NULL, created_at TIMESTAMP NULL, updated_at TIMESTAMP NULL, FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE, FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE)');
+            return 'Table post_topic created successfully!';
+        }
+        return 'Table post_topic already exists!';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
+
 Route::get('/run-symlink', function () {
     \Illuminate\Support\Facades\Artisan::call('storage:link');
     return 'Storage link created successfully!';
