@@ -10389,7 +10389,7 @@ input[type=radio] {
 }
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
   .it-header-menu > nav > ul > li {
-    margin: 0px 30px;
+    margin: 0px 15px;
   }
 }
 .it-header-menu > nav > ul > li:first-child {

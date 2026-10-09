@@ -20,7 +20,7 @@
 
    <!-- Theme / Main CSS -->
    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">          
-   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">   
+   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v={{ time() }}">   
 
    <style>
       .profile-header {
