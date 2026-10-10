@@ -8,13 +8,13 @@
             <div class="row align-items-center">
                <div class="col-lg-6">
                   <div class="it-newsletter-2-left">
-                     <h4 class="it-newsletter-2-title text-white mb-0">Sign Up today to get the <br> latest inspiration & insights</h4>
+                     <h4 class="it-newsletter-2-title text-white mb-0">Đăng ký ngay hôm nay để nhận <br> những thông tin & cảm hứng mới nhất</h4>
                   </div>
                </div>
                <div class="col-lg-6">
                   <div class="it-newsletter-input-box">
                      <form class="input-wrap p-relative" action="#">
-                        <input type="email" placeholder="Enter your Email Address">
+                        <input type="email" placeholder="Nhập địa chỉ Email của bạn">
                         <button type="submit">
                            <svg width="26" height="27" viewBox="0 0 26 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M24.7282 1.82586C24.3517 1.44485 23.8834 1.16736 23.3684 1.02022C22.8534 0.873071 22.3091 0.861239 21.7882 0.985864L4.9882 4.52436C4.0207 4.65705 3.10947 5.05722 2.35711 5.6798C1.60475 6.30238 1.04115 7.12265 0.729789 8.04823C0.418424 8.97381 0.371658 9.96795 0.594756 10.9187C0.817855 11.8694 1.30196 12.739 1.99255 13.4294L3.79645 15.2323C3.89408 15.3299 3.97151 15.4458 4.0243 15.5733C4.07709 15.7009 4.1042 15.8376 4.1041 15.9757V19.3021C4.10641 19.7698 4.21408 20.2309 4.4191 20.6513L4.4107 20.6587L4.438 20.686C4.74566 21.3045 5.24816 21.8048 5.8681 22.1098L5.8954 22.1371L5.90275 22.1287C6.32312 22.3337 6.78429 22.4413 7.252 22.4437H10.5784C10.8567 22.4434 11.1237 22.5537 11.3207 22.7503L13.1236 24.5531C13.6071 25.042 14.1827 25.4304 14.817 25.6958C15.4514 25.9613 16.132 26.0986 16.8196 26.0998C17.3926 26.0991 17.9618 26.0054 18.5048 25.8226C19.422 25.5214 20.2367 24.97 20.8571 24.2305C21.4775 23.4909 21.8789 22.5928 22.016 21.6373L25.5598 4.80051C25.6909 4.27514 25.6832 3.72471 25.5374 3.20322C25.3916 2.68173 25.1127 2.20709 24.7282 1.82586ZM5.28325 13.7497L3.4783 11.9468C3.058 11.5366 2.76343 11.0151 2.62915 10.4434C2.49487 9.87166 2.52645 9.27351 2.7202 8.71911C2.90804 8.15035 3.25528 7.64751 3.72063 7.27039C4.18598 6.89327 4.74986 6.65774 5.3452 6.59181L21.9782 3.09006L6.202 18.8684V15.9757C6.20359 15.5623 6.12321 15.1528 5.96551 14.7707C5.80781 14.3886 5.57591 14.0416 5.28325 13.7497ZM19.9528 21.2782C19.8722 21.8581 19.6315 22.4041 19.2578 22.8549C18.8841 23.3056 18.3921 23.6433 17.8372 23.83C17.2822 24.0167 16.6862 24.045 16.116 23.9118C15.5459 23.7786 15.0241 23.4891 14.6093 23.0758L12.8033 21.2698C12.5118 20.9767 12.1651 20.7443 11.7832 20.586C11.4013 20.4278 10.9918 20.3468 10.5784 20.3479H7.68565L23.464 4.57476L19.9528 21.2782Z" fill="currentcolor" />
@@ -44,13 +44,13 @@
                         <a href="{{ route('frontend.home') }}"><img src="{{ $siteSetting->footer_logo_url }}" alt=""></a>
                      </div>
                      <div class="it-footer-widget-text">
-                        <p>Access expert-led courses designed to help you succeed in your career, all from the comfort of your home.</p>
+                        <p>Khám phá các khóa học chất lượng từ <strong>Learning Indochine</strong>, được thiết kế bởi chuyên gia giúp bạn thăng tiến sự nghiệp ngay tại nhà.</p>
                      </div>
                      <div class="it-footer-widget-btn">
                         <a href="#" class="it-btn-yellow theme-bg border-radius-100">
                            <span>
-                              <span class="text-1">Contact Us</span>
-                              <span class="text-2">Contact Us</span>
+                              <span class="text-1">Liên Hệ Ngay</span>
+                              <span class="text-2">Liên Hệ Ngay</span>
                            </span>
                            <i>
                               <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,14 +64,14 @@
                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 mb-50 wow itfadeUp" data-wow-duration=".9s"
                   data-wow-delay=".5s">
                   <div class="it-footer-widget it-footer-col-1-2">
-                     <h4 class="it-footer-widget-title">Useful Links</h4>
+                     <h4 class="it-footer-widget-title">Liên Kết Hữu Ích</h4>
                      <div class="it-footer-widget-menu">
                         <ul>
-                           <li><a href="#">Marketplace</a></li>
-                           <li><a href="#">kindergarten</a></li>
-                           <li><a href="#">University</a></li>
-                           <li><a href="#">GYM Coaching</a></li>
-                           <li><a href="#">Cooking</a></li>
+                           <li><a href="#">Khóa Học Phổ Biến</a></li>
+                           <li><a href="#">Lộ Trình Đào Tạo</a></li>
+                           <li><a href="#">Tư Vấn Học Tập</a></li>
+                           <li><a href="#">Thư Viện Tài Liệu</a></li>
+                           <li><a href="#">Cộng Đồng Học Viên</a></li>
                         </ul>
                      </div>
                   </div>
@@ -79,14 +79,14 @@
                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 mb-50 wow itfadeUp" data-wow-duration=".9s"
                   data-wow-delay=".7s">
                   <div class="it-footer-widget it-footer-col-1-3">
-                     <h4 class="it-footer-widget-title">Our Company</h4>
+                     <h4 class="it-footer-widget-title">Về Chúng Tôi</h4>
                      <div class="it-footer-widget-menu">
                         <ul>
-                           <li><a href="#">Contact Us</a></li>
-                           <li><a href="#">Become Teacher</a></li>
-                           <li><a href="#">Blog</a></li>
-                           <li><a href="#">Instructor</a></li>
-                           <li><a href="#">Events</a></li>
+                           <li><a href="#">Liên Hệ</a></li>
+                           <li><a href="#">Trở Thành Giảng Viên</a></li>
+                           <li><a href="#">Tin Tức & Blog</a></li>
+                           <li><a href="#">Đội Ngũ Giảng Viên</a></li>
+                           <li><a href="#">Sự Kiện Nổi Bật</a></li>
                         </ul>
                      </div>
                   </div>
@@ -95,12 +95,12 @@
                   data-wow-delay=".9s">
                   <div class="it-footer-widget it-footer-col-1-4 d-flex justify-content-lg-end">
                      <div>
-                        <h4 class="it-footer-widget-title">Get Contact</h4>
+                        <h4 class="it-footer-widget-title">Thông Tin Liên Hệ</h4>
                         <div class="it-footer-widget-contact mb-25">
                            <ul>
-                              <li><span>Phone:</span><a href="tel:+91123456789">(+91) 123-456-789</a></li>
+                              <li><span>Điện thoại:</span><a href="tel:+91123456789">(+91) 123-456-789</a></li>
                               <li><span>Email:</span><a href="mailto:indochine@gmail.com">indochine@gmail.com</a></li>
-                              <li><span>Location:</span><a target="_blank" href="https://www.google.com/maps/dir///@24.4503253,17.1644279,4.17z?entry=ttu&amp;g_ep=EgoyMDI0MTAwOS4wIKXMDSoASAFQAw%3D%3D">North America, USA</a></li>
+                              <li><span>Địa chỉ:</span><a target="_blank" href="https://www.google.com/maps/dir///@24.4503253,17.1644279,4.17z?entry=ttu&amp;g_ep=EgoyMDI0MTAwOS4wIKXMDSoASAFQAw%3D%3D">Hà Nội, Việt Nam</a></li>
                            </ul>
                         </div>
                         <div class="it-footer-widget-social">
@@ -143,7 +143,7 @@
             <div class="row align-items-center">
                <div class="col-12">
                   <div class="it-copyright-left style-2 text-center">
-                     <p class="mb-0">Copyright © 2025 <a href="#">Ordianit</a> All Rights Reserved</p>
+                     <p class="mb-0">Bản quyền © 2025 <a href="#">Learning Indochine</a>. Bảo lưu mọi quyền.</p>
                   </div>
                </div>
             </div>

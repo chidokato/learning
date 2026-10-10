@@ -20978,7 +20978,7 @@ input[type=radio] {
   animation: ittranslateX2 5s forwards infinite alternate;
 }
 .it-newsletter-2-title {
-  font-size: 36px;
+  font-size: 27px;
   font-family: var(--it-ff-heading);
 }
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {

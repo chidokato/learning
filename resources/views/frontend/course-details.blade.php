@@ -184,13 +184,13 @@
                      <div id="overview">
                         @if ($post->what_to_learn)
                         <h4 class="it-details-title">Bạn sẽ học được gì</h4>
-                        <div class="it-details-list-box mt-5 mb-60 ck-content-list style-2-col">
+                        <div class="it-details-list-box mt-5 mb-60 ck-content-list style-1">
                               {!! $post->what_to_learn !!}
                         </div>
                         @endif
                         @if ($post->course_includes)
                         <h4 class="it-details-title">Khóa học này bao gồm:</h4>
-                        <div class="it-details-list-box mt-5 mb-60 ck-content-list style-2-col">
+                        <div class="it-details-list-box mt-5 mb-60 ck-content-list style-1">
                               {!! $post->course_includes !!}
                         </div>
                         @endif
