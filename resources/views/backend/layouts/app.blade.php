@@ -128,31 +128,41 @@
                 <div class="container-fluid">
                     <div id="two-column-menu"></div>
                     <ul class="navbar-nav" id="navbar-nav">
-                        <li class="menu-title"><span>Menu</span></li>
                         @php
-                            $menuItems = [
-                                ['label' => 'Slider', 'icon' => 'ri-image-line', 'route' => 'backend.sliders.index'],
-                                  ['label' => 'Homepage Categories', 'icon' => 'ri-layout-grid-line', 'route' => 'backend.homepage_categories.index'],
-
-                                ['label' => 'Menu', 'icon' => 'ri-menu-line', 'route' => 'backend.menus.index'],
-                                ['label' => 'Category', 'icon' => 'ri-folder-2-line', 'route' => 'backend.categories.index'],
-                                ['label' => 'Topic', 'icon' => 'ri-price-tag-3-line', 'route' => 'backend.topics.index'],
-                                ['label' => 'Course', 'icon' => 'ri-book-open-line', 'route' => 'backend.courses.index'],
-                                ['label' => 'News', 'icon' => 'ri-newspaper-line', 'route' => 'backend.news.index'],
-                                ['label' => 'Customer inquiry', 'icon' => 'ri-customer-service-2-line', 'route' => 'backend.customer-inquiries.index'],
-                                ['label' => 'SEO', 'icon' => 'ri-search-eye-line', 'route' => 'backend.seo.edit'],
-                                ['label' => 'Setting', 'icon' => 'ri-settings-3-line', 'route' => 'backend.settings.edit'],
-                                ['label' => 'AI ChatBot', 'icon' => 'ri-robot-line', 'route' => 'backend.chatbot.edit'],
-                                ['label' => 'User', 'icon' => 'ri-user-3-line', 'route' => 'backend.users.index'],
+                            $menuGroups = [
+                                'Giao diện & Trang chủ' => [
+                                    ['label' => 'Slider', 'icon' => 'ri-image-line', 'route' => 'backend.sliders.index', 'active' => request()->routeIs('backend.sliders.*')],
+                                    ['label' => 'Homepage Categories', 'icon' => 'ri-layout-grid-line', 'route' => 'backend.homepage_categories.index', 'active' => request()->routeIs('backend.homepage_categories.*')],
+                                    ['label' => 'Menu', 'icon' => 'ri-menu-line', 'route' => 'backend.menus.index', 'active' => request()->routeIs('backend.menus.*')],
+                                ],
+                                'Khóa học & Nội dung' => [
+                                    ['label' => 'Category', 'icon' => 'ri-folder-2-line', 'route' => 'backend.categories.index', 'active' => request()->routeIs('backend.categories.*')],
+                                    ['label' => 'Topic', 'icon' => 'ri-price-tag-3-line', 'route' => 'backend.topics.index', 'active' => request()->routeIs('backend.topics.*')],
+                                    ['label' => 'Course', 'icon' => 'ri-book-open-line', 'route' => 'backend.courses.index', 'active' => request()->routeIs('backend.courses.*') || request()->routeIs('backend.products.*')],
+                                    ['label' => 'Bài kiểm tra', 'icon' => 'ri-file-list-3-line', 'route' => 'backend.tests.index', 'active' => request()->routeIs('backend.tests.*')],
+                                    ['label' => 'News', 'icon' => 'ri-newspaper-line', 'route' => 'backend.news.index', 'active' => request()->routeIs('backend.news.*')],
+                                ],
+                                'Chăm sóc khách hàng' => [
+                                    ['label' => 'Customer inquiry', 'icon' => 'ri-customer-service-2-line', 'route' => 'backend.customer-inquiries.index', 'active' => request()->routeIs('backend.customer-inquiries.*')],
+                                    ['label' => 'AI ChatBot', 'icon' => 'ri-robot-line', 'route' => 'backend.chatbot.edit', 'active' => request()->routeIs('backend.chatbot.*')],
+                                ],
+                                'Hệ thống' => [
+                                    ['label' => 'SEO', 'icon' => 'ri-search-eye-line', 'route' => 'backend.seo.edit', 'active' => request()->routeIs('backend.seo.*')],
+                                    ['label' => 'Setting', 'icon' => 'ri-settings-3-line', 'route' => 'backend.settings.edit', 'active' => request()->routeIs('backend.settings.*')],
+                                    ['label' => 'User', 'icon' => 'ri-user-3-line', 'route' => 'backend.users.index', 'active' => request()->routeIs('backend.users.*')],
+                                ]
                             ];
                         @endphp
-                        @foreach ($menuItems as $item)
-                            <li class="nav-item">
-                                <a class="nav-link menu-link {{ $item['label'] === 'Course' && (request()->routeIs('backend.courses.*') || request()->routeIs('backend.products.*')) ? 'active' : '' }} {{ $item['label'] === 'News' && request()->routeIs('backend.news.*') ? 'active' : '' }} {{ $item['label'] === 'Menu' && request()->routeIs('backend.menus.*') ? 'active' : '' }} {{ $item['label'] === 'Category' && request()->routeIs('backend.categories.*') ? 'active' : '' }} {{ $item['label'] === 'Topic' && request()->routeIs('backend.topics.*') ? 'active' : '' }} {{ $item['label'] === 'User' && request()->routeIs('backend.users.*') ? 'active' : '' }} {{ $item['label'] === 'Customer inquiry' && request()->routeIs('backend.customer-inquiries.*') ? 'active' : '' }} {{ $item['label'] === 'SEO' && request()->routeIs('backend.seo.*') ? 'active' : '' }} {{ $item['label'] === 'Setting' && request()->routeIs('backend.settings.*') ? 'active' : '' }} {{ $item['label'] === 'Slider' && request()->routeIs('backend.sliders.*') ? 'active' : '' }} {{ $item['label'] === 'AI ChatBot' && request()->routeIs('backend.chatbot.*') ? 'active' : '' }}" href="{{ $item['route'] ? route($item['route']) : '#' }}">
-                                    <i class="{{ $item['icon'] }}"></i>
-                                    <span>{{ $item['label'] }}</span>
-                                </a>
-                            </li>
+                        @foreach ($menuGroups as $groupName => $menuItems)
+                            <li class="menu-title"><span data-key="t-{{ \Illuminate\Support\Str::slug($groupName) }}">{{ $groupName }}</span></li>
+                            @foreach ($menuItems as $item)
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link {{ $item['active'] ? 'active' : '' }}" href="{{ $item['route'] ? route($item['route']) : '#' }}">
+                                        <i class="{{ $item['icon'] }}"></i>
+                                        <span>{{ $item['label'] }}</span>
+                                    </a>
+                                </li>
+                            @endforeach
                         @endforeach
                     </ul>
                 </div>

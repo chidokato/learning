@@ -6,24 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('tests', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('post_id')->nullable()->comment('ID khoa hoc (post)');
+            $table->string('title');
+            $table->integer('pass_score')->default(80)->comment('Diem de qua mon');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('tests');

@@ -96,6 +96,28 @@ class AuthController extends Controller
             ->with('info', 'Tính năng Đăng nhập đang được tạm ẩn.');
     }
     /**
+     * Hiển thị trang cá nhân cùng lịch sử học và lịch sử làm bài kiểm tra
+     */
+    public function showProfile()
+    {
+        $user = Auth::user();
+
+        // Lịch sử học khóa học
+        $learnedCourses = \App\Models\UserCourseHistory::where('user_id', $user->id)
+            ->with(['post.category'])
+            ->orderByDesc('last_learned_at')
+            ->get();
+
+        // Lịch sử làm bài kiểm tra
+        $testResults = \App\Models\UserTestResult::where('user_id', $user->id)
+            ->with('test')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('frontend.profile', compact('learnedCourses', 'testResults'));
+    }
+
+    /**
      * Cập nhật thông tin cá nhân
      */
     public function updateProfile(Request $request): RedirectResponse

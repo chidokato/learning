@@ -6417,7 +6417,7 @@ body .ui-tooltip {
   margin-bottom: 15px;
 }
 .sidebar-widget {
-  padding: 45px 37px;
+  padding: 27px;
   border-radius: 20px;
   background-color: var(--it-gray-1);
   border: 1px solid rgba(31, 36, 50, 0.1);

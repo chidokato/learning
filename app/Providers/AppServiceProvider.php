@@ -55,6 +55,7 @@ class AppServiceProvider extends ServiceProvider
                     ->where('type', Post::TYPE_COURSE)
                     ->where('is_active', true)
                     ->with(['category', 'seller'])
+                    ->withCount('learningHistories')
                     ->latest('published_at')
                     ->latest('id')
                     ->take(4)
@@ -66,6 +67,7 @@ class AppServiceProvider extends ServiceProvider
                 ->where('type', Post::TYPE_COURSE)
                 ->where('is_active', true)
                 ->with(['category', 'seller'])
+                ->withCount('learningHistories')
                 ->latest('published_at')
                 ->latest('id')
                 ->paginate(9);

@@ -51,6 +51,10 @@ $courseLearnHandler = function (string $slug) {
 
     if (auth()->check()) {
         $userId = auth()->id();
+        \App\Models\UserCourseHistory::updateOrCreate(
+            ['user_id' => $userId, 'post_id' => $post->id],
+            ['last_learned_at' => now()]
+        );
         $cacheKey = "user_{$userId}_learned_post_{$post->id}";
         if (!cache()->has($cacheKey)) {
             $post->increment('view_count');
@@ -98,6 +102,9 @@ Route::get('courses/{slug}', fn (string $slug) => $postDetailHandler($slug))->na
 Route::get('products/{slug}', fn (string $slug) => $postDetailHandler($slug))->name('frontend.products.show.legacy');
 Route::get('news/{slug}', fn () => view('frontend.home'))->name('frontend.news.show.legacy');
 
+Route::get('bai-kiem-tra', [\App\Http\Controllers\FrontendTestController::class, 'index'])->name('frontend.tests.index');
+Route::get('bai-kiem-tra/{test_id}', [\App\Http\Controllers\FrontendTestController::class, 'show'])->name('frontend.tests.show');
+
 // Frontend Authentication Routes
 Route::controller(AuthController::class)->group(function () {
     Route::get('login', 'showLoginForm')->name('frontend.login');
@@ -114,7 +121,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('logout', 'logout')->name('frontend.logout.get');
     Route::post('forgot-password', 'forgotPassword')->name('frontend.forgot-password');
     Route::middleware('auth')->group(function () {
-        Route::get('profile', fn () => view('frontend.profile'))->name('frontend.profile');
+        Route::get('profile', 'showProfile')->name('frontend.profile');
         Route::post('profile', 'updateProfile')->name('frontend.profile.update');
     });
 });
@@ -156,6 +163,14 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::get('products', fn () => redirect()->route('backend.courses.index'))->name('products.index');
         Route::get('products/create', fn () => redirect()->route('backend.courses.create'))->name('products.create');
     });
+
+    Route::controller(\App\Http\Controllers\AdminTestController::class)->group(function () {
+        Route::get('tests', 'index')->name('tests.index');
+        Route::get('tests/{test}', 'show')->name('tests.show');
+        Route::post('tests/import', 'import')->name('tests.import');
+        Route::delete('tests/{test}', 'destroy')->name('tests.destroy');
+    });
+
 
     Route::get('customer-inquiries', $redirectToDashboard)->name('customer-inquiries.index');
     Route::get('seo', $redirectToDashboard)->name('seo.edit');
@@ -306,6 +321,7 @@ $categoryHandler = function (string $categorySlug) use ($postDetailHandler) {
             });
         })
         ->with(['category', 'seller'])
+        ->withCount('learningHistories')
         ->latest('published_at')
         ->latest('id')
         ->paginate(9);

@@ -159,4 +159,35 @@ class Post extends Model
 
         return $lessonCount;
     }
+
+    public function learningHistories()
+    {
+        return $this->hasMany(UserCourseHistory::class, 'post_id');
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'user_course_histories', 'post_id', 'user_id');
+    }
+
+    public function getStudentCountAttribute(): int
+    {
+        if (isset($this->attributes['learning_histories_count'])) {
+            return (int) $this->attributes['learning_histories_count'];
+        }
+
+        if (isset($this->attributes['students_count'])) {
+            return (int) $this->attributes['students_count'];
+        }
+
+        if ($this->relationLoaded('learningHistories')) {
+            return $this->learningHistories->count();
+        }
+
+        if ($this->relationLoaded('students')) {
+            return $this->students->count();
+        }
+
+        return $this->learningHistories()->count();
+    }
 }
