@@ -140,8 +140,8 @@
                                     <span class="test-card-tag"><i class="far fa-clipboard-list me-1"></i> Bài kiểm tra</span>
                                     <h4 class="test-card-title">{{ $test->title }}</h4>
                                     <div class="test-card-meta">
-                                       <span><i class="far fa-question-circle text-primary"></i> {{ $test->questions()->count() }} Câu hỏi</span>
-                                       <span><i class="far fa-check-circle text-success"></i> Đạt: {{ $test->pass_score }}/{{ $test->questions()->count() }} câu</span>
+                                       <span><i class="far fa-question-circle text-primary"></i> {{ $test->questions()->count() }} Câu</span>
+                                       <span><i class="far fa-check-circle text-success"></i> Đạt: {{ $test->pass_score }}/{{ $test->questions()->count() }}</span>
                                        <span>
                                           <i class="far fa-clock text-warning"></i> 
                                           @if($test->duration && $test->duration > 0)
@@ -179,10 +179,10 @@
                                        </span>
                                        @if($itemResult)
                                           <span class="test-stat-pill" title="Số lần đã làm bài">
-                                             <i class="far fa-redo text-muted"></i> {{ $itemResult['attempts'] }} lần thi
+                                             <i class="far fa-redo text-muted"></i> {{ $itemResult['attempts'] }}
                                           </span>
                                           <span class="test-stat-pill" title="Điểm số cao nhất">
-                                             <i class="far fa-trophy text-warning"></i> Cao nhất: <strong class="text-success">{{ $itemResult['max_score'] }}</strong>/{{ $test->questions()->count() }}
+                                             <i class="far fa-trophy text-warning"></i> <strong class="text-success">{{ $itemResult['max_score'] }}</strong>/{{ $test->questions()->count() }}
                                           </span>
                                        @endif
                                     </div>
