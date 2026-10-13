@@ -179,10 +179,10 @@
                                        </span>
                                        @if($itemResult)
                                           <span class="test-stat-pill" title="Số lần đã làm bài">
-                                             <i class="far fa-redo text-muted"></i> {{ $itemResult['attempts'] }}
+                                             <i class="far fa-redo text-muted"></i> {{ $itemResult['attempts'] }} Lần
                                           </span>
                                           <span class="test-stat-pill" title="Điểm số cao nhất">
-                                             <i class="far fa-trophy text-warning"></i> <strong class="text-success">{{ $itemResult['max_score'] }}</strong>/{{ $test->questions()->count() }}
+                                             <i class="far fa-trophy text-warning"></i> <strong class="text-success">{{ $itemResult['max_score'] }}</strong>/{{ $test->questions()->count() }} Câu
                                           </span>
                                        @endif
                                     </div>
