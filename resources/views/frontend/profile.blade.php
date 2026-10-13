@@ -38,36 +38,184 @@
       .sidebar-widget-list:hover .text-danger {
          color: var(--it-common-white) !important;
       }
+
+      /* Card bao bọc form thông tin cá nhân */
+      .sidebar-widget.profile-form-widget {
+         background: #ffffff;
+         border: 1px solid #eef2f6;
+         border-radius: 16px;
+         padding: 26px 26px 30px;
+         box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+      }
+      .profile-widget-title {
+         font-size: 18px;
+         font-weight: 700;
+         color: #1a2c5e;
+         margin-bottom: 20px;
+         padding-bottom: 12px;
+         border-bottom: 1px solid #f1f4f8;
+         display: flex;
+         align-items: center;
+         gap: 8px;
+      }
+
+      /* Nhãn tiêu đề (Label) nhỏ gọn, rõ ràng */
+      .sidebar-widget .form-label {
+         font-size: 13px;
+         font-weight: 600;
+         color: #374151;
+         margin-bottom: 5px;
+         display: inline-block;
+         line-height: 1.3;
+      }
+      .sidebar-widget .form-label .text-danger {
+         font-size: 13px;
+      }
+
+      /* Thẻ input nhỏ gọn, thanh thoát, tinh tế */
       .sidebar-widget .form-control {
-         height: 52px;
-         border-radius: 8px;
-         border: 1px solid rgba(31, 36, 50, 0.15);
-         padding: 10px 18px;
-         font-size: 15px;
+         height: 40px;
+         min-height: 40px;
+         border-radius: 6px;
+         border: 1px solid #d1d5db;
+         padding: 6px 13px;
+         font-size: 13.5px;
+         color: #1f2937;
+         background-color: #ffffff;
+         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      }
+      .sidebar-widget .form-control::placeholder {
+         color: #9ca3af;
+         font-size: 13px;
       }
       .sidebar-widget .form-control:focus {
-         border-color: var(--it-theme-1);
-         box-shadow: 0 0 0 0.2rem rgba(3, 89, 78, 0.15);
+         border-color: #03594e;
+         box-shadow: 0 0 0 3px rgba(3, 89, 78, 0.12);
+         outline: none;
       }
+      .sidebar-widget .form-control:disabled,
+      .sidebar-widget .form-control.bg-light {
+         background-color: #f8fafc !important;
+         border-color: #e2e8f0 !important;
+         color: #64748b !important;
+         cursor: not-allowed !important;
+         box-shadow: none;
+      }
+
+      /* Thông báo lỗi & ghi chú nhỏ dưới input */
+      .sidebar-widget small.text-danger {
+         font-size: 12px;
+         margin-top: 3px;
+         display: block;
+         font-weight: 500;
+         color: #dc2626 !important;
+      }
+      .sidebar-widget small.text-muted {
+         font-size: 12px;
+         margin-top: 3px;
+         display: block;
+         color: #64748b !important;
+      }
+
+      /* Nút lưu thay đổi cân đối với input */
       .it-btn-profile {
          background-color: #03594e;
          color: #ffffff !important;
          font-weight: 600;
-         padding: 13px 30px;
-         border-radius: 8px;
+         height: 40px;
+         padding: 0 22px;
+         border-radius: 6px;
          border: none;
          display: inline-flex;
          align-items: center;
          justify-content: center;
-         transition: all 0.3s ease;
-         font-size: 15px;
+         gap: 7px;
+         transition: all 0.25s ease;
+         font-size: 13.5px;
          cursor: pointer;
       }
       .it-btn-profile:hover {
          background-color: #02463d;
          color: #ffffff !important;
-         transform: translateY(-2px);
-         box-shadow: 0 6px 15px rgba(3, 89, 78, 0.25);
+         transform: translateY(-1px);
+         box-shadow: 0 4px 12px rgba(3, 89, 78, 0.25);
+      }
+
+      /* Nút gạt chuyển đổi đổi mật khẩu nhỏ gọn */
+      .custom-toggle-wrap {
+         display: inline-flex;
+         align-items: center;
+         gap: 10px;
+         cursor: pointer;
+         user-select: none;
+      }
+      .custom-toggle-label {
+         font-size: 13.5px;
+         font-weight: 600;
+         color: #1e293b;
+      }
+      .custom-toggle-switch {
+         position: relative;
+         display: inline-block;
+         width: 40px;
+         height: 22px;
+         margin-bottom: 0;
+         flex-shrink: 0;
+      }
+      .custom-toggle-switch input {
+         opacity: 0;
+         width: 0;
+         height: 0;
+         position: absolute;
+      }
+      .custom-toggle-slider {
+         position: absolute;
+         cursor: pointer;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background-color: #cbd5e1;
+         transition: all 0.25s ease-in-out;
+         border-radius: 22px;
+      }
+      .custom-toggle-slider::before {
+         position: absolute;
+         content: "";
+         height: 16px;
+         width: 16px;
+         left: 3px;
+         bottom: 3px;
+         background-color: #ffffff;
+         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+         border-radius: 50%;
+         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+      }
+      .custom-toggle-switch input:checked + .custom-toggle-slider {
+         background-color: #03594e;
+         box-shadow: 0 0 0 3px rgba(3, 89, 78, 0.15);
+      }
+      .custom-toggle-switch input:checked + .custom-toggle-slider::before {
+         transform: translateX(18px);
+      }
+
+      /* Khối nhập mật khẩu khi tắt */
+      .password-inputs-box {
+         transition: opacity 0.25s ease;
+      }
+      .password-inputs-box.is-disabled {
+         opacity: 0.55;
+      }
+      .password-inputs-box.is-disabled .form-control {
+         background-color: #f8fafc !important;
+         border-color: #e2e8f0 !important;
+         cursor: not-allowed !important;
+         color: #94a3b8 !important;
+      }
+      .password-inputs-box.is-disabled label {
+         color: #64748b !important;
+         cursor: not-allowed !important;
       }
    </style>
 </head>
@@ -93,211 +241,83 @@
 
                <!-- Main Content -->
                <div class="col-xl-9 col-lg-8">
-                  <div class="tab-content" id="profileTabContent">
-                     
-                     <!-- Tab Thông tin cá nhân & Mật khẩu -->
-                     <div class="tab-pane fade show active" id="tab-info" role="tabpanel" aria-labelledby="tab-info-link">
-                        <div class="sidebar-widget mb-40" style="background-color: #fff;">
-                           <h4 class="sidebar-widget-title mb-25 pb-15 border-bottom">Thông tin cá nhân</h4>
-                           
-                           <form action="{{ route('frontend.profile.update') }}" method="POST">
-                              @csrf
-                              
-                              <!-- Thông tin cá nhân -->
-                              <div class="row mb-20">
-                                 <div class="col-md-6 mb-20 mb-md-0">
-                                    <label class="form-label fw-semibold">Họ và tên <span class="text-danger">*</span></label>
-                                    <input type="text" name="name" class="form-control" value="{{ old('name', Auth::user()->name) }}" required>
-                                    @error('name') <small class="text-danger">{{ $message }}</small> @enderror
-                                 </div>
-                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Email</label>
-                                    <input type="email" class="form-control bg-light" value="{{ Auth::user()->email }}" disabled>
-                                    <small class="text-muted">Email không thể thay đổi</small>
-                                 </div>
-                              </div>
+                  <div class="sidebar-widget profile-form-widget mb-40">
+                     <h4 class="profile-widget-title">
+                        <i class="far fa-user-edit text-muted me-1"></i> Thông tin cá nhân
+                     </h4>
 
-                              <div class="row mb-25">
-                                 <div class="col-md-6 mb-20 mb-md-0">
-                                    <label class="form-label fw-semibold">Số điện thoại</label>
-                                    <input type="text" name="phone" class="form-control" value="{{ old('phone', Auth::user()->phone) }}">
-                                    @error('phone') <small class="text-danger">{{ $message }}</small> @enderror
-                                 </div>
-                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Địa chỉ</label>
-                                    <input type="text" name="address" class="form-control" value="{{ old('address', Auth::user()->address) }}">
-                                    @error('address') <small class="text-danger">{{ $message }}</small> @enderror
-                                 </div>
-                              </div>
-
-                              <!-- Đổi mật khẩu section -->
-                              <div class="pt-25 border-top mt-25">
-                                 <div class="form-check mb-15 d-flex align-items-center">
-                                    <input class="form-check-input mt-0" type="checkbox" id="changePasswordCheckbox" name="change_password" value="1" {{ old('change_password') || (!empty($errors) && $errors->has('password')) ? 'checked' : '' }} style="width: 19px; height: 19px; cursor: pointer;">
-                                    <label class="form-check-label fw-bold ms-2 mb-0" for="changePasswordCheckbox" style="font-size: 15px; color: #1a2c5e; cursor: pointer;">
-                                       <i class="far fa-key me-1 text-muted"></i> Đổi mật khẩu
-                                    </label>
-                                 </div>
-
-                                 <div id="passwordFields" style="{{ old('change_password') || (!empty($errors) && $errors->has('password')) ? 'display: block;' : 'display: none;' }}">
-                                    <p class="text-muted mb-20" style="font-size: 13px;">Nhập mật khẩu mới (ít nhất 6 ký tự) để thay đổi mật khẩu tài khoản của bạn.</p>
-
-                                    <div class="row mb-20">
-                                       <div class="col-md-6 mb-20 mb-md-0">
-                                          <label class="form-label fw-semibold">Mật khẩu mới <span class="text-danger">*</span></label>
-                                          <input type="password" name="password" id="inputNewPassword" class="form-control" minlength="6" placeholder="Nhập mật khẩu mới" autocomplete="new-password" {{ old('change_password') || (!empty($errors) && $errors->has('password')) ? '' : 'disabled' }}>
-                                          @error('password') <small class="text-danger">{{ $message }}</small> @enderror
-                                       </div>
-                                       <div class="col-md-6">
-                                          <label class="form-label fw-semibold">Xác nhận mật khẩu mới <span class="text-danger">*</span></label>
-                                          <input type="password" name="password_confirmation" id="inputConfirmPassword" class="form-control" minlength="6" placeholder="Nhập lại mật khẩu mới" autocomplete="new-password" {{ old('change_password') || (!empty($errors) && $errors->has('password')) ? '' : 'disabled' }}>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-
-                              <div class="mt-30 text-end">
-                                 <button type="submit" class="it-btn-profile">
-                                    <i class="far fa-save me-2"></i> Lưu thay đổi
-                                 </button>
-                              </div>
-                           </form>
+                      <form action="{{ route('frontend.profile.update') }}" method="POST">
+                        @csrf
+                        
+                        <!-- Thông tin cá nhân: lưới 2x2 gọn gàng, khoảng cách chuẩn -->
+                        <div class="row g-3 mb-3">
+                           <div class="col-md-6">
+                              <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                              <input type="text" name="name" class="form-control" value="{{ old('name', Auth::user()->name) }}" placeholder="Nhập họ và tên..." required>
+                              @error('name') <small class="text-danger">{{ $message }}</small> @enderror
+                           </div>
+                           <div class="col-md-6">
+                              <label class="form-label">Email</label>
+                              <input type="email" class="form-control bg-light" value="{{ Auth::user()->email }}" disabled>
+                              <small class="text-muted"><i class="fas fa-lock me-1"></i> Email không thể thay đổi</small>
+                           </div>
+                           <div class="col-md-6">
+                              <label class="form-label">Số điện thoại</label>
+                              <input type="text" name="phone" class="form-control" value="{{ old('phone', Auth::user()->phone) }}" placeholder="Nhập số điện thoại...">
+                              @error('phone') <small class="text-danger">{{ $message }}</small> @enderror
+                           </div>
+                           <div class="col-md-6">
+                              <label class="form-label">Địa chỉ</label>
+                              <input type="text" name="address" class="form-control" value="{{ old('address', Auth::user()->address) }}" placeholder="Nhập địa chỉ của bạn...">
+                              @error('address') <small class="text-danger">{{ $message }}</small> @enderror
+                           </div>
                         </div>
-                     </div>
 
-                     <!-- Tab Lịch sử học tập -->
-                     <div class="tab-pane fade" id="tab-learning-history" role="tabpanel" aria-labelledby="tab-learning-history-link">
-                        <div class="sidebar-widget mb-40" style="background-color: #fff;">
-                           <div class="d-flex justify-content-between align-items-center mb-25 pb-15 border-bottom flex-wrap gap-2">
-                              <h4 class="sidebar-widget-title mb-0">Lịch sử học tập</h4>
-                              @php $learnedList = $learnedCourses ?? collect(); @endphp
-                              <span class="badge" style="background-color: #03594e; font-size: 13px; padding: 7px 14px; border-radius: 20px;">
-                                 Đã học: {{ $learnedList->count() }} khóa học
+                        <!-- Đổi mật khẩu section -->
+                        <div class="pt-20 border-top mt-20">
+                           @php
+                              $isChangePasswordActive = old('change_password') || (!empty($errors) && $errors->has('password'));
+                           @endphp
+                           <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-12">
+                              <label class="custom-toggle-wrap mb-0" for="changePasswordToggle">
+                                 <span class="custom-toggle-switch">
+                                    <input type="checkbox" id="changePasswordToggle" name="change_password" value="1" {{ $isChangePasswordActive ? 'checked' : '' }}>
+                                    <span class="custom-toggle-slider"></span>
+                                 </span>
+                                 <span class="custom-toggle-label">
+                                    <i class="far fa-key me-1 text-muted"></i> Đổi mật khẩu
+                                 </span>
+                              </label>
+                              <span id="toggleStatusBadge" class="badge" style="{{ $isChangePasswordActive ? 'background: rgba(3, 89, 78, 0.1); color: #03594e;' : 'background: #f1f5f9; color: #64748b;' }} font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 20px;">
+                                 {{ $isChangePasswordActive ? 'Đang bật' : 'Đang tắt' }}
                               </span>
                            </div>
 
-                           @if($learnedList->count() > 0)
+                           <p id="toggleHelpText" class="text-muted mb-15" style="font-size: 12.5px;">
+                              {{ $isChangePasswordActive ? 'Nhập mật khẩu mới ít nhất 6 ký tự để thay đổi mật khẩu tài khoản của bạn.' : 'Bật công tắc trên nếu bạn muốn cập nhật mật khẩu mới.' }}
+                           </p>
+
+                           <div id="passwordFieldsWrap" class="password-inputs-box {{ $isChangePasswordActive ? '' : 'is-disabled' }}">
                               <div class="row g-3">
-                                 @foreach($learnedList as $item)
-                                    @if($item->post)
-                                    <div class="col-12">
-                                       <div class="p-3 rounded border d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3" style="background: #fafbfc;">
-                                          <div class="d-flex align-items-center gap-3">
-                                             <img src="{{ $item->post->image ? asset($item->post->image) : asset('assets/img/course/course-1-5.jpg') }}" alt="{{ $item->post->title }}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 8px;" class="flex-shrink-0">
-                                             <div>
-                                                <h6 class="mb-1 fw-bold">
-                                                   <a href="{{ $item->post->frontend_url }}" class="text-dark text-decoration-none">
-                                                      {{ $item->post->title }}
-                                                   </a>
-                                                </h6>
-                                                <div class="text-muted small d-flex flex-wrap align-items-center gap-3">
-                                                   @if($item->post->category)
-                                                      <span class="badge bg-light text-secondary border">{{ $item->post->category->name }}</span>
-                                                   @endif
-                                                   <span>
-                                                      <i class="far fa-clock me-1"></i> Học gần nhất: {{ $item->last_learned_at ? $item->last_learned_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') : $item->updated_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
-                                                   </span>
-                                                </div>
-                                             </div>
-                                          </div>
-                                          <div class="flex-shrink-0 text-md-end">
-                                             <a href="{{ $item->post->learn_url }}" class="it-btn-profile" style="padding: 9px 20px; font-size: 13px; text-decoration: none;">
-                                                <i class="far fa-play-circle me-1"></i> Tiếp tục học
-                                             </a>
-                                          </div>
-                                       </div>
-                                    </div>
-                                    @endif
-                                 @endforeach
-                              </div>
-                           @else
-                              <div class="text-center py-5">
-                                 <div style="font-size: 48px; color: #adb5bd;" class="mb-3">
-                                    <i class="far fa-graduation-cap"></i>
+                                 <div class="col-md-6">
+                                    <label class="form-label">Mật khẩu mới <span class="text-danger required-star" style="{{ $isChangePasswordActive ? '' : 'display: none;' }}">*</span></label>
+                                    <input type="password" name="password" id="inputNewPassword" class="form-control" minlength="6" placeholder="{{ $isChangePasswordActive ? 'Nhập mật khẩu mới (tối thiểu 6 ký tự)' : 'Bật công tắc để nhập mật khẩu' }}" autocomplete="new-password" {{ $isChangePasswordActive ? '' : 'disabled' }}>
+                                    @error('password') <small class="text-danger">{{ $message }}</small> @enderror
                                  </div>
-                                 <h6 class="text-muted mb-3">Bạn chưa có lịch sử học khóa học nào.</h6>
-                                 <a href="{{ route('frontend.home') }}" class="it-btn-profile text-decoration-none" style="padding: 10px 24px; font-size: 14px;">
-                                    <i class="far fa-compass me-2"></i> Khám phá các khóa học
-                                 </a>
+                                 <div class="col-md-6">
+                                    <label class="form-label">Xác nhận mật khẩu mới <span class="text-danger required-star" style="{{ $isChangePasswordActive ? '' : 'display: none;' }}">*</span></label>
+                                    <input type="password" name="password_confirmation" id="inputConfirmPassword" class="form-control" minlength="6" placeholder="{{ $isChangePasswordActive ? 'Nhập lại mật khẩu mới' : 'Bật công tắc để xác nhận mật khẩu' }}" autocomplete="new-password" {{ $isChangePasswordActive ? '' : 'disabled' }}>
+                                 </div>
                               </div>
-                           @endif
-                        </div>
-                     </div>
-
-                     <!-- Tab Lịch sử làm bài kiểm tra -->
-                     <div class="tab-pane fade" id="tab-test-history" role="tabpanel" aria-labelledby="tab-test-history-link">
-                        <div class="sidebar-widget mb-40" style="background-color: #fff;">
-                           <div class="d-flex justify-content-between align-items-center mb-25 pb-15 border-bottom flex-wrap gap-2">
-                              <h4 class="sidebar-widget-title mb-0">Lịch sử làm bài kiểm tra</h4>
-                              @php $testList = $testResults ?? collect(); @endphp
-                              <span class="badge" style="background-color: #03594e; font-size: 13px; padding: 7px 14px; border-radius: 20px;">
-                                 Đã làm: {{ $testList->count() }} lượt
-                              </span>
                            </div>
-
-                           @if($testList->count() > 0)
-                              <div class="table-responsive">
-                                 <table class="table table-hover align-middle mb-0">
-                                    <thead class="table-light">
-                                       <tr style="font-size: 14px;">
-                                          <th>Bài kiểm tra</th>
-                                          <th class="text-center">Điểm số</th>
-                                          <th class="text-center">Kết quả</th>
-                                          <th>Thời gian hoàn thành</th>
-                                          <th class="text-end">Hành động</th>
-                                       </tr>
-                                    </thead>
-                                    <tbody>
-                                       @foreach($testList as $result)
-                                       <tr style="font-size: 14px;">
-                                          <td>
-                                             <strong class="text-dark">{{ $result->test ? $result->test->title : 'Bài kiểm tra #' . $result->test_id }}</strong>
-                                             @if($result->test)
-                                                <div class="small text-muted">Điểm qua: {{ $result->test->pass_score }}</div>
-                                             @endif
-                                          </td>
-                                          <td class="text-center fw-bold" style="font-size: 15px;">
-                                             {{ $result->score }}
-                                          </td>
-                                          <td class="text-center">
-                                             @if($result->is_passed)
-                                                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
-                                                   <i class="far fa-check-circle me-1"></i> ĐẠT
-                                                </span>
-                                             @else
-                                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
-                                                   <i class="far fa-times-circle me-1"></i> CHƯA ĐẠT
-                                                </span>
-                                             @endif
-                                          </td>
-                                          <td class="text-muted">
-                                             <i class="far fa-calendar-alt me-1"></i>
-                                             {{ $result->completed_at ? $result->completed_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') : $result->created_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
-                                          </td>
-                                          <td class="text-end">
-                                             <a href="{{ route('frontend.tests.show', $result->test_id) }}" class="btn btn-sm btn-outline-secondary rounded-pill px-3" style="font-size: 12px;">
-                                                <i class="far fa-redo me-1"></i> Làm lại
-                                             </a>
-                                          </td>
-                                       </tr>
-                                       @endforeach
-                                    </tbody>
-                                 </table>
-                              </div>
-                           @else
-                              <div class="text-center py-5">
-                                 <div style="font-size: 48px; color: #adb5bd;" class="mb-3">
-                                    <i class="far fa-clipboard-list"></i>
-                                 </div>
-                                 <h6 class="text-muted mb-3">Bạn chưa tham gia bài kiểm tra nào.</h6>
-                                 <a href="{{ route('frontend.tests.index') }}" class="it-btn-profile text-decoration-none" style="padding: 10px 24px; font-size: 14px;">
-                                    <i class="far fa-pen-nib me-2"></i> Làm bài kiểm tra ngay
-                                 </a>
-                              </div>
-                           @endif
                         </div>
-                     </div>
 
+                        <div class="mt-25 text-end">
+                           <button type="submit" class="it-btn-profile">
+                              <i class="far fa-save me-1"></i> Lưu thay đổi
+                           </button>
+                        </div>
+                     </form>
                   </div>
                </div>
 
@@ -328,37 +348,30 @@
    <script src="{{ asset('assets/js/main.js') }}"></script>  
    <script>
       $(document).ready(function() {
-         var hash = window.location.hash;
-         if (hash === '#tab-password') {
-            hash = '#tab-info';
-            $('#changePasswordCheckbox').prop('checked', true);
-            $('#passwordFields').show();
-            $('#inputNewPassword, #inputConfirmPassword').prop('disabled', false);
-         }
-         if (hash) {
-            var tabBtn = document.querySelector('a[href="' + hash + '"]');
-            if (tabBtn) {
-               var tab = new bootstrap.Tab(tabBtn);
-               tab.show();
-            }
-         }
+         $('#changePasswordToggle').on('change', function() {
+            var isChecked = $(this).is(':checked');
+            var $wrap = $('#passwordFieldsWrap');
+            var $badge = $('#toggleStatusBadge');
+            var $help = $('#toggleHelpText');
+            var $inputs = $('#inputNewPassword, #inputConfirmPassword');
+            var $stars = $('.required-star');
 
-         // Toggle password fields
-         $('#changePasswordCheckbox').on('change', function() {
-            if ($(this).is(':checked')) {
-               $('#passwordFields').stop(true, true).slideDown(200);
-               $('#inputNewPassword, #inputConfirmPassword').prop('disabled', false);
+            if (isChecked) {
+               $wrap.removeClass('is-disabled');
+               $inputs.prop('disabled', false);
+               $badge.css({'background': 'rgba(3, 89, 78, 0.1)', 'color': '#03594e'}).text('Đang bật');
+               $help.text('Nhập mật khẩu mới ít nhất 6 ký tự để thay đổi mật khẩu tài khoản của bạn.');
+               $stars.show();
+               $('#inputNewPassword').attr('placeholder', 'Nhập mật khẩu mới (tối thiểu 6 ký tự)').focus();
+               $('#inputConfirmPassword').attr('placeholder', 'Nhập lại mật khẩu mới');
             } else {
-               $('#passwordFields').stop(true, true).slideUp(200);
-               $('#inputNewPassword, #inputConfirmPassword').prop('disabled', true).val('');
-            }
-         });
-
-         // Update URL hash when tab is switched
-         $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function(e) {
-            var target = $(e.target).attr('href');
-            if (target && target.startsWith('#')) {
-               history.replaceState(null, null, target);
+               $wrap.addClass('is-disabled');
+               $inputs.prop('disabled', true).val('');
+               $badge.css({'background': '#f1f5f9', 'color': '#64748b'}).text('Đang tắt');
+               $help.text('Bật công tắc trên nếu bạn muốn cập nhật mật khẩu mới.');
+               $stars.hide();
+               $('#inputNewPassword').attr('placeholder', 'Bật công tắc để nhập mật khẩu');
+               $('#inputConfirmPassword').attr('placeholder', 'Bật công tắc để xác nhận mật khẩu');
             }
          });
       });

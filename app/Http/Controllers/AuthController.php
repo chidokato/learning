@@ -24,10 +24,16 @@ class AuthController extends Controller
      */
         public function login(Request $request): RedirectResponse
     {
+        $messages = [
+            'email.required' => 'Vui lòng nhập địa chỉ email.',
+            'email.email' => 'Địa chỉ email không đúng định dạng.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
+        ];
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
-        ]);
+        ], $messages);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
@@ -53,12 +59,26 @@ class AuthController extends Controller
      */
         public function register(Request $request): RedirectResponse
     {
+        $messages = [
+            'name.required' => 'Vui lòng nhập họ và tên.',
+            'name.string' => 'Họ và tên không hợp lệ.',
+            'name.max' => 'Họ và tên không được vượt quá :max ký tự.',
+            'phone.max' => 'Số điện thoại không được vượt quá :max ký tự.',
+            'email.required' => 'Vui lòng nhập địa chỉ email.',
+            'email.email' => 'Địa chỉ email không đúng định dạng.',
+            'email.max' => 'Địa chỉ email không được vượt quá :max ký tự.',
+            'email.unique' => 'Địa chỉ email này đã được đăng ký tài khoản.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
+            'password.min' => 'Mật khẩu phải có ít nhất :min ký tự.',
+            'password.confirmed' => 'Xác nhận mật khẩu không trùng khớp.',
+        ];
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
-        ]);
+        ], $messages);
 
         $user = User::create([
             'name' => $validated['name'],
@@ -100,21 +120,37 @@ class AuthController extends Controller
      */
     public function showProfile()
     {
+        return view('frontend.profile');
+    }
+
+    /**
+     * Lịch sử học tập
+     */
+    public function learningHistory()
+    {
         $user = Auth::user();
 
-        // Lịch sử học khóa học
         $learnedCourses = \App\Models\UserCourseHistory::where('user_id', $user->id)
             ->with(['post.category'])
             ->orderByDesc('last_learned_at')
             ->get();
 
-        // Lịch sử làm bài kiểm tra
+        return view('frontend.history.learning', compact('learnedCourses'));
+    }
+
+    /**
+     * Lịch sử làm bài kiểm tra
+     */
+    public function testHistory()
+    {
+        $user = Auth::user();
+
         $testResults = \App\Models\UserTestResult::where('user_id', $user->id)
             ->with('test')
             ->orderByDesc('created_at')
             ->get();
 
-        return view('frontend.profile', compact('learnedCourses', 'testResults'));
+        return view('frontend.history.tests', compact('testResults'));
     }
 
     /**
@@ -134,7 +170,18 @@ class AuthController extends Controller
             $rules['password'] = ['required', 'string', 'min:6', 'confirmed'];
         }
 
-        $validated = $request->validate($rules);
+        $messages = [
+            'name.required' => 'Vui lòng nhập họ và tên.',
+            'name.string' => 'Họ và tên không hợp lệ.',
+            'name.max' => 'Họ và tên không được vượt quá :max ký tự.',
+            'phone.max' => 'Số điện thoại không được vượt quá :max ký tự.',
+            'address.max' => 'Địa chỉ không được vượt quá :max ký tự.',
+            'password.required' => 'Vui lòng nhập mật khẩu mới.',
+            'password.min' => 'Mật khẩu mới phải có ít nhất :min ký tự.',
+            'password.confirmed' => 'Xác nhận mật khẩu mới không trùng khớp.',
+        ];
+
+        $validated = $request->validate($rules, $messages);
 
         $data = [
             'name' => $validated['name'],

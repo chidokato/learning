@@ -197,73 +197,43 @@
    @endif
 
    <div class="profile-sidebar-nav-wrap">
-      <ul class="profile-nav-list" id="profileTab" role="tablist">
+      <ul class="profile-nav-list">
          <!-- 1. Thông tin cá nhân -->
          <li class="nav-item">
-            @if($isProfilePage)
-               <a class="profile-nav-link active" id="tab-info-link" data-bs-toggle="pill" href="#tab-info" role="tab" aria-controls="tab-info" aria-selected="true">
-                  <span class="profile-nav-link-content">
-                     <i class="far fa-user profile-nav-icon"></i>
-                     <span>Thông tin cá nhân</span>
-                  </span>
-                  <i class="far fa-angle-right profile-nav-arrow"></i>
-               </a>
-            @else
-               <a class="profile-nav-link" href="{{ route('frontend.profile') }}#tab-info">
-                  <span class="profile-nav-link-content">
-                     <i class="far fa-user profile-nav-icon"></i>
-                     <span>Thông tin cá nhân</span>
-                  </span>
-                  <i class="far fa-angle-right profile-nav-arrow"></i>
-               </a>
-            @endif
+            <a class="profile-nav-link {{ request()->routeIs('frontend.profile') ? 'active' : '' }}" href="{{ route('frontend.profile') }}">
+               <span class="profile-nav-link-content">
+                  <i class="far fa-user profile-nav-icon"></i>
+                  <span>Thông tin cá nhân</span>
+               </span>
+               <i class="far fa-angle-right profile-nav-arrow"></i>
+            </a>
          </li>
 
-         <!-- 3. Lịch sử học tập -->
+         <!-- 2. Lịch sử học tập -->
          <li class="nav-item">
-            @if($isProfilePage)
-               <a class="profile-nav-link" id="tab-learning-history-link" data-bs-toggle="pill" href="#tab-learning-history" role="tab" aria-controls="tab-learning-history" aria-selected="false">
-                  <span class="profile-nav-link-content">
-                     <i class="far fa-graduation-cap profile-nav-icon"></i>
-                     <span>Lịch sử học tập</span>
-                  </span>
-                  <i class="far fa-angle-right profile-nav-arrow"></i>
-               </a>
-            @else
-               <a class="profile-nav-link" href="{{ route('frontend.profile') }}#tab-learning-history">
-                  <span class="profile-nav-link-content">
-                     <i class="far fa-graduation-cap profile-nav-icon"></i>
-                     <span>Lịch sử học tập</span>
-                  </span>
-                  <i class="far fa-angle-right profile-nav-arrow"></i>
-               </a>
-            @endif
+            <a class="profile-nav-link {{ request()->routeIs('frontend.history.learning') ? 'active' : '' }}" href="{{ route('frontend.history.learning') }}">
+               <span class="profile-nav-link-content">
+                  <i class="far fa-graduation-cap profile-nav-icon"></i>
+                  <span>Lịch sử học tập</span>
+               </span>
+               <i class="far fa-angle-right profile-nav-arrow"></i>
+            </a>
          </li>
 
-         <!-- 4. Lịch sử làm bài -->
+         <!-- 3. Lịch sử làm bài -->
          <li class="nav-item">
-            @if($isProfilePage)
-               <a class="profile-nav-link" id="tab-test-history-link" data-bs-toggle="pill" href="#tab-test-history" role="tab" aria-controls="tab-test-history" aria-selected="false">
-                  <span class="profile-nav-link-content">
-                     <i class="far fa-history profile-nav-icon"></i>
-                     <span>Lịch sử làm bài</span>
-                  </span>
-                  <i class="far fa-angle-right profile-nav-arrow"></i>
-               </a>
-            @else
-               <a class="profile-nav-link" href="{{ route('frontend.profile') }}#tab-test-history">
-                  <span class="profile-nav-link-content">
-                     <i class="far fa-history profile-nav-icon"></i>
-                     <span>Lịch sử làm bài</span>
-                  </span>
-                  <i class="far fa-angle-right profile-nav-arrow"></i>
-               </a>
-            @endif
+            <a class="profile-nav-link {{ request()->routeIs('frontend.history.tests') ? 'active' : '' }}" href="{{ route('frontend.history.tests') }}">
+               <span class="profile-nav-link-content">
+                  <i class="far fa-history profile-nav-icon"></i>
+                  <span>Lịch sử làm bài</span>
+               </span>
+               <i class="far fa-angle-right profile-nav-arrow"></i>
+            </a>
          </li>
 
-         <!-- 5. Bài kiểm tra -->
+         <!-- 4. Bài kiểm tra -->
          <li class="nav-item">
-            <a class="profile-nav-link {{ $isTestsPage ? 'active' : '' }}" href="{{ route('frontend.tests.index') }}">
+            <a class="profile-nav-link {{ request()->routeIs('frontend.tests.*') ? 'active' : '' }}" href="{{ route('frontend.tests.index') }}">
                <span class="profile-nav-link-content">
                   <i class="far fa-clipboard-check profile-nav-icon"></i>
                   <span>Bài kiểm tra</span>

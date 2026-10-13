@@ -123,6 +123,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::middleware('auth')->group(function () {
         Route::get('profile', 'showProfile')->name('frontend.profile');
         Route::post('profile', 'updateProfile')->name('frontend.profile.update');
+        Route::get('lich-su-hoc-tap', 'learningHistory')->name('frontend.history.learning');
+        Route::get('lich-su-lam-bai', 'testHistory')->name('frontend.history.tests');
     });
 });
 // AI Chatbot Widget API Route
