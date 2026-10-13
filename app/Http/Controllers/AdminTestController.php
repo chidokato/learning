@@ -30,6 +30,7 @@ class AdminTestController extends Controller
             'post_id' => 'nullable',
             'title' => 'required',
             'pass_score' => 'required|numeric',
+            'duration' => 'nullable|numeric|min:0',
             'file' => 'required|mimes:xlsx,xls,csv'
         ]);
 
@@ -37,12 +38,36 @@ class AdminTestController extends Controller
             $test = Test::create([
                 'post_id' => $request->post_id,
                 'title' => $request->title,
-                'pass_score' => $request->pass_score
+                'pass_score' => $request->pass_score,
+                'duration' => $request->duration ? (int)$request->duration : 0,
             ]);
 
             Excel::import(new TestImport($test->id), $request->file('file'));
             
             return redirect()->back()->with('success', 'Tạo bài test và import câu hỏi thành công!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Đã có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
+
+    public function update(Request $request, Test $test)
+    {
+        $request->validate([
+            'title' => 'required',
+            'post_id' => 'nullable',
+            'pass_score' => 'required|numeric|min:1',
+            'duration' => 'nullable|numeric|min:0',
+        ]);
+
+        try {
+            $test->update([
+                'title' => $request->title,
+                'post_id' => $request->post_id ?: null,
+                'pass_score' => $request->pass_score,
+                'duration' => $request->duration ? (int)$request->duration : 0,
+            ]);
+
+            return redirect()->back()->with('success', 'Cập nhật bài kiểm tra thành công!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Đã có lỗi xảy ra: ' . $e->getMessage());
         }

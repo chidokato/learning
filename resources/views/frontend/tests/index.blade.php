@@ -79,6 +79,19 @@
          padding: 5px 12px;
          border-radius: 6px;
       }
+      .test-stat-pill {
+         display: inline-flex;
+         align-items: center;
+         gap: 4px;
+         font-size: 12px;
+         font-weight: 500;
+         padding: 4px 8px;
+         border-radius: 6px;
+         background: #f8fafc;
+         border: 1px solid #e2e8f0;
+         color: #475569;
+         white-space: nowrap;
+      }
       .test-btn-action {
          display: inline-flex;
          align-items: center;
@@ -128,17 +141,26 @@
                                     <h4 class="test-card-title">{{ $test->title }}</h4>
                                     <div class="test-card-meta">
                                        <span><i class="far fa-question-circle text-primary"></i> {{ $test->questions()->count() }} Câu hỏi</span>
-                                       <span><i class="far fa-bullseye text-success"></i> Điểm qua: {{ $test->pass_score }}</span>
+                                       <span><i class="far fa-check-circle text-success"></i> Đạt: {{ $test->pass_score }}/{{ $test->questions()->count() }} câu</span>
+                                       <span>
+                                          <i class="far fa-clock text-warning"></i> 
+                                          @if($test->duration && $test->duration > 0)
+                                             {{ $test->duration }} phút
+                                          @else
+                                             Tự do
+                                          @endif
+                                       </span>
                                     </div>
                                  </div>
-                                 <div class="d-flex align-items-center justify-content-between pt-15 border-top">
+                                 <div class="d-flex align-items-center justify-content-between pt-15 border-top gap-2 flex-wrap">
                                     @php
+                                       $itemResult = $userResults[$test->id] ?? null;
                                        $status = 'Chưa làm';
                                        $statusBg = '#f1f5f9';
                                        $statusColor = '#475467';
                                        $statusIcon = 'fa-clock';
-                                       if(isset($results[$test->id])) {
-                                          if($results[$test->id]->is_passed) {
+                                       if($itemResult) {
+                                          if($itemResult['is_passed']) {
                                              $status = 'Đã qua';
                                              $statusBg = '#dcfce7';
                                              $statusColor = '#15803d';
@@ -151,11 +173,21 @@
                                           }
                                        }
                                     @endphp
-                                    <span class="test-status-badge" style="background-color: {{ $statusBg }}; color: {{ $statusColor }};">
-                                       <i class="far {{ $statusIcon }}"></i> {{ $status }}
-                                    </span>
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                       <span class="test-status-badge" style="background-color: {{ $statusBg }}; color: {{ $statusColor }};">
+                                          <i class="far {{ $statusIcon }}"></i> {{ $status }}
+                                       </span>
+                                       @if($itemResult)
+                                          <span class="test-stat-pill" title="Số lần đã làm bài">
+                                             <i class="far fa-redo text-muted"></i> {{ $itemResult['attempts'] }} lần thi
+                                          </span>
+                                          <span class="test-stat-pill" title="Điểm số cao nhất">
+                                             <i class="far fa-trophy text-warning"></i> Cao nhất: <strong class="text-success">{{ $itemResult['max_score'] }}</strong>/{{ $test->questions()->count() }}
+                                          </span>
+                                       @endif
+                                    </div>
                                     <a href="{{ route('frontend.tests.show', $test->id) }}" class="test-btn-action">
-                                       <span>Làm bài</span>
+                                       <span>{{ $itemResult ? 'Làm lại' : 'Làm bài' }}</span>
                                        <i class="far fa-arrow-right"></i>
                                     </a>
                                  </div>

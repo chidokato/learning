@@ -212,9 +212,14 @@
                <div class="col-xl-9 col-lg-8">
                   <div class="test-header-box text-center">
                      <h3 class="test-header-title">{{ $test->title }}</h3>
-                     <span class="test-header-badge">
-                        Điểm qua môn: {{ $test->pass_score }} / {{ $test->questions->count() }}
-                     </span>
+                     <div class="d-flex align-items-center justify-content-center gap-2 mt-2 flex-wrap">
+                        <span class="test-header-badge">
+                           Yêu cầu đạt: {{ $test->pass_score }}/{{ $test->questions->count() }} câu
+                        </span>
+                        <span class="test-header-badge">
+                           <i class="far fa-clock text-warning me-1"></i> Thời gian: {{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Không giới hạn' }}
+                        </span>
+                     </div>
                   </div>
 
                   <form id="test-form">
@@ -252,7 +257,7 @@
                            <div class="d-flex align-items-center">
                               <div class="test-timer-wrapper">
                                  <i class="far fa-clock text-danger me-2"></i>
-                                 <span>Thời gian:</span>
+                                 <span>{{ $test->duration && $test->duration > 0 ? "Còn lại:" : "Thời gian:" }}</span>
                                  <span class="timer-val ms-2" id="test-timer">00:00</span>
                               </div>
                               <span class="test-progress-badge d-none d-sm-inline-block">
@@ -348,6 +353,7 @@
       $(document).ready(function() {
          // 1. Đồng hồ thời gian thực (Lưu vào localStorage để load trang không bị reset)
          const testStorageKey = 'test_start_time_{{ $test->id }}_{{ auth()->id() ?? "guest" }}';
+         const testDurationMinutes = {{ (int)($test->duration ?? 0) }};
          let startTime = localStorage.getItem(testStorageKey);
          if (!startTime) {
             startTime = Date.now();
@@ -356,11 +362,38 @@
             startTime = parseInt(startTime);
          }
 
+         let autoSubmitted = false;
+
          function updateTimerDisplay() {
-            let elapsedSeconds = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
-            let hours = Math.floor(elapsedSeconds / 3600);
-            let mins = Math.floor((elapsedSeconds % 3600) / 60);
-            let secs = elapsedSeconds % 60;
+            let now = Date.now();
+            let elapsedSeconds = Math.max(0, Math.floor((now - startTime) / 1000));
+            
+            let displaySeconds = 0;
+            if (testDurationMinutes > 0) {
+               // Đếm ngược nếu có giới hạn thời gian
+               let totalAllowedSeconds = testDurationMinutes * 60;
+               let remaining = totalAllowedSeconds - elapsedSeconds;
+               
+               if (remaining <= 0) {
+                  remaining = 0;
+                  $('#test-timer').text('00:00');
+                  if (!autoSubmitted) {
+                     autoSubmitted = true;
+                     clearInterval(timerInterval);
+                     alert('Đã hết thời gian làm bài! Hệ thống sẽ tự động nộp bài của bạn.');
+                     executeSubmitTest();
+                  }
+                  return;
+               }
+               displaySeconds = remaining;
+            } else {
+               // Đếm xuôi nếu không giới hạn
+               displaySeconds = elapsedSeconds;
+            }
+
+            let hours = Math.floor(displaySeconds / 3600);
+            let mins = Math.floor((displaySeconds % 3600) / 60);
+            let secs = displaySeconds % 60;
             
             let formatted = '';
             if (hours > 0) {
@@ -451,7 +484,7 @@
             });
 
             $.ajax({
-               url: '/api/tests/{{ $test->id }}/submit',
+               url: '{{ route('frontend.tests.submit', $test->id) }}',
                type: 'POST',
                data: {
                   _token: $('meta[name="csrf-token"]').attr('content'),
@@ -481,8 +514,13 @@
                   // Cuộn lên đầu xem kết quả
                   $('html, body').animate({ scrollTop: $('.test-header-box').offset().top - 30 }, 400);
                },
-               error: function(err) {
-                  alert('Có lỗi xảy ra, vui lòng thử lại!');
+               error: function(xhr, status, err) {
+                  console.error('Submit error:', xhr);
+                  let errorMsg = 'Có lỗi xảy ra, vui lòng thử lại!';
+                  if (xhr.responseJSON && xhr.responseJSON.message) {
+                     errorMsg = xhr.responseJSON.message;
+                  }
+                  alert(errorMsg);
                   submitBtn.prop('disabled', false).html('<span>Nộp bài kiểm tra</span>');
                   bottomBtn.prop('disabled', false).html('<i class="far fa-paper-plane me-2"></i> Nộp bài');
                }

@@ -104,6 +104,7 @@ Route::get('news/{slug}', fn () => view('frontend.home'))->name('frontend.news.s
 
 Route::get('bai-kiem-tra', [\App\Http\Controllers\FrontendTestController::class, 'index'])->name('frontend.tests.index');
 Route::get('bai-kiem-tra/{test_id}', [\App\Http\Controllers\FrontendTestController::class, 'show'])->name('frontend.tests.show');
+Route::post('bai-kiem-tra/{test_id}/submit', [\App\Http\Controllers\TestController::class, 'submitTest'])->name('frontend.tests.submit');
 
 // Frontend Authentication Routes
 Route::controller(AuthController::class)->group(function () {
@@ -170,6 +171,7 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::get('tests', 'index')->name('tests.index');
         Route::get('tests/{test}', 'show')->name('tests.show');
         Route::post('tests/import', 'import')->name('tests.import');
+        Route::put('tests/{test}', 'update')->name('tests.update');
         Route::delete('tests/{test}', 'destroy')->name('tests.destroy');
     });
 

@@ -14,10 +14,20 @@ class FrontendTestController extends Controller
         
         $user_id = auth()->id() ?? 1; // Fallback to 1 for testing if not logged in
         
-        // Lấy kết quả của user để hiển thị trạng thái
-        $results = UserTestResult::where('user_id', $user_id)->get()->keyBy('test_id');
+        // Lấy thống kê làm bài của user theo từng bài test
+        $userResults = UserTestResult::where('user_id', $user_id)
+            ->get()
+            ->groupBy('test_id')
+            ->map(function ($items) {
+                return [
+                    'attempts'   => $items->count(),
+                    'max_score'  => $items->max('score'),
+                    'is_passed'  => $items->contains('is_passed', true),
+                    'latest'     => $items->sortByDesc('created_at')->first(),
+                ];
+            });
 
-        return view('frontend.tests.index', compact('tests', 'results'));
+        return view('frontend.tests.index', compact('tests', 'userResults'));
     }
 
     public function show($id)
