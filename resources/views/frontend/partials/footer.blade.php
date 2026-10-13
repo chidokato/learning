@@ -41,7 +41,7 @@
                   data-wow-delay=".3s">
                   <div class="it-footer-widget it-footer-col-1-1">
                      <div class="it-footer-widget-logo mb-30">
-                        <a href="{{ route('frontend.home') }}"><img src="{{ $siteSetting->footer_logo_url }}" alt=""></a>
+                        <a href="{{ route('frontend.home') }}"><img src="{{ $siteSetting->footer_logo_url }}" alt="Indochine Logo" style="max-width: 160px; max-height: 55px; width: auto;"></a>
                      </div>
                      <div class="it-footer-widget-text">
                         <p>Khám phá các khóa học chất lượng từ <strong>Learning Indochine</strong>, được thiết kế bởi chuyên gia giúp bạn thăng tiến sự nghiệp ngay tại nhà.</p>

@@ -94,9 +94,13 @@
                      <div class="sidebar-widget mb-40">
                         <div class="d-flex align-items-center mb-25 pb-20 border-bottom">
                            <div class="flex-shrink-0 me-3">
-                              <div style="width: 52px; height: 52px; border-radius: 50%; background: #03594e; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold;">
-                                 {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
-                              </div>
+                              @if(Auth::user()->avatar && file_exists(public_path(Auth::user()->avatar)))
+                                 <img src="{{ asset(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #03594e;">
+                              @else
+                                 <div style="width: 52px; height: 52px; border-radius: 50%; background: #03594e; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold;">
+                                    {{ mb_strtoupper(mb_substr(Auth::user()->name ?? 'U', 0, 1, 'UTF-8'), 'UTF-8') }}
+                                 </div>
+                              @endif
                            </div>
                            <div class="flex-grow-1 overflow-hidden">
                               <h5 class="mb-5 text-truncate" style="font-size: 17px; font-weight: 600;">{{ Auth::user()->name }}</h5>
@@ -270,7 +274,7 @@
                                                       <span class="badge bg-light text-secondary border">{{ $item->post->category->name }}</span>
                                                    @endif
                                                    <span>
-                                                      <i class="far fa-clock me-1"></i> Học gần nhất: {{ $item->last_learned_at ? $item->last_learned_at->format('d/m/Y H:i') : $item->updated_at->format('d/m/Y H:i') }}
+                                                      <i class="far fa-clock me-1"></i> Học gần nhất: {{ $item->last_learned_at ? $item->last_learned_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') : $item->updated_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
                                                    </span>
                                                 </div>
                                              </div>
@@ -347,7 +351,7 @@
                                           </td>
                                           <td class="text-muted">
                                              <i class="far fa-calendar-alt me-1"></i>
-                                             {{ $result->completed_at ? $result->completed_at->format('d/m/Y H:i') : $result->created_at->format('d/m/Y H:i') }}
+                                             {{ $result->completed_at ? $result->completed_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') : $result->created_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
                                           </td>
                                           <td class="text-end">
                                              <a href="{{ route('frontend.tests.show', $result->test_id) }}" class="btn btn-sm btn-outline-secondary rounded-pill px-3" style="font-size: 12px;">

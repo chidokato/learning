@@ -40,7 +40,7 @@ class Setting extends Model
 
     public function getFooterLogoUrlAttribute(): string
     {
-        return $this->imageUrl($this->footer_logo, 'images/logo/logo-black.png');
+        return $this->imageUrl($this->footer_logo ?: $this->logo, 'images/logo/logo-black.png');
     }
 
     public function getFaviconUrlAttribute(): string
