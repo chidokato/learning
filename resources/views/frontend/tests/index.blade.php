@@ -23,20 +23,79 @@
    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v={{ time() }}">   
 
    <style>
-      .sidebar-widget-list {
-         cursor: pointer;
+      .test-card-item {
+         background: #ffffff;
+         border: 1px solid #eef2f6;
+         border-radius: 16px;
+         padding: 24px;
+         box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+         transition: all 0.25s ease;
+         height: 100%;
+         display: flex;
+         flex-direction: column;
+         justify-content: space-between;
+      }
+      .test-card-item:hover {
+         transform: translateY(-3px);
+         box-shadow: 0 10px 25px -4px rgba(3, 89, 78, 0.12);
+         border-color: rgba(3, 89, 78, 0.25);
+      }
+      .test-card-tag {
+         display: inline-block;
+         font-size: 11.5px;
+         font-weight: 600;
+         color: #03594e;
+         background: rgba(3, 89, 78, 0.08);
+         padding: 3px 10px;
+         border-radius: 6px;
+         margin-bottom: 12px;
+      }
+      .test-card-title {
+         font-size: 17px;
+         font-weight: 700;
+         color: #1a2c5e;
+         margin-bottom: 12px;
+         line-height: 1.4;
+      }
+      .test-card-meta {
+         display: flex;
+         align-items: center;
+         gap: 15px;
+         font-size: 13px;
+         color: #64748b;
+         margin-bottom: 20px;
+      }
+      .test-card-meta span {
+         display: inline-flex;
+         align-items: center;
+         gap: 5px;
+      }
+      .test-status-badge {
+         display: inline-flex;
+         align-items: center;
+         gap: 5px;
+         font-size: 12.5px;
+         font-weight: 600;
+         padding: 5px 12px;
+         border-radius: 6px;
+      }
+      .test-btn-action {
+         display: inline-flex;
+         align-items: center;
+         gap: 7px;
+         background: #03594e;
+         color: #ffffff !important;
+         font-size: 13.5px;
+         font-weight: 600;
+         padding: 7px 16px;
+         border-radius: 8px;
          text-decoration: none !important;
+         transition: all 0.2s ease;
       }
-      .sidebar-widget-list i {
-         transition: 0.3s;
-      }
-      .sidebar-widget-list.active i,
-      .sidebar-widget-list:hover i {
-         color: var(--it-common-white) !important;
-      }
-      .sidebar-widget-list.active .text-danger,
-      .sidebar-widget-list:hover .text-danger {
-         color: var(--it-common-white) !important;
+      .test-btn-action:hover {
+         background: #02433b;
+         box-shadow: 0 4px 12px rgba(3, 89, 78, 0.25);
+         transform: translateX(2px);
       }
    </style>
 </head>
@@ -53,48 +112,51 @@
             <div class="row gx-35">
                
                <!-- Sidebar -->
-               <div class="col-xl-4 col-lg-4">
+               <div class="col-xl-3 col-lg-4">
                   @include('frontend.partials.profile-sidebar')
                </div>
 
                <!-- Main Content -->
-               <div class="col-xl-8 col-lg-8">
-                  <div class="row gx-35">
+               <div class="col-xl-9 col-lg-8">
+                  <div class="row g-4">
                      @if($tests->count() > 0)
                         @foreach($tests as $test)
                            <div class="col-xl-6 col-lg-6 col-md-12 wow itfadeUp" data-wow-duration=".9s" data-wow-delay=".3s">
-                              <div class="it-career-item mb-35">
-                                 <span>Bài kiểm tra</span>
-                                 <h4 class="title">{{ $test->title }}</h4>
-                                 <div class="it-career-meta">
-                                    <span>{{ $test->questions()->count() }} Câu hỏi</span>
-                                    <span>Điểm qua: {{ $test->pass_score }}</span>
+                              <div class="test-card-item">
+                                 <div>
+                                    <span class="test-card-tag"><i class="far fa-clipboard-list me-1"></i> Bài kiểm tra</span>
+                                    <h4 class="test-card-title">{{ $test->title }}</h4>
+                                    <div class="test-card-meta">
+                                       <span><i class="far fa-question-circle text-primary"></i> {{ $test->questions()->count() }} Câu hỏi</span>
+                                       <span><i class="far fa-bullseye text-success"></i> Điểm qua: {{ $test->pass_score }}</span>
+                                    </div>
                                  </div>
-                                 <div class="d-sm-flex align-items-center justify-content-between mt-4">
+                                 <div class="d-flex align-items-center justify-content-between pt-15 border-top">
                                     @php
                                        $status = 'Chưa làm';
-                                       $statusColor = '#6c757d'; // gray
+                                       $statusBg = '#f1f5f9';
+                                       $statusColor = '#475467';
+                                       $statusIcon = 'fa-clock';
                                        if(isset($results[$test->id])) {
                                           if($results[$test->id]->is_passed) {
                                              $status = 'Đã qua';
-                                             $statusColor = '#28a745'; // green
+                                             $statusBg = '#dcfce7';
+                                             $statusColor = '#15803d';
+                                             $statusIcon = 'fa-check-circle';
                                           } else {
                                              $status = 'Chưa qua';
-                                             $statusColor = '#dc3545'; // red
+                                             $statusBg = '#fee2e2';
+                                             $statusColor = '#b91c1c';
+                                             $statusIcon = 'fa-times-circle';
                                           }
                                        }
                                     @endphp
-                                    <span class="it-career-price badge" style="background-color: {{ $statusColor }}; color: #fff; padding: 8px 15px; border-radius: 5px; font-weight: 500; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">{{ $status }}</span>
-                                    <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow">
-                                       <span>
-                                          <span class="text-1">Làm bài</span>
-                                          <span class="text-2">Làm bài</span>
-                                       </span>
-                                       <i>
-                                          <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                             <path d="M14.6364 7.26396C14.9879 6.91249 14.9879 6.34264 14.6364 5.99117L8.90883 0.263603C8.55736 -0.0878692 7.98751 -0.0878692 7.63604 0.263603C7.28457 0.615075 7.28457 1.18492 7.63604 1.53639L12.7272 6.62756L7.63604 11.7187C7.28457 12.0702 7.28457 12.6401 7.63604 12.9915C7.98751 13.343 8.55736 13.343 8.90883 12.9915L14.6364 7.26396ZM0 6.62756V7.52756H14V6.62756V5.72756H0V6.62756Z" fill="#1F2432"></path>
-                                          </svg>
-                                       </i>
+                                    <span class="test-status-badge" style="background-color: {{ $statusBg }}; color: {{ $statusColor }};">
+                                       <i class="far {{ $statusIcon }}"></i> {{ $status }}
+                                    </span>
+                                    <a href="{{ route('frontend.tests.show', $test->id) }}" class="test-btn-action">
+                                       <span>Làm bài</span>
+                                       <i class="far fa-arrow-right"></i>
                                     </a>
                                  </div>
                               </div>
@@ -102,8 +164,9 @@
                         @endforeach
                      @else
                         <div class="col-12 text-center">
-                           <div class="postbox-details-wrapper p-5" style="border: 1px dashed #ddd; border-radius: 10px;">
-                              <p class="mb-0 fs-18">Hiện chưa có bài kiểm tra chung nào được mở.</p>
+                           <div class="p-5 bg-white rounded-3 shadow-sm" style="border: 1px dashed #cbd5e1;">
+                              <i class="far fa-clipboard-check text-muted mb-3" style="font-size: 40px;"></i>
+                              <p class="mb-0 text-muted fs-16">Hiện chưa có bài kiểm tra nào được mở.</p>
                            </div>
                         </div>
                      @endif
@@ -112,7 +175,6 @@
 
             </div>
          </div>
-      </div>
    </main>
 
    @include('frontend.partials.footer')

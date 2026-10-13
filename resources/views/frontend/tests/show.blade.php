@@ -80,40 +80,24 @@
       }
       .pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
       .fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-      .sidebar-widget-list {
-         cursor: pointer;
-         text-decoration: none !important;
-      }
-      .sidebar-widget-list i {
-         transition: 0.3s;
-      }
-      .sidebar-widget-list.active i,
-      .sidebar-widget-list:hover i {
-         color: var(--it-common-white) !important;
-      }
-      .sidebar-widget-list.active .text-danger,
-      .sidebar-widget-list:hover .text-danger {
-         color: var(--it-common-white) !important;
-      }
    </style>
 </head>
 
 <body>
    @include('frontend.partials.header')
 
-      <main>
+   <main>
       <div class="it-blog-details-area blog-details-left-sidebar pt-40 pb-40">
          <div class="container">
             <div class="row gx-35">
                
                <!-- Sidebar -->
-               <div class="col-xl-4 col-lg-4">
+               <div class="col-xl-3 col-lg-4">
                   @include('frontend.partials.profile-sidebar')
                </div>
 
                <!-- Main Content -->
-               <div class="col-xl-8 col-lg-8">
+               <div class="col-xl-9 col-lg-8">
                   <div class="test-header-box text-center">
                      <h3 class="test-header-title">{{ $test->title }}</h3>
                      <span class="badge bg-secondary p-2 mt-2" style="font-size: 14px;">

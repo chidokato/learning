@@ -124,12 +124,17 @@ class AuthController extends Controller
     {
         $user = Auth::user();
 
-        $validated = $request->validate([
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string', 'max:255'],
-            'password' => ['nullable', 'string', 'min:6', 'confirmed'],
-        ]);
+        ];
+
+        if ($request->boolean('change_password')) {
+            $rules['password'] = ['required', 'string', 'min:6', 'confirmed'];
+        }
+
+        $validated = $request->validate($rules);
 
         $data = [
             'name' => $validated['name'],
@@ -137,7 +142,7 @@ class AuthController extends Controller
             'address' => $validated['address'] ?? null,
         ];
 
-        if (! empty($validated['password'])) {
+        if ($request->boolean('change_password') && ! empty($validated['password'])) {
             $data['password'] = Hash::make($validated['password']);
         }
 
