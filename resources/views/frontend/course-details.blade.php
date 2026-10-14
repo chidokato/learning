@@ -24,7 +24,7 @@
    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v={{ time() }}">   
 
    <link rel="stylesheet" href="{{ asset('assets/css/course-curriculum.css') }}">
-   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}">
+   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v={{ time() }}">
 </head>
 
 <body>
@@ -285,30 +285,29 @@
       </div>    
       <!-- details-area-end -->
 
-      <!-- course-area-start -->
+      <!-- related-courses-area-start -->
       @if (isset($relatedCourses) && $relatedCourses->isNotEmpty())
-      <div class="it-course-area it-course-style-11 it-course-style-3">
+      <section class="related-courses-section">
          <div class="container">
-            <div class="it-course-details-border pt-125 pb-130">
-               <div class="row">
-                  <div class="col-lg-7">
-                     <div class="it-course-details-section-title-box mb-70">
-                        <h4 class="it-details-title">Khóa học liên quan</h4>
-                        <span>Khám phá thêm các khóa học hấp dẫn khác</span>
-                     </div>
+            <div class="row">
+               <div class="col-12">
+                  <div class="related-courses-header">
+                     <span class="related-courses-badge">
+                        <i class="fas fa-sparkles me-1"></i> Khóa học đề xuất
+                     </span>
+                     <h3 class="related-courses-title">Khóa học liên quan</h3>
+                     <p class="related-courses-subtitle">Khám phá thêm các chương trình đào tạo hấp dẫn khác tại Indochine</p>
                   </div>
                </div>
-               <div class="row">
-                  @if (isset($relatedCourses) && $relatedCourses->isNotEmpty())
-                     @foreach ($relatedCourses as $index => $course)
-                        @include('frontend.partials.course-item', ['course' => $course, 'index' => $index])
-                     @endforeach
-                  @endif
-               </div>
+            </div>
+            <div class="row">
+               @foreach ($relatedCourses as $index => $course)
+                  @include('frontend.partials.course-item', ['course' => $course, 'index' => $index])
+               @endforeach
             </div>
          </div>
-      </div>      
-      <!-- course-area-end -->
+      </section>      
+      <!-- related-courses-area-end -->
       @endif
 
    </main>

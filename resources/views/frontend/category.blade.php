@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="zxx">
+<html class="no-js" lang="vi">
 <head>
    <meta charset="utf-8">
    <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -8,7 +8,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
 
    <!-- Place favicon.ico in the root directory -->
-   <link rel="shortcut icon" type="image/x-icon" href="{{ $siteSetting->favicon_url }}">
+   <link rel="shortcut icon" type="image/x-icon" href="{{ $siteSetting->favicon_url ?? asset('assets/img/logo/favicon.png') }}">
 
    <!-- CSS Here -->
    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">        
@@ -22,30 +22,7 @@
    <!-- Theme / Main CSS -->
    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">          
    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v={{ time() }}">   
-
-   <style>
-      /* Đồng bộ kích thước ảnh khóa học bằng nhau */
-      .it-course-thumb {
-         position: relative;
-         overflow: hidden;
-         border-radius: 20px;
-      }
-      .it-course-thumb a {
-         display: block;
-         width: 100%;
-      }
-      .it-course-thumb img {
-         width: 100% !important;
-         height: 230px !important;
-         object-fit: cover !important;
-         object-position: center !important;
-         display: block !important;
-         transition: transform 0.4s ease;
-      }
-      .it-course-item:hover .it-course-thumb img {
-         transform: scale(1.05);
-      }
-   </style>
+   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v={{ time() }}">
 </head>
 
 <body>
@@ -61,7 +38,7 @@
         <button class="close-search"><span class="flaticon-multiply"><i class="fal fa-times"></i></span></button>
         <form method="post" action="#">
             <div class="form-group">
-                <input type="search" name="search-field" value="" placeholder="Search Here" required="">
+                <input type="search" name="search-field" value="" placeholder="Tìm kiếm khóa học..." required="">
                 <button type="submit"><i class="fal fa-search"></i></button>
             </div>
         </form>
@@ -76,7 +53,7 @@
          </div>
          <div class="itoffcanvas__logo">
             <a href="{{ route('frontend.home') }}">
-               <img src="{{ $siteSetting->logo_url }}" alt="">
+               <img src="{{ $siteSetting->logo_url }}" alt="Indochine">
             </a>
          </div>
          <div class="itoffcanvas__text">
@@ -84,7 +61,7 @@
          </div>
          <div class="it-menu-mobile d-xl-none"></div>
          <div class="itoffcanvas__info">
-            <h3 class="offcanva-title">Get In Touch</h3>
+            <h3 class="offcanva-title">Liên hệ</h3>
             <div class="it-info-wrapper mb-20 d-flex align-items-center">
                <div class="itoffcanvas__info-icon">
                   <a href="#"><i class="fal fa-envelope"></i></a>
@@ -99,7 +76,7 @@
                   <a href="#"><i class="fal fa-phone-alt"></i></a>
                </div>
                <div class="itoffcanvas__info-address">
-                  <span>Phone</span>
+                  <span>Hotline</span>
                   <a href="tel:{{ preg_replace('/[^0-9]/', '', $siteSetting->hotline) }}">{{ $siteSetting->hotline }}</a>
                </div>
             </div>
@@ -112,6 +89,34 @@
    @include('frontend.partials.header')
 
    <main>
+      <!-- category-hero-start -->
+      <section class="category-hero-section">
+         <div class="container">
+            <div class="row align-items-center">
+               <div class="col-lg-8">
+                  <nav class="category-breadcrumb mb-2" aria-label="breadcrumb">
+                     <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}"><i class="fas fa-home me-1"></i> Trang chủ</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ $category->name }}</li>
+                     </ol>
+                  </nav>
+                  <h1 class="category-hero-title">{{ $category->name }}</h1>
+                  @if(!empty($category->description))
+                     <p class="category-hero-desc">{{ $category->description }}</p>
+                  @else
+                     <p class="category-hero-desc">Tổng hợp các chương trình đào tạo chuyên sâu và tài liệu thực chiến Indochine</p>
+                  @endif
+               </div>
+               <div class="col-lg-4 text-lg-end d-none d-lg-block">
+                  <div class="category-hero-badge">
+                     <i class="fas fa-graduation-cap me-2"></i>
+                     <span>{{ isset($courses) ? $courses->total() : 0 }} Khóa học</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+      <!-- category-hero-end -->
 
       @include('frontend.partials.course-area')
 

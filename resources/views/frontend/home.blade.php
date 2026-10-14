@@ -22,7 +22,8 @@
 
    <!-- Theme / Main CSS -->
    <link rel="stylesheet" href="assets/css/spacing.css">          
-   <link rel="stylesheet" href="assets/css/main.css?v={{ time() }}">   
+   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v={{ time() }}">   
+   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v={{ time() }}">   
 
    <style>
       /* Đồng bộ kích thước ảnh khóa học bằng nhau */

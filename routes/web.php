@@ -128,6 +128,11 @@ Route::controller(AuthController::class)->group(function () {
         Route::get('lich-su-lam-bai', 'testHistory')->name('frontend.history.tests');
     });
 });
+
+// Google Authentication Routes
+Route::get('auth/google', [\App\Http\Controllers\GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [\App\Http\Controllers\GoogleAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+
 // AI Chatbot Widget API Route
 Route::post('/api/chatbot/ask', [ChatbotController::class, 'ask'])->name('api.chatbot.ask');
 
