@@ -13,9 +13,11 @@
     
     $hasAvatar = !empty($course->seller?->avatar) && file_exists(public_path(ltrim($course->seller->avatar, '/')));
     $avatarImage = $hasAvatar ? asset(ltrim($course->seller->avatar, '/')) : asset('assets/img/avatar/avatar-1-5.png');
+
+    $displayCategoryName = $course->category?->name ?? ($category->name ?? null);
 @endphp
 
-<div class="col-xl-4 col-lg-4 col-md-6 mb-30">
+<div class="{{ $colClass ?? 'col-xl-4 col-lg-4 col-md-6 mb-30' }}">
    <div class="modern-course-card">
       <!-- Thumbnail -->
       <div class="course-card-thumb">
@@ -27,9 +29,9 @@
                  loading="lazy">
          </a>
 
-         @if($course->category?->name)
+         @if($displayCategoryName)
             <span class="course-badge-category">
-               {{ $course->category->name }}
+               {{ $displayCategoryName }}
             </span>
          @endif
 

@@ -35,21 +35,22 @@
                  text-decoration: none !important;
                  border: 2px solid #{{ $hex }} !important;
                  background-color: {{ $bg }} !important;
-                 transition: all 0.3s ease;
+                 transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
                  cursor: pointer;
-                 padding: 40px 20px 35px;
-                 border-radius: 20px;
-                 margin-bottom: 35px;
+                 padding: 28px 20px 24px;
+                 border-radius: 16px;
+                 margin-bottom: 20px;
+                 box-shadow: 0 4px 14px rgba({{ $r }}, {{ $g }}, {{ $b }}, 0.08);
              }
              .cat-item-{{ $cat->id }}:hover {
                  background-color: #{{ $hex }} !important;
-                 transform: translateY(-5px);
-                 box-shadow: 0 10px 25px rgba({{ $r }}, {{ $g }}, {{ $b }}, 0.25);
+                 transform: translateY(-4px);
+                 box-shadow: 0 12px 28px rgba({{ $r }}, {{ $g }}, {{ $b }}, 0.28);
                  text-decoration: none !important;
              }
              .cat-item-{{ $cat->id }} span {
                  display: inline-block;
-                 margin-bottom: 26px;
+                 margin-bottom: 16px;
                  transition: transform 0.5s ease;
              }
              .cat-item-{{ $cat->id }}:hover span {

@@ -330,7 +330,8 @@ body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-he
 .course-card-thumb {
    position: relative;
    overflow: hidden;
-   height: 200px;
+   aspect-ratio: 16 / 10;
+   min-height: 175px;
    width: 100%;
    background: #0f172a;
 }
@@ -578,3 +579,155 @@ body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-he
    opacity: 0.4;
    cursor: not-allowed;
 }
+
+/* ==========================================================================
+   HOMEPAGE CATEGORY SECTIONS & HEADERS
+   ========================================================================== */
+.home-category-section {
+   position: relative;
+   padding: 55px 0 50px 0;
+   transition: background-color 0.3s ease;
+}
+
+.home-category-section.bg-white {
+   background-color: #ffffff;
+}
+
+.home-category-section.bg-light-tint {
+   background-color: #f8faf9;
+   border-top: 1px solid #edf4f1;
+   border-bottom: 1px solid #edf4f1;
+}
+
+/* Section Header Container */
+.home-section-header {
+   margin-bottom: 32px;
+   padding-bottom: 16px;
+   border-bottom: 1px solid rgba(3, 89, 78, 0.08);
+}
+
+.home-section-header-left {
+   flex: 1;
+   min-width: 250px;
+}
+
+/* Category Badge Pill */
+.home-section-badge {
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   padding: 4px 12px;
+   border-radius: 20px;
+   background: rgba(3, 89, 78, 0.08);
+   color: #03594E;
+   font-size: 11.5px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+   margin-bottom: 8px;
+}
+
+.home-section-badge i {
+   font-size: 11px;
+   color: #1AB69D;
+}
+
+/* Section Title */
+.home-section-title {
+   font-size: 25px;
+   font-weight: 800;
+   color: #0f172a;
+   margin: 0;
+   letter-spacing: -0.01em;
+   line-height: 1.3;
+}
+
+/* Section Title Accent Line */
+.home-section-title-line {
+   width: 44px;
+   height: 3.5px;
+   background: linear-gradient(90deg, #03594E 0%, #1AB69D 100%);
+   border-radius: 3px;
+   margin-top: 8px;
+   margin-bottom: 8px;
+}
+
+.home-section-subtitle {
+   font-size: 13.5px;
+   color: #64748b;
+   font-weight: 500;
+   display: inline-block;
+}
+
+/* Modern View All Button */
+.home-btn-view-all {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   padding: 10px 22px;
+   border-radius: 10px;
+   background: #ffffff;
+   color: #03594E !important;
+   border: 1.5px solid #03594E;
+   font-size: 13.5px;
+   font-weight: 700;
+   text-decoration: none !important;
+   box-shadow: 0 2px 6px rgba(3, 89, 78, 0.08);
+   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+   white-space: nowrap;
+}
+
+.home-btn-view-all .btn-count {
+   opacity: 0.85;
+   font-weight: 600;
+   font-size: 12.5px;
+}
+
+.home-btn-view-all i {
+   font-size: 13px;
+   transition: transform 0.25s ease;
+}
+
+.home-btn-view-all:hover {
+   background: #03594E;
+   color: #ffffff !important;
+   box-shadow: 0 6px 18px rgba(3, 89, 78, 0.25);
+   transform: translateY(-2px);
+}
+
+.home-btn-view-all:hover i {
+   transform: translateX(4px);
+}
+
+/* Empty Course Box in Category */
+.home-empty-courses {
+   padding: 45px 20px;
+   background: rgba(255, 255, 255, 0.8);
+   border: 1.5px dashed #cbd5e1;
+   border-radius: 16px;
+   color: #64748b;
+}
+
+/* Category area feature cards subtle polish */
+.it-categories-area {
+   padding-top: 25px !important;
+   padding-bottom: 15px !important;
+}
+
+@media (max-width: 767px) {
+   .home-category-section {
+      padding: 40px 0 35px 0;
+   }
+   .home-section-title {
+      font-size: 20px;
+   }
+   .home-section-header {
+      margin-bottom: 24px;
+   }
+   .home-btn-view-all {
+      width: 100%;
+      justify-content: center;
+      margin-top: 12px;
+   }
+}
+
