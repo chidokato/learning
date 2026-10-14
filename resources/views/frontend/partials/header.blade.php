@@ -115,14 +115,14 @@
 </header>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-@if(session('info') || session('success') || session('error') || session('login_notice'))
+@if(session('info') || session('success') || session('warning') || session('error') || session('login_notice'))
 <script>
    document.addEventListener('DOMContentLoaded', function () {
       const Toast = Swal.mixin({
          toast: true,
          position: 'bottom-start',
          showConfirmButton: false,
-         timer: 3500,
+         timer: 4000,
          timerProgressBar: true,
          customClass: {
             popup: 'colored-toast'
@@ -157,6 +157,13 @@
       });
       @endif
 
+      @if(session('warning'))
+      Toast.fire({
+         icon: 'warning',
+         title: "{{ session('warning') }}"
+      });
+      @endif
+
       @if(session('error'))
       Toast.fire({
          icon: 'error',
@@ -167,6 +174,12 @@
 </script>
 <style>
    /* Toast notifications */
+   .colored-toast {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08) !important;
+      border-radius: 12px !important;
+      font-size: 14px !important;
+      z-index: 99999 !important;
+   }
    .colored-toast.swal2-icon-info {
       background-color: #e0f2fe !important;
       color: #0284c7 !important;
@@ -175,12 +188,17 @@
       background-color: #dcfce7 !important;
       color: #16a34a !important;
    }
+   .colored-toast.swal2-icon-warning {
+      background-color: #fef3c7 !important;
+      color: #92400e !important;
+   }
    .colored-toast.swal2-icon-error {
       background-color: #fee2e2 !important;
       color: #dc2626 !important;
    }
    .colored-toast .swal2-title {
       color: inherit !important;
+      font-weight: 600 !important;
    }
 </style>
 @endif

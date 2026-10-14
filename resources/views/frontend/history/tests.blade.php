@@ -91,7 +91,7 @@
                               <thead class="table-light">
                                  <tr style="font-size: 14px;">
                                     <th>Bài kiểm tra</th>
-                                    <th class="text-center">Điểm số</th>
+                                    <th class="text-center">Số câu đúng</th>
                                     <th class="text-center">Kết quả</th>
                                     <th>Thời gian hoàn thành</th>
                                     <th class="text-end">Hành động</th>
@@ -99,15 +99,18 @@
                               </thead>
                               <tbody>
                                  @foreach($testList as $result)
+                                 @php
+                                    $totalQ = $result->test ? $result->test->questions->count() : null;
+                                 @endphp
                                  <tr style="font-size: 14px;">
                                     <td>
                                        <strong class="text-dark">{{ $result->test ? $result->test->title : 'Bài kiểm tra #' . $result->test_id }}</strong>
                                        @if($result->test)
-                                          <div class="small text-muted">Điểm qua: {{ $result->test->pass_score }}</div>
+                                          <div class="small text-muted">Số câu qua: {{ $result->test->pass_score }}{{ $totalQ ? '/' . $totalQ : '' }}</div>
                                        @endif
                                     </td>
                                     <td class="text-center fw-bold" style="font-size: 15px;">
-                                       {{ $result->score }}
+                                       <span class="text-primary">{{ $result->score }}</span>{{ $totalQ ? '/' . $totalQ : '' }}
                                     </td>
                                     <td class="text-center">
                                        @if($result->is_passed)

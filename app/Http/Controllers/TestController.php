@@ -78,19 +78,20 @@ class TestController extends Controller
             $question = Question::with('answers')->find($ua['question_id']);
             if (!$question || $question->test_id != $test_id) continue;
 
-            $correctAnswerIds = $question->answers->where('is_correct', true)->pluck('id')->toArray();
-            $userAnswerIds = $ua['answer_ids'] ?? [];
+            $correctAnswerIds = $question->answers->where('is_correct', true)->pluck('id')->map(fn($id) => (int)$id)->toArray();
+            $userAnswerIds = array_map('intval', (array)($ua['answer_ids'] ?? []));
 
             // Kiểm tra xem user có chọn đúng mảng đáp án không
             sort($correctAnswerIds);
             sort($userAnswerIds);
 
-            if ($correctAnswerIds === $userAnswerIds) {
+            if (!empty($correctAnswerIds) && $correctAnswerIds === $userAnswerIds) {
                 $totalCorrect++;
             }
         }
 
-        $isPassed = $totalCorrect >= $test->pass_score;
+        $isCancelled = $request->boolean('is_cancelled');
+        $isPassed = !$isCancelled && ($totalCorrect >= $test->pass_score);
 
         $user_id = auth()->id() ?? auth('sanctum')->id() ?? 1;
 
@@ -102,12 +103,17 @@ class TestController extends Controller
             'completed_at' => now(),
         ]);
 
+        if ($isCancelled) {
+            session()->flash('warning', 'Bạn đã hủy bài làm. Lượt làm bài này đã được ghi nhận vào hệ thống.');
+        }
+
         return response()->json([
-            'message' => 'Nộp bài thành công',
+            'message' => $isCancelled ? 'Đã hủy bài làm và ghi nhận 1 lượt thi' : 'Nộp bài thành công',
             'result' => [
                 'total_correct' => $totalCorrect,
                 'total_questions' => $totalQuestions,
                 'is_passed' => $isPassed,
+                'is_cancelled' => $isCancelled,
             ]
         ]);
     }

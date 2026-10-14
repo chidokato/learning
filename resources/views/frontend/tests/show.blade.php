@@ -275,15 +275,20 @@
                      </div>
                   </form>
 
-                  <div id="result-box">
-                     <h3 id="result-title" class="fw-bold mb-3"></h3>
-                     <p id="result-text" class="fs-18 mb-4"></p>
+                  <div id="result-box" style="display: none; background: #fff; padding: 36px 24px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); text-align: center; border: 1px solid #edf2f7;">
+                     <div id="result-icon-wrapper" class="mb-3" style="width: 72px; height: 72px; line-height: 72px; border-radius: 50%; margin: 0 auto; font-size: 32px;"></div>
+                     <h3 id="result-title" class="fw-bold mb-2"></h3>
+                     <div id="result-text" class="fs-18 mb-2"></div>
+                     <p id="result-subtext" class="text-muted mb-4" style="font-size: 14.5px;"></p>
                      <div class="d-flex justify-content-center gap-3 flex-wrap">
                         <button type="button" class="btn btn-warning px-4 py-2" onclick="location.reload();" style="font-weight: 700; border-radius: 8px;">
                            <i class="far fa-redo me-2"></i> Làm lại bài
                         </button>
+                        <a href="{{ route('frontend.history.tests') }}" class="btn btn-outline-primary px-4 py-2" style="font-weight: 600; border-radius: 8px;">
+                           <i class="far fa-history me-2"></i> Lịch sử làm bài
+                        </a>
                         <a href="{{ route('frontend.tests.index') }}" class="btn btn-secondary px-4 py-2" style="font-weight: 600; border-radius: 8px;">
-                           <i class="far fa-list me-2"></i> Danh sách bài kiểm tra
+                           <i class="far fa-list me-2"></i> Danh sách bài
                         </a>
                      </div>
                   </div>
@@ -328,9 +333,9 @@
                   <i class="far fa-exclamation-triangle"></i>
                </div>
             </div>
-            <h4 class="mb-2" style="font-weight: 700; color: #991b1b;">Hủy bài làm?</h4>
+            <h4 class="mb-2" style="font-weight: 700; color: #991b1b;">Xác nhận hủy bài làm?</h4>
             <p class="text-muted mb-4" style="font-size: 14.5px;">
-               Thời gian và các câu trả lời hiện tại sẽ bị xóa.<br>Bạn có chắc chắn muốn thoát không?
+               Lưu ý: Hủy bài làm <strong>vẫn được tính là 1 lượt làm bài</strong> (kết quả Chưa đạt).<br>Bạn có chắc chắn muốn kết thúc bài thi không?
             </p>
             <div class="d-flex justify-content-center gap-2">
                <button type="button" class="btn btn-light px-4 py-2" data-bs-dismiss="modal" style="font-weight: 600; border-radius: 8px; border: 1px solid #cbd5e1;">
@@ -346,21 +351,22 @@
 
    <!-- Modal Hết giờ làm bài (Ở giữa màn hình) -->
    <div class="modal fade" id="timeoutModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+      <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
          <div class="modal-content text-center p-4" style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
             <div class="mb-3">
-               <div style="width: 60px; height: 60px; line-height: 60px; border-radius: 50%; background: #fee2e2; color: #dc2626; margin: 0 auto; font-size: 26px;">
+               <div style="width: 64px; height: 64px; line-height: 64px; border-radius: 50%; background: #fee2e2; color: #dc2626; margin: 0 auto; font-size: 28px;">
                   <i class="far fa-clock"></i>
                </div>
             </div>
             <h4 class="mb-2" style="font-weight: 700; color: #00225a;">Hết giờ làm bài!</h4>
-            <p class="text-muted mb-3" style="font-size: 14.5px;">
-               Thời gian làm bài đã kết thúc.<br>Hệ thống đang tự động nộp bài làm của bạn để chấm điểm.
+            <p class="text-muted mb-4" style="font-size: 14.5px;">
+               Thời gian làm bài đã kết thúc.<br>Hệ thống đang tự động thu bài, chấm số câu đúng và ghi nhận kết quả lượt làm bài này...
             </p>
-            <div class="d-flex justify-content-center">
-               <div class="spinner-border text-warning" role="status">
+            <div class="d-flex justify-content-center align-items-center gap-2">
+               <div class="spinner-border text-warning" role="status" style="width: 2rem; height: 2rem;">
                   <span class="visually-hidden">Đang nộp...</span>
                </div>
+               <span class="text-muted fw-bold ms-2">Đang chấm điểm...</span>
             </div>
          </div>
       </div>
@@ -385,8 +391,11 @@
          var autoSubmitted = false;
 
          const testStorageKey = 'test_start_time_{{ $test->id }}_{{ auth()->id() ?? "guest" }}';
+         const testAnswersKey = 'test_answers_{{ $test->id }}_{{ auth()->id() ?? "guest" }}';
          const testDurationMinutes = {{ (int)($test->duration ?? 0) }};
          const totalAllowedSeconds = testDurationMinutes * 60;
+         const totalQuestionsCount = {{ $test->questions->count() }};
+         const passScoreRequired = {{ (int)($test->pass_score ?? 0) }};
 
          // Helper hiển thị modal an toàn (hỗ trợ cả BS5 và jQuery)
          function showModal(modalId) {
@@ -412,7 +421,83 @@
             }
          }
 
-         // 1. Quản lý thời gian làm bài (Lưu vào localStorage để F5/load trang không bị reset)
+         // Thu thập dữ liệu đáp án hiện tại
+         function collectAnswers() {
+            var answers = [];
+            $('.question-box').each(function() {
+               var qInput = $(this).find('input');
+               if (qInput.length === 0) return;
+               var qId = qInput.first().attr('name').replace('q_', '').replace('[]', '');
+               var selected = [];
+               
+               $(this).find('input:checked').each(function() {
+                  selected.push(parseInt($(this).val()));
+               });
+
+               if (selected.length > 0) {
+                  answers.push({
+                     question_id: parseInt(qId),
+                     answer_ids: selected
+                  });
+               }
+            });
+            return answers;
+         }
+
+         // Lưu các đáp án đã chọn vào localStorage
+         function saveAnswersToStorage() {
+            try {
+               var answers = collectAnswers();
+               localStorage.setItem(testAnswersKey, JSON.stringify(answers));
+            } catch(e) {
+               console.error('Error saving answers:', e);
+            }
+         }
+
+         // Phục hồi các đáp án đã chọn từ localStorage
+         function restoreAnswersFromStorage() {
+            try {
+               var saved = localStorage.getItem(testAnswersKey);
+               if (!saved) return;
+               var answers = JSON.parse(saved);
+               if (Array.isArray(answers)) {
+                  answers.forEach(function(item) {
+                     if (item.question_id && Array.isArray(item.answer_ids)) {
+                        item.answer_ids.forEach(function(ansId) {
+                           $('input[name="q_' + item.question_id + '"][value="' + ansId + '"]').prop('checked', true);
+                           $('input[name="q_' + item.question_id + '[]"][value="' + ansId + '"]').prop('checked', true);
+                        });
+                     }
+                  });
+               }
+            } catch(e) {
+               console.error('Error restoring answers:', e);
+            }
+         }
+
+         // Cập nhật số câu đã làm
+         function updateAnsweredCount() {
+            var count = 0;
+            $('.question-box').each(function() {
+               if ($(this).find('input:checked').length > 0) {
+                  count++;
+               }
+            });
+            $('#answered-count').text(count);
+            $('#modal-answered-count').text(count);
+         }
+
+         // 1. Phục hồi câu trả lời đã lưu từ phiên trước
+         restoreAnswersFromStorage();
+         updateAnsweredCount();
+
+         // Lắng nghe sự kiện click/change để cập nhật tiến độ & lưu đáp án
+         $(document).on('change click', '.question-box input', function() {
+            updateAnsweredCount();
+            saveAnswersToStorage();
+         });
+
+         // 2. Quản lý thời gian làm bài thực tế
          var now = Date.now();
          var savedStartTime = localStorage.getItem(testStorageKey);
          var startTime = null;
@@ -421,11 +506,13 @@
             var parsedTime = parseInt(savedStartTime, 10);
             if (!isNaN(parsedTime)) {
                var elapsed = Math.floor((now - parsedTime) / 1000);
-               // Nếu bài có thời hạn và phiên trước đó đã quá hạn từ lâu (ví dụ từ hôm qua)
                if (testDurationMinutes > 0 && elapsed >= totalAllowedSeconds) {
-                  // Khởi tạo phiên làm bài mới tinh để không bị kẹt ở 00:00
-                  startTime = now;
-                  localStorage.setItem(testStorageKey, startTime);
+                  // Đã quá thời hạn cho phép -> Tự động nộp bài và tính 1 lần làm bài
+                  autoSubmitted = true;
+                  $('#test-timer').text('00:00');
+                  showModal('timeoutModal');
+                  executeSubmitTest();
+                  return;
                } else {
                   startTime = parsedTime;
                }
@@ -452,6 +539,8 @@
                      if (timerInterval) {
                         clearInterval(timerInterval);
                      }
+                     hideModal('submitConfirmModal');
+                     hideModal('cancelConfirmModal');
                      showModal('timeoutModal');
                      executeSubmitTest();
                   }
@@ -478,26 +567,9 @@
             $('#test-timer').text(formatted);
          }
 
-         // Khởi động đồng hồ
+         // Khởi động đồng hồ đếm ngược
          updateTimerDisplay();
          timerInterval = setInterval(updateTimerDisplay, 1000);
-
-         // 2. Cập nhật số câu đã làm
-         function updateAnsweredCount() {
-            var count = 0;
-            $('.question-box').each(function() {
-               if ($(this).find('input:checked').length > 0) {
-                  count++;
-               }
-            });
-            $('#answered-count').text(count);
-            $('#modal-answered-count').text(count);
-         }
-
-         $(document).on('change click', '.question-box input', function() {
-            updateAnsweredCount();
-         });
-         updateAnsweredCount();
 
          // 3. Xử lý Hủy bài làm
          $('#btn-cancel-test').on('click', function(e) {
@@ -506,11 +578,31 @@
          });
 
          $('#btn-confirm-cancel-action').on('click', function() {
-            localStorage.removeItem(testStorageKey);
-            window.location.href = "{{ route('frontend.tests.index') }}";
+            var cancelBtn = $(this);
+            cancelBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> Đang hủy...');
+
+            var answers = collectAnswers();
+
+            $.ajax({
+               url: '{{ route('frontend.tests.submit', $test->id) }}',
+               type: 'POST',
+               data: {
+                  _token: $('meta[name="csrf-token"]').attr('content'),
+                  answers: answers,
+                  is_cancelled: 1
+               },
+               complete: function() {
+                  if (timerInterval) {
+                     clearInterval(timerInterval);
+                  }
+                  localStorage.removeItem(testStorageKey);
+                  localStorage.removeItem(testAnswersKey);
+                  window.location.href = "{{ route('frontend.tests.index') }}";
+               }
+            });
          });
 
-         // 4. Kích hoạt nộp bài từ thanh đáy
+         // 4. Kích hoạt nộp bài chủ động từ thanh đáy
          $('#bottom-submit-btn').on('click', function(e) {
             e.preventDefault();
             updateAnsweredCount();
@@ -522,29 +614,12 @@
             executeSubmitTest();
          });
 
-         // 5. Xử lý nộp bài AJAX
+         // 5. Nộp bài lên hệ thống (Chấm điểm & Ghi nhận 1 lần làm bài)
          function executeSubmitTest() {
             var bottomBtn = $('#bottom-submit-btn');
             bottomBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> Đang nộp...');
 
-            var answers = [];
-            $('.question-box').each(function() {
-               var qInput = $(this).find('input');
-               if (qInput.length === 0) return;
-               var qId = qInput.first().attr('name').replace('q_', '').replace('[]', '');
-               var selected = [];
-               
-               $(this).find('input:checked').each(function() {
-                  selected.push(parseInt($(this).val()));
-               });
-
-               if (selected.length > 0) {
-                  answers.push({
-                     question_id: parseInt(qId),
-                     answer_ids: selected
-                  });
-               }
-            });
+            var answers = collectAnswers();
 
             $.ajax({
                url: '{{ route('frontend.tests.submit', $test->id) }}',
@@ -557,23 +632,30 @@
                   if (timerInterval) {
                      clearInterval(timerInterval);
                   }
+                  // Xóa sạch trạng thái lưu tạm để lần làm sau làm mới hoàn toàn
                   localStorage.removeItem(testStorageKey);
+                  localStorage.removeItem(testAnswersKey);
+
                   hideModal('timeoutModal');
+                  hideModal('submitConfirmModal');
+                  hideModal('cancelConfirmModal');
                   $('#test-bottom-bar').addClass('hidden');
 
                   $('#test-form').slideUp();
                   var resultBox = $('#result-box');
+                  var iconWrapper = $('#result-icon-wrapper');
                   var data = res.result;
 
                   if (data.is_passed) {
-                     resultBox.removeClass('fail').addClass('pass');
-                     $('#result-title').text('🎉 Chúc mừng! Bạn đã ĐẠT bài kiểm tra.');
+                     iconWrapper.css({ 'background': '#dcfce7', 'color': '#15803d' }).html('<i class="far fa-trophy"></i>');
+                     $('#result-title').css('color', '#15803d').text('🎉 Chúc mừng! Bạn đã ĐẠT bài kiểm tra.');
                   } else {
-                     resultBox.removeClass('pass').addClass('fail');
-                     $('#result-title').text('⚠️ Rất tiếc! Bạn CHƯA ĐẠT bài kiểm tra.');
+                     iconWrapper.css({ 'background': '#fee2e2', 'color': '#dc2626' }).html('<i class="far fa-times-circle"></i>');
+                     $('#result-title').css('color', '#dc2626').text('⚠️ Rất tiếc! Bạn CHƯA ĐẠT bài kiểm tra.');
                   }
 
-                  $('#result-text').html(`Số câu trả lời đúng: <strong class="fs-20">${data.total_correct}</strong> / ${data.total_questions} câu`);
+                  $('#result-text').html(`Số câu trả lời đúng: <strong class="fs-22 text-primary">${data.total_correct}</strong> / ${data.total_questions} câu`);
+                  $('#result-subtext').html(`Yêu cầu đạt: <strong>${passScoreRequired}</strong>/${data.total_questions} câu. Kết quả này đã được ghi nhận vào lịch sử làm bài.`);
                   resultBox.slideDown();
 
                   $('html, body').animate({ scrollTop: $('.test-header-box').offset().top - 30 }, 400);
