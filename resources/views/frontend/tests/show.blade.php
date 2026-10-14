@@ -117,7 +117,7 @@
          border: 1px solid #edf2f7;
          border-radius: 10px;
          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-         z-index: 99;
+         z-index: 990;
          padding: 10px 16px;
          margin-top: 15px;
          transition: opacity 0.3s ease;
@@ -276,15 +276,24 @@
                   </form>
 
                   <div id="result-box">
-                     <h3 id="result-title"></h3>
-                     <p id="result-text" class="fs-18 mt-2"></p>
-                     <a href="{{ route('frontend.tests.index') }}" class="it-btn mt-3"><span>Quay lại danh sách</span></a>
+                     <h3 id="result-title" class="fw-bold mb-3"></h3>
+                     <p id="result-text" class="fs-18 mb-4"></p>
+                     <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <button type="button" class="btn btn-warning px-4 py-2" onclick="location.reload();" style="font-weight: 700; border-radius: 8px;">
+                           <i class="far fa-redo me-2"></i> Làm lại bài
+                        </button>
+                        <a href="{{ route('frontend.tests.index') }}" class="btn btn-secondary px-4 py-2" style="font-weight: 600; border-radius: 8px;">
+                           <i class="far fa-list me-2"></i> Danh sách bài kiểm tra
+                        </a>
+                     </div>
                   </div>
                </div>
 
             </div>
          </div>
       </div>
+   </main>
+
    <!-- Modal Xác nhận Nộp bài (Ở giữa màn hình) -->
    <div class="modal fade" id="submitConfirmModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
@@ -334,7 +343,28 @@
          </div>
       </div>
    </div>
-   </main>
+
+   <!-- Modal Hết giờ làm bài (Ở giữa màn hình) -->
+   <div class="modal fade" id="timeoutModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+         <div class="modal-content text-center p-4" style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+            <div class="mb-3">
+               <div style="width: 60px; height: 60px; line-height: 60px; border-radius: 50%; background: #fee2e2; color: #dc2626; margin: 0 auto; font-size: 26px;">
+                  <i class="far fa-clock"></i>
+               </div>
+            </div>
+            <h4 class="mb-2" style="font-weight: 700; color: #00225a;">Hết giờ làm bài!</h4>
+            <p class="text-muted mb-3" style="font-size: 14.5px;">
+               Thời gian làm bài đã kết thúc.<br>Hệ thống đang tự động nộp bài làm của bạn để chấm điểm.
+            </p>
+            <div class="d-flex justify-content-center">
+               <div class="spinner-border text-warning" role="status">
+                  <span class="visually-hidden">Đang nộp...</span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 
    @include('frontend.partials.footer')
    
@@ -351,51 +381,92 @@
    
    <script>
       $(document).ready(function() {
-         // 1. Đồng hồ thời gian thực (Lưu vào localStorage để load trang không bị reset)
+         var timerInterval = null;
+         var autoSubmitted = false;
+
          const testStorageKey = 'test_start_time_{{ $test->id }}_{{ auth()->id() ?? "guest" }}';
          const testDurationMinutes = {{ (int)($test->duration ?? 0) }};
-         let startTime = localStorage.getItem(testStorageKey);
-         if (!startTime) {
-            startTime = Date.now();
-            localStorage.setItem(testStorageKey, startTime);
-         } else {
-            startTime = parseInt(startTime);
+         const totalAllowedSeconds = testDurationMinutes * 60;
+
+         // Helper hiển thị modal an toàn (hỗ trợ cả BS5 và jQuery)
+         function showModal(modalId) {
+            var el = document.getElementById(modalId);
+            if (!el) return;
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+               var modal = bootstrap.Modal.getOrCreateInstance(el);
+               modal.show();
+            } else if (typeof $ !== 'undefined' && $.fn.modal) {
+               $('#' + modalId).modal('show');
+            }
          }
 
-         let autoSubmitted = false;
+         // Helper ẩn modal an toàn
+         function hideModal(modalId) {
+            var el = document.getElementById(modalId);
+            if (!el) return;
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+               var modal = bootstrap.Modal.getInstance(el);
+               if (modal) modal.hide();
+            } else if (typeof $ !== 'undefined' && $.fn.modal) {
+               $('#' + modalId).modal('hide');
+            }
+         }
+
+         // 1. Quản lý thời gian làm bài (Lưu vào localStorage để F5/load trang không bị reset)
+         var now = Date.now();
+         var savedStartTime = localStorage.getItem(testStorageKey);
+         var startTime = null;
+
+         if (savedStartTime) {
+            var parsedTime = parseInt(savedStartTime, 10);
+            if (!isNaN(parsedTime)) {
+               var elapsed = Math.floor((now - parsedTime) / 1000);
+               // Nếu bài có thời hạn và phiên trước đó đã quá hạn từ lâu (ví dụ từ hôm qua)
+               if (testDurationMinutes > 0 && elapsed >= totalAllowedSeconds) {
+                  // Khởi tạo phiên làm bài mới tinh để không bị kẹt ở 00:00
+                  startTime = now;
+                  localStorage.setItem(testStorageKey, startTime);
+               } else {
+                  startTime = parsedTime;
+               }
+            }
+         }
+
+         if (!startTime) {
+            startTime = now;
+            localStorage.setItem(testStorageKey, startTime);
+         }
 
          function updateTimerDisplay() {
-            let now = Date.now();
-            let elapsedSeconds = Math.max(0, Math.floor((now - startTime) / 1000));
-            
-            let displaySeconds = 0;
+            var currentNow = Date.now();
+            var elapsedSeconds = Math.max(0, Math.floor((currentNow - startTime) / 1000));
+            var displaySeconds = 0;
+
             if (testDurationMinutes > 0) {
-               // Đếm ngược nếu có giới hạn thời gian
-               let totalAllowedSeconds = testDurationMinutes * 60;
-               let remaining = totalAllowedSeconds - elapsedSeconds;
-               
+               var remaining = totalAllowedSeconds - elapsedSeconds;
                if (remaining <= 0) {
                   remaining = 0;
                   $('#test-timer').text('00:00');
                   if (!autoSubmitted) {
                      autoSubmitted = true;
-                     clearInterval(timerInterval);
-                     alert('Đã hết thời gian làm bài! Hệ thống sẽ tự động nộp bài của bạn.');
+                     if (timerInterval) {
+                        clearInterval(timerInterval);
+                     }
+                     showModal('timeoutModal');
                      executeSubmitTest();
                   }
                   return;
                }
                displaySeconds = remaining;
             } else {
-               // Đếm xuôi nếu không giới hạn
                displaySeconds = elapsedSeconds;
             }
 
-            let hours = Math.floor(displaySeconds / 3600);
-            let mins = Math.floor((displaySeconds % 3600) / 60);
-            let secs = displaySeconds % 60;
+            var hours = Math.floor(displaySeconds / 3600);
+            var mins = Math.floor((displaySeconds % 3600) / 60);
+            var secs = displaySeconds % 60;
             
-            let formatted = '';
+            var formatted = '';
             if (hours > 0) {
                formatted = (hours < 10 ? '0' : '') + hours + ':' + 
                            (mins < 10 ? '0' : '') + mins + ':' + 
@@ -407,26 +478,31 @@
             $('#test-timer').text(formatted);
          }
 
+         // Khởi động đồng hồ
          updateTimerDisplay();
-         let timerInterval = setInterval(updateTimerDisplay, 1000);
+         timerInterval = setInterval(updateTimerDisplay, 1000);
 
          // 2. Cập nhật số câu đã làm
          function updateAnsweredCount() {
-            let count = 0;
+            var count = 0;
             $('.question-box').each(function() {
                if ($(this).find('input:checked').length > 0) {
                   count++;
                }
             });
             $('#answered-count').text(count);
+            $('#modal-answered-count').text(count);
          }
-         $('input[type="radio"], input[type="checkbox"]').on('change', updateAnsweredCount);
+
+         $(document).on('change click', '.question-box input', function() {
+            updateAnsweredCount();
+         });
          updateAnsweredCount();
 
-         // 2.5. Xử lý Hủy bài làm (Hiện Modal ở giữa màn hình)
-         $('#btn-cancel-test').on('click', function() {
-            var cancelModal = new bootstrap.Modal(document.getElementById('cancelConfirmModal'));
-            cancelModal.show();
+         // 3. Xử lý Hủy bài làm
+         $('#btn-cancel-test').on('click', function(e) {
+            e.preventDefault();
+            showModal('cancelConfirmModal');
          });
 
          $('#btn-confirm-cancel-action').on('click', function() {
@@ -434,42 +510,29 @@
             window.location.href = "{{ route('frontend.tests.index') }}";
          });
 
-         // 3. Kích hoạt nộp bài từ thanh cố định ở đáy (Hiện Modal ở giữa màn hình)
-         $('#bottom-submit-btn').on('click', function() {
-            let count = 0;
-            $('.question-box').each(function() {
-               if ($(this).find('input:checked').length > 0) {
-                  count++;
-               }
-            });
-            $('#modal-answered-count').text(count);
-
-            var submitModal = new bootstrap.Modal(document.getElementById('submitConfirmModal'));
-            submitModal.show();
+         // 4. Kích hoạt nộp bài từ thanh đáy
+         $('#bottom-submit-btn').on('click', function(e) {
+            e.preventDefault();
+            updateAnsweredCount();
+            showModal('submitConfirmModal');
          });
 
          $('#btn-confirm-submit-action').on('click', function() {
-            var modalEl = document.getElementById('submitConfirmModal');
-            var modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) {
-               modalInstance.hide();
-            }
+            hideModal('submitConfirmModal');
             executeSubmitTest();
          });
 
-         // 4. Xử lý nộp bài
+         // 5. Xử lý nộp bài AJAX
          function executeSubmitTest() {
-
-            let submitBtn = $('#submit-btn');
-            let bottomBtn = $('#bottom-submit-btn');
-            submitBtn.prop('disabled', true).html('<span>Đang chấm điểm...</span>');
+            var bottomBtn = $('#bottom-submit-btn');
             bottomBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> Đang nộp...');
 
-            // Format dữ liệu gửi đi
-            let answers = [];
+            var answers = [];
             $('.question-box').each(function() {
-               let qId = $(this).find('input').attr('name').replace('q_', '').replace('[]', '');
-               let selected = [];
+               var qInput = $(this).find('input');
+               if (qInput.length === 0) return;
+               var qId = qInput.first().attr('name').replace('q_', '').replace('[]', '');
+               var selected = [];
                
                $(this).find('input:checked').each(function() {
                   selected.push(parseInt($(this).val()));
@@ -491,37 +554,38 @@
                   answers: answers
                },
                success: function(res) {
-                  // Dừng đồng hồ, xóa bộ nhớ thời gian & ẩn thanh bottom bar
-                  clearInterval(timerInterval);
+                  if (timerInterval) {
+                     clearInterval(timerInterval);
+                  }
                   localStorage.removeItem(testStorageKey);
+                  hideModal('timeoutModal');
                   $('#test-bottom-bar').addClass('hidden');
 
                   $('#test-form').slideUp();
-                  let resultBox = $('#result-box');
-                  let data = res.result;
+                  var resultBox = $('#result-box');
+                  var data = res.result;
 
-                  if(data.is_passed) {
-                     resultBox.addClass('pass');
-                     $('#result-title').text('Chúc mừng! Bạn đã ĐẠT.');
+                  if (data.is_passed) {
+                     resultBox.removeClass('fail').addClass('pass');
+                     $('#result-title').text('🎉 Chúc mừng! Bạn đã ĐẠT bài kiểm tra.');
                   } else {
-                     resultBox.addClass('fail');
-                     $('#result-title').text('Rất tiếc! Bạn CHƯA ĐẠT.');
+                     resultBox.removeClass('pass').addClass('fail');
+                     $('#result-title').text('⚠️ Rất tiếc! Bạn CHƯA ĐẠT bài kiểm tra.');
                   }
 
-                  $('#result-text').text(`Số câu đúng: ${data.total_correct} / ${data.total_questions}`);
+                  $('#result-text').html(`Số câu trả lời đúng: <strong class="fs-20">${data.total_correct}</strong> / ${data.total_questions} câu`);
                   resultBox.slideDown();
 
-                  // Cuộn lên đầu xem kết quả
                   $('html, body').animate({ scrollTop: $('.test-header-box').offset().top - 30 }, 400);
                },
                error: function(xhr, status, err) {
                   console.error('Submit error:', xhr);
-                  let errorMsg = 'Có lỗi xảy ra, vui lòng thử lại!';
+                  hideModal('timeoutModal');
+                  var errorMsg = 'Có lỗi xảy ra, vui lòng thử lại!';
                   if (xhr.responseJSON && xhr.responseJSON.message) {
                      errorMsg = xhr.responseJSON.message;
                   }
                   alert(errorMsg);
-                  submitBtn.prop('disabled', false).html('<span>Nộp bài kiểm tra</span>');
                   bottomBtn.prop('disabled', false).html('<i class="far fa-paper-plane me-2"></i> Nộp bài');
                }
             });

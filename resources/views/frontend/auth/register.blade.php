@@ -20,6 +20,7 @@
    <link rel="stylesheet" href="{{ asset('assets/css/custom-animation.css') }}">
    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">          
    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">   
+   <link rel="stylesheet" href="{{ asset('assets/css/auth.css') }}?v={{ time() }}">
 </head>
 
 <body>
@@ -32,112 +33,149 @@
    @include('frontend.partials.header')
 
    <main>
-
-   
-
-   <!-- sign-in-area-start -->
-   <div class="it-signup-area pt-50 pb-130">
-      <div class="container">
-         <div class="row justify-content-center">
-            <div class="col-xxl-8 col-xl-10 col-lg-11">
-               <div class="it-signup-wrap">
-                  <h4 class="it-signup-title">Chào mừng bạn đến với Indochine!</h4>
-
-                  @if ($errors->any())
-                     <div class="alert alert-danger mb-30" style="border-radius: 10px;">
-                        <ul class="mb-0 ps-3">
-                           @foreach ($errors->all() as $error)
-                              <li>{{ $error }}</li>
-                           @endforeach
-                        </ul>
-                     </div>
-                  @endif
-
-                  <form action="{{ route('frontend.register.post') }}" method="POST">
-                     @csrf
-                     <div class="it-signup-input-wrap">
-                        <div class="row">
-                           <div class="col-md-6">
-                              <div class="it-signup-input mb-20">
-                                 <label>Họ và tên <span class="text-danger">*</span></label>
-                                 <input type="text" name="name" value="{{ old('name') }}" placeholder="Nhập họ và tên" required autofocus>
-                              </div>
+      <!-- auth-area-start -->
+      <section class="auth-page-area">
+         <div class="container">
+            <div class="row justify-content-center">
+               <div class="col-12">
+                  <div class="auth-card-wrap auth-card-register">
+                     <div class="auth-card">
+                        <div class="auth-header">
+                           <div class="auth-badge-icon">
+                              <i class="fas fa-user-plus"></i>
                            </div>
-                           <div class="col-md-6">
-                              <div class="it-signup-input mb-20">
-                                 <label>Số điện thoại</label>
-                                 <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="Nhập số điện thoại">
-                              </div>
-                           </div>
-                           <div class="col-12">
-                              <div class="it-signup-input mb-20">
-                                 <label>Địa chỉ Email <span class="text-danger">*</span></label>
-                                 <input type="email" name="email" value="{{ old('email') }}" placeholder="student@example.com" required>
-                              </div>
-                           </div>
-                           <div class="col-md-6">
-                              <div class="it-signup-input mb-20">
-                                 <label>Mật khẩu <span class="text-danger">*</span></label>
-                                 <input type="password" name="password" placeholder="Nhập mật khẩu (ít nhất 6 ký tự)" required>
-                              </div>
-                           </div>
-                           <div class="col-md-6">
-                              <div class="it-signup-input mb-25">
-                                 <label>Xác nhận mật khẩu <span class="text-danger">*</span></label>
-                                 <input type="password" name="password_confirmation" placeholder="Nhập lại mật khẩu" required>
-                              </div>
-                           </div>
+                           <h4 class="auth-title">Tạo tài khoản mới</h4>
+                           <p class="auth-subtitle">Đăng ký thành viên để khám phá các khóa học nội bộ Indochine</p>
                         </div>
-                     </div>
-                     <div class="it-signup-forget d-flex justify-content-between flex-wrap">
-                        <div class="it-contact-agree mb-30">
-                           <div class="form-check">
-                              <input class="form-check-input" type="checkbox" name="terms" value="1"
-                                 id="flexCheckDefault" required {{ old('terms') ? 'checked' : '' }}>
-                              <label class="form-check-label" for="flexCheckDefault">
-                                 Tôi đồng ý với các Điều khoản & Chính sách bảo mật của Indochine
+
+                        @if (isset($errors) && $errors->any())
+                           <div class="auth-alert auth-alert-danger">
+                              <div class="d-flex align-items-start gap-2">
+                                 <i class="fas fa-exclamation-circle mt-1 flex-shrink-0"></i>
+                                 <div>
+                                    <strong class="d-block mb-1">Đăng ký chưa hoàn tất</strong>
+                                    <ul class="mb-0 ps-3">
+                                       @foreach ($errors->all() as $error)
+                                          <li>{{ $error }}</li>
+                                       @endforeach
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        @endif
+
+                        <form action="{{ route('frontend.register.post') }}" method="POST">
+                           @csrf
+
+                           <div class="row">
+                              <!-- Họ và tên -->
+                              <div class="col-md-6">
+                                 <div class="auth-field">
+                                    <label class="auth-label">Họ và tên <span class="required">*</span></label>
+                                    <div class="auth-input-group">
+                                       <i class="far fa-user auth-input-icon"></i>
+                                       <input type="text" name="name" value="{{ old('name') }}" class="auth-input-control" placeholder="Nguyễn Văn A" required autofocus>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <!-- Số điện thoại -->
+                              <div class="col-md-6">
+                                 <div class="auth-field">
+                                    <label class="auth-label">Số điện thoại</label>
+                                    <div class="auth-input-group">
+                                       <i class="far fa-phone auth-input-icon"></i>
+                                       <input type="tel" name="phone" value="{{ old('phone') }}" class="auth-input-control" placeholder="0987 654 321">
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <!-- Email -->
+                              <div class="col-12">
+                                 <div class="auth-field">
+                                    <label class="auth-label">Địa chỉ Email <span class="required">*</span></label>
+                                    <div class="auth-input-group">
+                                       <i class="far fa-envelope auth-input-icon"></i>
+                                       <input type="email" name="email" value="{{ old('email') }}" class="auth-input-control" placeholder="student@indochine.vn" required>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <!-- Mật khẩu -->
+                              <div class="col-md-6">
+                                 <div class="auth-field">
+                                    <label class="auth-label">Mật khẩu <span class="required">*</span></label>
+                                    <div class="auth-input-group">
+                                       <i class="far fa-lock-alt auth-input-icon"></i>
+                                       <input type="password" name="password" id="registerPassword" class="auth-input-control has-toggle" placeholder="Tối thiểu 6 ký tự" required>
+                                       <button type="button" class="auth-password-toggle" onclick="togglePassword('registerPassword', 'regPassEye')" title="Hiện/ẩn mật khẩu">
+                                          <i class="far fa-eye" id="regPassEye"></i>
+                                       </button>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <!-- Xác nhận mật khẩu -->
+                              <div class="col-md-6">
+                                 <div class="auth-field">
+                                    <label class="auth-label">Xác nhận mật khẩu <span class="required">*</span></label>
+                                    <div class="auth-input-group">
+                                       <i class="far fa-shield-check auth-input-icon"></i>
+                                       <input type="password" name="password_confirmation" id="registerPasswordConfirm" class="auth-input-control has-toggle" placeholder="Nhập lại mật khẩu" required>
+                                       <button type="button" class="auth-password-toggle" onclick="togglePassword('registerPasswordConfirm', 'regPassConfirmEye')" title="Hiện/ẩn mật khẩu">
+                                          <i class="far fa-eye" id="regPassConfirmEye"></i>
+                                       </button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <!-- Terms Agree -->
+                           <div class="auth-checkbox-wrap my-3">
+                              <input type="checkbox" name="terms" value="1" id="agreeTerms" required {{ old('terms') ? 'checked' : '' }}>
+                              <label class="auth-checkbox-label" for="agreeTerms">
+                                 Tôi đồng ý với <a href="#" class="auth-link">Điều khoản</a> & <a href="#" class="auth-link">Chính sách bảo mật</a> của Indochine
                               </label>
                            </div>
-                        </div>
-                     </div>
-                     <div class="it-signup-btn mb-25">
-                        <button type="submit" class="it-btn-yellow theme-bg w-100">
-                           <span>
-                              <span class="text-1">Đăng ký ngay</span>
-                              <span class="text-2">Đăng ký ngay</span>
-                           </span>
-                        </button>
-                     </div>
-                     <div class="it-signup-text text-center mb-30">
-                        <span>Bạn đã có tài khoản?<a href="{{ route('frontend.login') }}"> Đăng nhập ngay</a></span>
-                     </div>
-                     <div class="it-signup-border text-center">
-                        <span>hoặc</span>
-                     </div>
-                     <div class="it-signup-continue-wrap">
-                        <div class="row gx-35 justify-content-center">
-                           <div class="col-12">
-                              <div>
-                                 <a href="#" onclick="showDemoToast('Google'); return false;">
-                                    <div class="it-signup-continue-item d-flex align-items-center justify-content-center">
-                                       <img src="{{ asset('assets/img/contact/icon-1.png') }}" alt="">
-                                       <span>Đăng ký với Google</span>
-                                    </div>
-                                 </a>
-                              </div>
+
+                           <!-- Submit Button -->
+                           <div class="mb-3">
+                              <button type="submit" class="auth-btn-primary">
+                                 <span>Đăng ký ngay</span>
+                                 <i class="far fa-arrow-right"></i>
+                              </button>
                            </div>
-                        </div>
-                     </div>                     
-                  </form>
-               </div>
-            </div> 
+
+                           <!-- Divider -->
+                           <div class="auth-divider">
+                              <span>hoặc tiếp tục với</span>
+                           </div>
+
+                           <!-- Google Register -->
+                           <div>
+                              <a href="#" onclick="showDemoToast('Google'); return false;" class="auth-btn-google">
+                                 <svg width="18" height="18" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                                 </svg>
+                                 <span>Đăng ký với Google</span>
+                              </a>
+                           </div>
+
+                           <!-- Switch to Login -->
+                           <p class="auth-switch-text">
+                              Bạn đã có tài khoản? <a href="{{ route('frontend.login') }}">Đăng nhập ngay</a>
+                           </p>
+                        </form>
+                     </div>
+                  </div>
+               </div> 
+            </div>
          </div>
-      </div>
-   </div>
-   <!-- sign-in-area-end -->
-
-   
-
+      </section>
+      <!-- auth-area-end -->
    </main>
 
    @include('frontend.partials.footer')
@@ -155,8 +193,23 @@
    <script src="{{ asset('assets/js/main.js') }}"></script>
 
    <script>
+      function togglePassword(inputId, iconId) {
+         var input = document.getElementById(inputId);
+         var icon = document.getElementById(iconId);
+         if (!input || !icon) return;
+         if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+         } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+         }
+      }
+
       function showDemoToast(provider) {
-         alert('Tính năng đăng ký nhanh với ' + provider + ' đang được kích hoạt. Vui lòng sử dụng đăng ký bằng Email / Mật khẩu để trải nghiệm hệ thống!');
+         alert('Tính năng đăng ký nhanh với ' + provider + ' đang được hoàn thiện. Vui lòng sử dụng đăng ký bằng Email / Mật khẩu để tiếp tục!');
       }
    </script>
 </body>
