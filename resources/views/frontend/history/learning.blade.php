@@ -104,13 +104,40 @@
                                                 {{ $item->post->title }}
                                              </a>
                                           </h6>
-                                          <div class="text-muted small d-flex flex-wrap align-items-center gap-3">
+                                          <div class="text-muted small d-flex flex-wrap align-items-center gap-2 mb-2">
                                              @if($item->post->category)
                                                 <span class="badge bg-light text-secondary border">{{ $item->post->category->name }}</span>
                                              @endif
-                                             <span>
-                                                <i class="far fa-clock me-1"></i> Học gần nhất: {{ $item->last_learned_at ? $item->last_learned_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') : $item->updated_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
+                                             <span class="badge bg-white text-dark border">
+                                                <i class="far fa-clock text-primary me-1"></i> {{ $item->last_learned_at ? $item->last_learned_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') : $item->updated_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
                                              </span>
+                                             <span class="badge bg-white text-danger border">
+                                                <i class="far fa-stopwatch me-1"></i> Thời gian học: <strong>{{ $item->formatted_study_time }}</strong>
+                                             </span>
+                                             @if($item->completed_at || ($item->progress_percent ?? 0) >= 100)
+                                                <span class="badge bg-success text-white">
+                                                   <i class="far fa-check-circle me-1"></i> Đã hoàn thành
+                                                </span>
+                                             @endif
+                                          </div>
+                                          <!-- Tiến trình học -->
+                                          <div style="max-width: 320px;">
+                                             <div class="d-flex justify-content-between align-items-center mb-1" style="font-size: 11.5px;">
+                                                <span class="fw-semibold text-secondary">
+                                                   Tiến độ: <strong class="text-success">{{ $item->progress_percent ?? 0 }}%</strong>
+                                                </span>
+                                                <span class="text-muted">
+                                                   Đang học slide: {{ $item->current_page ?? 1 }}/{{ $item->total_pages ?: '--' }}
+                                                </span>
+                                             </div>
+                                             <div class="progress" style="height: 6px; border-radius: 999px; background-color: #e2e8f0;">
+                                                <div class="progress-bar" 
+                                                     style="width: {{ $item->progress_percent ?? 0 }}%; background-color: {{ ($item->progress_percent ?? 0) >= 100 ? '#10b981' : '#03594e' }}; border-radius: 999px;" 
+                                                     role="progressbar" 
+                                                     aria-valuenow="{{ $item->progress_percent ?? 0 }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="100"></div>
+                                             </div>
                                           </div>
                                        </div>
                                     </div>

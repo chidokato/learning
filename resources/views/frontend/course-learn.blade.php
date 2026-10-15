@@ -6,6 +6,7 @@
    <meta http-equiv="x-ua-compatible" content="ie=edge">
    <title>{{ $post->title }} - Học trực tuyến & Sách lật 3D</title>
    <meta name="description" content="Học trực tuyến khóa học {{ $post->title }} - Giao diện LMS chuẩn & Sách lật PDF 3D FULL">
+   <meta name="csrf-token" content="{{ csrf_token() }}">
    <meta name="viewport" content="width=device-width, initial-scale=1">
 
    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/logo/favicon.png') }}">
@@ -104,6 +105,111 @@
          align-items: center;
          gap: 20px;
       }
+      
+      /* Presence & Active Learning Tracker Widget */
+      
+      /* Test Tab Styles */
+      .course-test-highlight-card {
+         background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+         border: 2px solid #03594e;
+         border-radius: 12px;
+         padding: 16px;
+         box-shadow: 0 6px 20px rgba(3, 89, 78, 0.12);
+         margin-bottom: 18px;
+         position: relative;
+         overflow: hidden;
+      }
+      .course-test-highlight-card::before {
+         content: "";
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 5px;
+         height: 100%;
+         background: #03594e;
+      }
+      .general-test-card {
+         background: #ffffff;
+         border: 1px solid #e2e8f0;
+         border-radius: 10px;
+         padding: 14px 16px;
+         margin-bottom: 12px;
+         transition: all 0.2s ease;
+      }
+      .general-test-card:hover {
+         border-color: #03594e;
+         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+         transform: translateY(-2px);
+      }
+      .test-meta-badge {
+         display: inline-flex;
+         align-items: center;
+         gap: 5px;
+         font-size: 11.5px;
+         font-weight: 600;
+         padding: 3px 8px;
+         border-radius: 6px;
+         background: #f1f5f9;
+         color: #475569;
+      }
+
+      .learning-tracker-box {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         background: #f1f5f9;
+         border: 1px solid #e2e8f0;
+         padding: 5px 12px;
+         border-radius: 999px;
+      }
+      .tracker-status-indicator {
+         display: inline-flex;
+         align-items: center;
+         gap: 6px;
+         font-size: 11.5px;
+         font-weight: 600;
+         color: #10b981;
+         padding: 2px 8px;
+         border-radius: 20px;
+         background: rgba(16, 185, 129, 0.1);
+         transition: all 0.25s ease;
+      }
+      .tracker-status-indicator .status-dot {
+         width: 7px;
+         height: 7px;
+         border-radius: 50%;
+         background: #10b981;
+         box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+         animation: pulse-green 1.8s infinite;
+      }
+      .tracker-status-indicator.paused {
+         color: #b45309;
+         background: rgba(245, 158, 11, 0.12);
+      }
+      .tracker-status-indicator.paused .status-dot {
+         background: #f59e0b;
+         animation: none;
+         box-shadow: none;
+      }
+      @keyframes pulse-green {
+         0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+         70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+         100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+      }
+      .tracker-time-display {
+         font-size: 13px;
+         font-weight: 700;
+         color: #0f172a;
+         font-variant-numeric: tabular-nums;
+         display: flex;
+         align-items: center;
+      }
+      .progress-circle.completed {
+         border-color: #059669;
+         background: #d1fae5;
+         color: #059669;
+      }
+
       .progress-ring-box {
          display: flex;
          align-items: center;
@@ -288,35 +394,51 @@
          to { transform: rotate(360deg); }
       }
 
-      /* 3D Book Flipbook styling (FULL SIZE, MAXIMIZED TO SCREEN) */
-      #flipbookContainerWrapper {
+      /* Slide E-Learning Viewer (FULL RESPONSIVE & HIGH DEFINITION) */
+      #slideViewerWrapper {
          width: 100%;
          height: 100%;
          display: flex;
          justify-content: center;
          align-items: center;
          position: relative;
-         padding: 5px 35px;
-         overflow: hidden;
+         padding: 10px 40px;
+         overflow: auto;
+         user-select: none;
       }
-      .flip-book {
-         box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9);
+      .slide-stage {
          position: relative;
-      }
-      .flip-page {
-         background-color: #ffffff;
-         overflow: hidden;
-         border: 1px solid #dcdcdc;
          display: flex;
          align-items: center;
          justify-content: center;
+         box-shadow: 0 15px 50px rgba(0, 0, 0, 0.85);
+         background: #1e1e24;
+         border-radius: 6px;
+         max-width: 100%;
+         max-height: 100%;
+         transition: opacity 0.15s ease-out;
+         cursor: pointer;
       }
-      /* object-fit contain ensures pages never stretch or get cropped */
-      .flip-page canvas {
-         width: 100%;
-         height: 100%;
-         object-fit: contain;
+      .slide-stage canvas {
          display: block;
+         max-width: 100%;
+         max-height: 100%;
+         border-radius: 6px;
+      }
+      .slide-progress-container {
+         position: absolute;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         height: 4px;
+         background: rgba(255, 255, 255, 0.1);
+         z-index: 12;
+      }
+      .slide-progress-bar {
+         height: 100%;
+         width: 0%;
+         background: #d32f2f;
+         transition: width 0.25s ease;
       }
 
       /* Floating Left & Right Navigation Arrows */
@@ -327,9 +449,9 @@
          width: 48px;
          height: 48px;
          border-radius: 50%;
-         background: rgba(0, 0, 0, 0.7);
+         background: rgba(0, 0, 0, 0.65);
          color: #fff;
-         border: 1px solid rgba(255, 255, 255, 0.3);
+         border: 1px solid rgba(255, 255, 255, 0.25);
          display: flex;
          align-items: center;
          justify-content: center;
@@ -337,13 +459,20 @@
          cursor: pointer;
          z-index: 10;
          transition: all 0.2s;
+         backdrop-filter: blur(4px);
       }
-      .flip-nav-btn:hover {
+      .flip-nav-btn:hover:not(:disabled) {
          background: #d32f2f;
-         transform: translateY(-50%) scale(1.1);
+         transform: translateY(-50%) scale(1.08);
+         border-color: #d32f2f;
       }
-      .flip-prev { left: 10px; }
-      .flip-next { right: 10px; }
+      .flip-nav-btn:disabled {
+         opacity: 0.2;
+         cursor: not-allowed;
+         pointer-events: none;
+      }
+      .flip-prev { left: 16px; }
+      .flip-next { right: 16px; }
 
       /* Scroll Mode Container (iframe fallback) */
       #scrollModeContainer {
@@ -490,6 +619,28 @@
       </div>
 
       <div class="gitiho-header-right">
+         <!-- Active Learning Presence & Time Tracker -->
+         <div class="learning-tracker-box">
+            <div class="tracker-status-indicator" id="trackerIndicator" title="Trạng thái theo dõi thời gian học thực tế">
+               <span class="status-dot"></span>
+               <span id="trackerStatusText">Đang học</span>
+            </div>
+            <div class="tracker-time-display" title="Tổng thời gian bạn đã thực sự học bài này">
+               <i class="fa-regular fa-clock me-1 text-danger"></i>
+               <span id="studyTimeCounter">00:00:00</span>
+            </div>
+         </div>
+
+         <!-- Course Progress -->
+         <div class="progress-ring-box" title="Tiến trình học tập">
+            <div class="progress-circle" id="progressCircle">{{ $userHistory->progress_percent ?? 0 }}%</div>
+            <div class="progress-text d-none d-sm-block">
+               <div style="font-size: 12.5px; font-weight: 700; color: #1a1a1a; line-height: 1.2;">Tiến độ</div>
+               <div style="font-size: 11px; color: #64748b;" id="progressSubtext">
+                  Trang {{ $userHistory->current_page ?? 1 }}
+               </div>
+            </div>
+         </div>
       </div>
    </header>
 
@@ -506,10 +657,10 @@
             <div class="player-toolbar">
                <div class="toolbar-left">
                   <span class="badge bg-danger px-3 py-2" style="font-size: 13px;">
-                     <i class="fa-solid fa-book-open me-1"></i> Sách lật 3D (Từng trang)
+                     <i class="fa-solid fa-display me-1"></i> Trình chiếu Slide
                   </span>
                   <span class="text-white-50 ms-2 d-none d-md-inline" style="font-size: 13.5px;">
-                     Kéo góc sách hoặc bấm phím mũi tên để lật trang
+                     Dùng phím mũi tên ← → hoặc click hai bên để đổi slide
                   </span>
                </div>
 
@@ -527,7 +678,16 @@
                </div>
 
                <div class="toolbar-right">
-                  <button class="btn-toolbar-icon" id="btnFullscreen" title="Mở toàn màn hình">
+                  <button class="btn-toolbar-icon" id="btnZoomOut" title="Thu nhỏ (-)">
+                     <i class="fa-solid fa-minus"></i>
+                  </button>
+                  <button class="btn-toolbar-icon" id="btnZoomReset" title="Vừa màn hình (100%)" style="font-size: 12px; font-weight: 600; width: auto; padding: 0 10px;">
+                     100%
+                  </button>
+                  <button class="btn-toolbar-icon" id="btnZoomIn" title="Phóng to (+)">
+                     <i class="fa-solid fa-plus"></i>
+                  </button>
+                  <button class="btn-toolbar-icon" id="btnFullscreen" title="Mở toàn màn hình (F)">
                      <i class="fa-solid fa-expand"></i>
                   </button>
                </div>
@@ -539,22 +699,29 @@
                <!-- 1. Loading Overlay -->
                <div class="flipbook-loading" id="flipbookLoading">
                   <div class="spinner-book"></div>
-                  <h5 class="mb-2" style="font-weight: 700;">Đang tạo quyển sách 3D FULL...</h5>
+                  <h5 class="mb-2" style="font-weight: 700;">Đang mở bài giảng...</h5>
                   <p class="loading-text text-white-50 mb-0" style="font-size: 13.5px;">Vui lòng đợi trong giây lát</p>
                </div>
 
-               <!-- 2. 3D Book Flipbook Mode Container (PageFlip) -->
-               <div id="flipbookContainerWrapper">
-                  <button id="floatingPrevBtn" class="flip-nav-btn flip-prev" title="Trang trước">
+               <!-- 2. Slide E-Learning Mode Container -->
+               <div id="slideViewerWrapper">
+                  <button id="floatingPrevBtn" class="flip-nav-btn flip-prev" title="Slide trước (←)">
                      <i class="fa-solid fa-chevron-left"></i>
                   </button>
 
-                  <!-- Target book element -->
-                  <div id="flipbook" class="flip-book"></div>
+                  <!-- Main Slide Stage with Canvas -->
+                  <div id="slideStage" class="slide-stage" title="Click nửa phải để xem tiếp, nửa trái để lùi lại">
+                     <canvas id="slideCanvas"></canvas>
+                  </div>
 
-                  <button id="floatingNextBtn" class="flip-nav-btn flip-next" title="Trang tiếp">
+                  <button id="floatingNextBtn" class="flip-nav-btn flip-next" title="Slide tiếp theo (→)">
                      <i class="fa-solid fa-chevron-right"></i>
                   </button>
+
+                  <!-- Bottom Reading Progress Bar -->
+                  <div class="slide-progress-container">
+                     <div class="slide-progress-bar" id="slideProgressBar"></div>
+                  </div>
                </div>
 
                <!-- 3. Scroll Mode Container (iframe fallback) -->
@@ -577,31 +744,32 @@
          <!-- Course tabs at the top of the right panel -->
          <div class="gitiho-tabs-nav">
             <ul class="nav nav-tabs" id="learnTabs" role="tablist">
+               <!-- 1. BÀI TEST (ĐẦU TIÊN & ACTIVE) -->
                <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#tab-overview" type="button" role="tab">
-                     Nội dung
+                  <button class="nav-link active" id="tests-tab" data-bs-toggle="tab" data-bs-target="#tab-tests" type="button" role="tab" aria-selected="true">
+                     <i class="fa-solid fa-clipboard-check me-1"></i> Làm bài test
+                     @php 
+                        $courseTestsList = $courseTests ?? collect(); 
+                        $generalTestsList = $generalTests ?? collect(); 
+                        $totalTestsCount = $courseTestsList->count() + $generalTestsList->count();
+                     @endphp
+                     @if($totalTestsCount > 0)
+                        <span class="badge rounded-pill bg-danger ms-1" style="font-size: 10px; padding: 2px 6px;">{{ $totalTestsCount }}</span>
+                     @endif
                   </button>
                </li>
+               <!-- 2. NỘI DUNG KHÓA HỌC -->
                <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="qa-tab" data-bs-toggle="tab" data-bs-target="#tab-qa" type="button" role="tab">
+                  <button class="nav-link" id="overview-tab" data-bs-toggle="tab" data-bs-target="#tab-overview" type="button" role="tab" aria-selected="false">
+                     Nội dung khóa học
+                  </button>
+               </li>
+               <!-- 3. HỎI ĐÁP -->
+               <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="qa-tab" data-bs-toggle="tab" data-bs-target="#tab-qa" type="button" role="tab" aria-selected="false">
                      Hỏi đáp
                   </button>
                </li>
-               <!-- <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="articles-tab" data-bs-toggle="tab" data-bs-target="#tab-articles" type="button" role="tab">
-                     Tài liệu
-                  </button>
-               </li> -->
-               <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#tab-reviews" type="button" role="tab">
-                     Đánh giá
-                  </button>
-               </li>
-               <!-- <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="cert-tab" data-bs-toggle="tab" data-bs-target="#tab-cert" type="button" role="tab">
-                     Tải chứng nhận
-                  </button>
-               </li> -->
             </ul>
          </div>
 
@@ -610,7 +778,160 @@
             <div class="tab-content">
 
                <!-- 1. TỔNG QUAN -->
-               <div class="tab-pane fade show active" id="tab-overview" role="tabpanel">
+               <!-- 4. LÀM BÀI TEST (BÀI KIỂM TRA CHUNG & RIÊNG) -->
+               <div class="tab-pane fade show active" id="tab-tests" role="tabpanel">
+                  @php
+                     $courseTestsList = $courseTests ?? collect();
+                     $generalTestsList = $generalTests ?? collect();
+                     $resultsMap = $userTestResults ?? collect();
+                  @endphp
+
+                  <!-- Header giới thiệu -->
+                  <div class="mb-3 pb-2 border-bottom">
+                     <h6 class="fw-bold mb-1" style="font-size: 14.5px; color: #1e293b;">
+                        <i class="fa-solid fa-graduation-cap text-danger me-1"></i> Kiểm tra & Đánh giá năng lực
+                     </h6>
+                     <p class="text-muted mb-0" style="font-size: 12px;">
+                        Hoàn thành bài kiểm tra để củng cố kiến thức và xác nhận kết quả học tập.
+                     </p>
+                  </div>
+
+                  <!-- PHẦN 1: BÀI TEST RIÊNG CỦA KHÓA HỌC (LÀM NỔI BẬT) -->
+                  <div class="mb-4">
+                     <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="fw-bold" style="font-size: 13px; color: #03594e;">
+                           <i class="fa-solid fa-star text-warning me-1"></i> BÀI TEST RIÊNG CỦA KHÓA HỌC
+                        </span>
+                        @if($courseTestsList->isNotEmpty())
+                           <span class="badge" style="background: rgba(3, 89, 78, 0.12); color: #03594e; font-size: 11px;">
+                              {{ $courseTestsList->count() }} bài
+                           </span>
+                        @endif
+                     </div>
+
+                     @if($courseTestsList->isNotEmpty())
+                        @foreach($courseTestsList as $cTest)
+                           @php $res = $resultsMap->get($cTest->id); @endphp
+                           <div class="course-test-highlight-card">
+                              <div class="d-flex justify-content-between align-items-start mb-2 gap-2">
+                                 <div>
+                                    <span class="badge text-white mb-2" style="background: #03594e; font-size: 11px; padding: 4px 8px; border-radius: 4px;">
+                                       <i class="fa-solid fa-certificate me-1"></i> Đề thi trọng tâm khóa học
+                                    </span>
+                                    <h6 class="fw-bold mb-1" style="font-size: 14px; color: #0f172a; line-height: 1.35;">
+                                       <a href="{{ route('frontend.tests.show', $cTest->id) }}" class="text-decoration-none text-dark hover-primary">
+                                          {{ $cTest->title }}
+                                       </a>
+                                    </h6>
+                                 </div>
+                              </div>
+
+                              <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                                 <span class="test-meta-badge">
+                                    <i class="fa-regular fa-clipboard-question text-primary"></i> {{ $cTest->questions_count }} câu hỏi
+                                 </span>
+                                 <span class="test-meta-badge">
+                                    <i class="fa-regular fa-stopwatch text-danger"></i> {{ $cTest->duration ? $cTest->duration . ' phút' : 'Không giới hạn' }}
+                                 </span>
+                                 <span class="test-meta-badge">
+                                    <i class="fa-regular fa-bullseye-arrow text-success"></i> Điểm đạt: {{ $cTest->pass_score }}đ
+                                 </span>
+                              </div>
+
+                              @if($res)
+                                 @if($res['is_passed'])
+                                    <div class="alert alert-success py-2 px-3 mb-3 d-flex justify-content-between align-items-center" style="font-size: 12px; border-radius: 8px;">
+                                       <span><i class="fa-solid fa-circle-check text-success me-1"></i> <strong>ĐÃ ĐẠT:</strong> {{ $res['max_score'] }} điểm</span>
+                                       <span class="text-muted" style="font-size: 11px;">(Đã làm {{ $res['attempts'] }} lần)</span>
+                                    </div>
+                                 @else
+                                    <div class="alert alert-warning py-2 px-3 mb-3 d-flex justify-content-between align-items-center" style="font-size: 12px; border-radius: 8px;">
+                                       <span><i class="fa-solid fa-triangle-exclamation text-warning me-1"></i> <strong>CHƯA ĐẠT:</strong> {{ $res['max_score'] }} điểm</span>
+                                       <span class="text-muted" style="font-size: 11px;">(Cần {{ $cTest->pass_score }}đ)</span>
+                                    </div>
+                                 @endif
+                              @else
+                                 <div class="mb-3 text-muted" style="font-size: 12px;">
+                                    <i class="fa-regular fa-circle-info me-1"></i> Bạn chưa thực hiện bài kiểm tra này.
+                                 </div>
+                              @endif
+
+                              <a href="{{ route('frontend.tests.show', $cTest->id) }}" class="btn text-white w-100 fw-bold py-2 shadow-sm" style="background: linear-gradient(135deg, #03594e 0%, #057d6e 100%); border-radius: 8px; font-size: 13.5px;">
+                                 <i class="fa-solid fa-pen-to-square me-1"></i> {{ $res ? 'Làm lại bài kiểm tra' : 'Bắt đầu làm bài test ngay' }} <i class="fa-solid fa-arrow-right ms-1"></i>
+                              </a>
+                           </div>
+                        @endforeach
+                     @else
+                        <div class="p-3 rounded text-center mb-3" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
+                           <div class="text-muted mb-1" style="font-size: 12.5px;">
+                              <i class="fa-regular fa-clipboard-list me-1"></i> Khóa học này chưa có bài test riêng.
+                           </div>
+                           <small class="text-muted" style="font-size: 11.5px;">
+                              Vui lòng tham khảo các bài kiểm tra năng lực chung ở bên dưới.
+                           </small>
+                        </div>
+                     @endif
+                  </div>
+
+                  <!-- PHẦN 2: BÀI TEST CHUNG NỘI BỘ (GENERAL TESTS) -->
+                  <div>
+                     <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="fw-bold" style="font-size: 13px; color: #334155;">
+                           <i class="fa-solid fa-layer-group me-1 text-primary"></i> BÀI TEST ĐÁNH GIÁ CHUNG
+                        </span>
+                        @if($generalTestsList->isNotEmpty())
+                           <span class="badge bg-secondary" style="font-size: 11px;">
+                              {{ $generalTestsList->count() }} bài
+                           </span>
+                        @endif
+                     </div>
+
+                     @if($generalTestsList->isNotEmpty())
+                        @foreach($generalTestsList as $gTest)
+                           @php $gRes = $resultsMap->get($gTest->id); @endphp
+                           <div class="general-test-card">
+                              <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                 <h6 class="fw-bold mb-0" style="font-size: 13px; color: #1e293b; line-height: 1.35;">
+                                    <a href="{{ route('frontend.tests.show', $gTest->id) }}" class="text-decoration-none text-dark hover-primary">
+                                       {{ $gTest->title }}
+                                    </a>
+                                 </h6>
+                                 @if($gRes)
+                                    @if($gRes['is_passed'])
+                                       <span class="badge bg-success" style="font-size: 10.5px; flex-shrink: 0;">
+                                          <i class="fa-solid fa-check me-1"></i> Đạt ({{ $gRes['max_score'] }}đ)
+                                       </span>
+                                    @else
+                                       <span class="badge bg-warning text-dark" style="font-size: 10.5px; flex-shrink: 0;">
+                                          Chưa đạt ({{ $gRes['max_score'] }}đ)
+                                       </span>
+                                    @endif
+                                 @endif
+                              </div>
+
+                              <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-2 pt-2 border-top">
+                                 <div class="d-flex align-items-center gap-2" style="font-size: 11.5px; color: #64748b;">
+                                    <span><i class="fa-regular fa-clipboard-question me-1"></i> {{ $gTest->questions_count }} câu</span>
+                                    <span>•</span>
+                                    <span><i class="fa-regular fa-clock me-1"></i> {{ $gTest->duration ? $gTest->duration . 'p' : 'Tự do' }}</span>
+                                    <span>•</span>
+                                    <span><i class="fa-regular fa-bullseye me-1"></i> Đạt: {{ $gTest->pass_score }}đ</span>
+                                 </div>
+                                 <a href="{{ route('frontend.tests.show', $gTest->id) }}" class="btn btn-sm btn-outline-primary px-3 py-1" style="font-size: 12px; font-weight: 600; border-radius: 6px;">
+                                    {{ $gRes ? 'Làm lại' : 'Vào thi' }} <i class="fa-solid fa-angle-right ms-1"></i>
+                                 </a>
+                              </div>
+                           </div>
+                        @endforeach
+                     @else
+                        <div class="p-3 rounded text-center text-muted" style="background: #f8fafc; font-size: 12px;">
+                           Hiện chưa có bài kiểm tra chung nào.
+                        </div>
+                     @endif
+                  </div>
+               </div>
+
+               <div class="tab-pane fade" id="tab-overview" role="tabpanel">
                   @include('frontend.partials.course-curriculum')
                </div>
 
@@ -622,7 +943,6 @@
                      </a>
                   @endif
                </div>
-               <div class="tab-pane fade" id="tab-reviews" role="tabpanel"></div>
                <div class="tab-pane fade" id="tab-cert" role="tabpanel"></div>
 
             </div>
@@ -634,175 +954,503 @@
 
    <!-- JS Libraries -->
    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-   <!-- PDF.js & PageFlip CDN for 3D Book Flipbook -->
+   <!-- PDF.js CDN for E-Learning Slide Viewer -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 
    <script>
-      // 1. Quản lý sách lật 3D (PageFlip hiển thị FULL tối đa theo kích thước màn hình)
+      // ========================================================
+      // TRÌNH CHIẾU SLIDE E-LEARNING SIÊU TỐC & THEO DÕI HỌC TẬP
+      // ========================================================
       let pdfDoc = null;
-      let flipBook = null;
-      let totalPagesCount = 1;
+      let currentPage = {{ (int) ($userHistory->current_page ?? 1) }};
+      let totalPagesCount = {{ (int) ($userHistory->total_pages ?? 1) }};
+      let currentZoom = 1.0;
+      let isRendering = false;
+      let pendingPageNum = null;
+      let currentRenderTask = null;
+      const pageCache = new Map();
+
+      // Dữ liệu tiến trình học
+      const initialStudySeconds = {{ (int) ($userHistory->study_time_seconds ?? 0) }};
+      const initialCurrentPage = {{ (int) ($userHistory->current_page ?? 1) }};
+      let currentProgressPercent = {{ (int) ($userHistory->progress_percent ?? 0) }};
+      let maxPageVisited = Math.max(initialCurrentPage, 1);
 
       const pdfUrl = @json($post->pdf_url);
+      const trackApiUrl = "{{ route('api.course.track-learning', $post->slug) }}";
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || "{{ csrf_token() }}";
+
       const loadingEl = document.getElementById('flipbookLoading');
-      const flipbookEl = document.getElementById('flipbook');
-      const flipbookWrapper = document.getElementById('flipbookContainerWrapper');
+      const slideWrapper = document.getElementById('slideViewerWrapper');
+      const slideStage = document.getElementById('slideStage');
+      const slideCanvas = document.getElementById('slideCanvas');
+      const slideCtx = slideCanvas.getContext('2d');
       const scrollWrapper = document.getElementById('scrollModeContainer');
 
       const pageNumInput = document.getElementById('pageNumInput');
       const totalPagesText = document.getElementById('totalPagesText');
+      const progressBar = document.getElementById('slideProgressBar');
+      const btnPrev = document.getElementById('btnPrevPage');
+      const btnNext = document.getElementById('btnNextPage');
+      const floatPrev = document.getElementById('floatingPrevBtn');
+      const floatNext = document.getElementById('floatingNextBtn');
+      const btnZoomIn = document.getElementById('btnZoomIn');
+      const btnZoomOut = document.getElementById('btnZoomOut');
+      const btnZoomReset = document.getElementById('btnZoomReset');
+      const btnFullscreen = document.getElementById('btnFullscreen');
 
-      async function initPdfFlipbook() {
-         if (!pdfUrl) {
-            loadingEl.style.display = 'none';
-            flipbookWrapper.style.display = 'none';
-            document.querySelector('.player-toolbar').style.display = 'none';
+      // Tracker Elements
+      const trackerIndicator = document.getElementById('trackerIndicator');
+      const trackerStatusText = document.getElementById('trackerStatusText');
+      const studyTimeCounter = document.getElementById('studyTimeCounter');
+      const progressCircle = document.getElementById('progressCircle');
+      const progressSubtext = document.getElementById('progressSubtext');
+
+      // ========================================================
+      // 1. KIỂM TRA HIỆN DIỆN & TÍNH THỜI GIAN HỌC THỰC TẾ
+      // ========================================================
+      let totalStudySeconds = initialStudySeconds;
+      let unsavedActiveSeconds = 0;
+      let lastUserActivity = Date.now();
+      let isUserActive = true;
+      const IDLE_LIMIT_MS = 120000; // 2 phút không có tương tác chuột/phím -> Tạm dừng
+
+      function formatStudyTime(totalSec) {
+         const h = Math.floor(totalSec / 3600);
+         const m = Math.floor((totalSec % 3600) / 60);
+         const s = totalSec % 60;
+         const pad = (n) => String(n).padStart(2, '0');
+         return (h > 0 ? pad(h) + ':' : '') + pad(m) + ':' + pad(s);
+      }
+
+      studyTimeCounter.innerText = formatStudyTime(totalStudySeconds);
+
+      // Lắng nghe tương tác của người dùng
+      function onUserActivity() {
+         lastUserActivity = Date.now();
+      }
+      ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evt => {
+         window.addEventListener(evt, onUserActivity, { passive: true });
+      });
+
+      // Vòng lặp đếm giờ mỗi giây
+      setInterval(() => {
+         const isVisible = (document.visibilityState === 'visible');
+         const isNotIdle = (Date.now() - lastUserActivity < IDLE_LIMIT_MS);
+
+         if (isVisible && isNotIdle) {
+            isUserActive = true;
+            totalStudySeconds++;
+            unsavedActiveSeconds++;
+
+            if (trackerIndicator) trackerIndicator.classList.remove('paused');
+            if (trackerStatusText) trackerStatusText.innerText = 'Đang học';
+         } else {
+            isUserActive = false;
+            if (trackerIndicator) trackerIndicator.classList.add('paused');
+            if (trackerStatusText) {
+               if (!isVisible) {
+                  trackerStatusText.innerText = 'Tạm dừng (Rời tab)';
+               } else {
+                  trackerStatusText.innerText = 'Tạm dừng (Treo máy)';
+               }
+            }
+         }
+
+         if (studyTimeCounter) {
+            studyTimeCounter.innerText = formatStudyTime(totalStudySeconds);
+         }
+      }, 1000);
+
+      // ========================================================
+      // 2. ĐỒNG BỘ DỮ LIỆU TIẾN ĐỘ & THỜI GIAN VÀO DATABASE
+      // ========================================================
+      function syncLearningProgress(isBeacon = false) {
+         if (unsavedActiveSeconds <= 0 && !isBeacon) return;
+
+         const payload = {
+            active_seconds: unsavedActiveSeconds,
+            current_page: currentPage,
+            total_pages: totalPagesCount,
+            progress_percent: currentProgressPercent,
+            _token: csrfToken
+         };
+
+         if (isBeacon && navigator.sendBeacon) {
+            const formData = new FormData();
+            for (const key in payload) {
+               formData.append(key, payload[key]);
+            }
+            navigator.sendBeacon(trackApiUrl, formData);
+            unsavedActiveSeconds = 0;
             return;
          }
+
+         const secondsToSend = unsavedActiveSeconds;
+         fetch(trackApiUrl, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+               'X-CSRF-TOKEN': csrfToken,
+               'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+         })
+         .then(res => res.json())
+         .then(data => {
+            if (data && data.success) {
+               unsavedActiveSeconds = Math.max(0, unsavedActiveSeconds - secondsToSend);
+            }
+         })
+         .catch(err => {
+            console.warn("Lỗi lưu tiến trình học:", err);
+         });
+      }
+
+      // Tự động lưu định kỳ mỗi 15 giây
+      setInterval(() => {
+         syncLearningProgress();
+      }, 15000);
+
+      // Lưu khi rời khỏi tab hoặc đóng trình duyệt
+      document.addEventListener('visibilitychange', () => {
+         if (document.visibilityState === 'hidden') {
+            syncLearningProgress(true);
+         }
+      });
+      window.addEventListener('beforeunload', () => {
+         syncLearningProgress(true);
+      });
+
+      // Cập nhật hiển thị tiến trình học
+      function updateProgressUi(pageNum) {
+         maxPageVisited = Math.max(maxPageVisited, pageNum);
+         if (totalPagesCount > 0) {
+            const calculated = Math.round((maxPageVisited / totalPagesCount) * 100);
+            currentProgressPercent = Math.max(currentProgressPercent, calculated);
+         }
+
+         if (progressCircle) {
+            progressCircle.innerText = currentProgressPercent + '%';
+            if (currentProgressPercent >= 100) {
+               progressCircle.classList.add('completed');
+            }
+         }
+         if (progressSubtext) {
+            progressSubtext.innerText = 'Trang ' + pageNum + ' / ' + totalPagesCount;
+         }
+      }
+
+      // ========================================================
+      // 3. KHỞI TẠO & RENDER SLIDE (PDF.JS + CACHE)
+      // ========================================================
+      async function initSlideViewer() {
+         if (!pdfUrl) {
+            if (loadingEl) loadingEl.style.display = 'none';
+            if (slideWrapper) slideWrapper.style.display = 'none';
+            const toolbar = document.querySelector('.player-toolbar');
+            if (toolbar) toolbar.style.display = 'none';
+            return;
+         }
+
          try {
-            if (typeof pdfjsLib === 'undefined' || typeof St === 'undefined') {
-               throw new Error("Thư viện PDF.js hoặc PageFlip chưa load");
+            if (typeof pdfjsLib === 'undefined') {
+               throw new Error("Thư viện PDF.js chưa tải thành công");
             }
 
             pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-            
+
             const loadingTask = pdfjsLib.getDocument(pdfUrl);
             pdfDoc = await loadingTask.promise;
             totalPagesCount = pdfDoc.numPages;
-            totalPagesText.innerText = totalPagesCount;
-            pageNumInput.max = totalPagesCount;
-
-            // Tính toán tỷ lệ chuẩn từ trang đầu tiên
-            const firstPage = await pdfDoc.getPage(1);
-            const firstViewport = firstPage.getViewport({ scale: 1 });
-            const pageRatio = firstViewport.height / firstViewport.width;
-
-            // Keep the host narrower than PageFlip's two-page breakpoint.
-            // Size one page from the actual reading area, including in fullscreen.
-            const maxPageWidth = 2400;
-            function resizeBook() {
-               const style = getComputedStyle(flipbookWrapper);
-               const availableWidth = flipbookWrapper.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-               const availableHeight = flipbookWrapper.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
-               const pageWidth = Math.max(1, Math.floor(Math.min(availableWidth, availableHeight / pageRatio, maxPageWidth)));
-               flipbookEl.style.width = pageWidth + 'px';
-               flipbookEl.style.height = Math.max(1, Math.floor(pageWidth * pageRatio)) + 'px';
-               if (flipBook) flipBook.update();
+            if (totalPagesText) totalPagesText.innerText = totalPagesCount;
+            if (pageNumInput) {
+               pageNumInput.max = totalPagesCount;
             }
 
-            resizeBook();
+            // Tự động nhảy đến slide học dở lần trước (nếu có)
+            let startPage = initialCurrentPage;
+            if (startPage < 1 || startPage > totalPagesCount) startPage = 1;
 
-            flipbookEl.innerHTML = "";
-
-            for (let i = 1; i <= totalPagesCount; i++) {
-               const page = await pdfDoc.getPage(i);
-               const viewport = page.getViewport({ scale: 2.0 }); // Render Retina HD DPI 2.0 siêu sắc nét
-
-               const pageDiv = document.createElement("div");
-               pageDiv.className = "flip-page";
-               pageDiv.setAttribute("data-density", (i === 1 || i === totalPagesCount) ? "hard" : "soft");
-
-               const canvas = document.createElement("canvas");
-               const context = canvas.getContext("2d");
-               canvas.width = viewport.width;
-               canvas.height = viewport.height;
-
-               pageDiv.appendChild(canvas);
-               flipbookEl.appendChild(pageDiv);
-
-               await page.render({
-                  canvasContext: context,
-                  viewport: viewport
-               }).promise;
-
-               const loadText = loadingEl.querySelector('.loading-text');
-               if (loadText) {
-                  loadText.innerText = `Đang tạo trang sách FULL... (${i}/${totalPagesCount} trang)`;
-               }
-            }
-
-            loadingEl.style.display = 'none';
-
-            // Khởi tạo St.PageFlip với kích thước FULL màn hình
-            flipBook = new St.PageFlip(flipbookEl, {
-               width: maxPageWidth,
-               height: Math.round(maxPageWidth * pageRatio),
-               size: "stretch",
-               minWidth: maxPageWidth,
-               maxWidth: maxPageWidth,
-               minHeight: 1,
-               maxHeight: Math.round(maxPageWidth * pageRatio),
-               usePortrait: true,
-               autoSize: false,
-               maxShadowOpacity: 0.6,
-               showCover: false,
-               mobileScrollSupport: false,
-               flippingTime: 650
-            });
-
-            flipBook.loadFromHTML(document.querySelectorAll('.flip-page'));
-            // PageFlip sets this inline minimum when it loads the HTML pages.
-            // Allow the host to shrink while retaining the single-page breakpoint.
-            flipbookEl.style.minWidth = '0';
-            resizeBook();
-            const bookResizeObserver = new ResizeObserver(resizeBook);
-            bookResizeObserver.observe(flipbookWrapper);
-
-            flipBook.on("flip", (e) => {
-               pageNumInput.value = (e.data + 1);
-            });
+            updateProgressUi(startPage);
+            await renderSlide(startPage);
 
          } catch (err) {
-            console.warn("Chuyển sang chế độ xem cuộn do lỗi tải Flipbook:", err);
-            loadingEl.style.display = 'none';
+            console.warn("Chuyển sang chế độ cuộn do lỗi tải Slide:", err);
+            if (loadingEl) loadingEl.style.display = 'none';
             switchToScrollMode();
          }
       }
 
-      // Điều hướng Trang trước / tiếp
-      document.getElementById('btnPrevPage')?.addEventListener('click', () => {
-         if (flipBook) flipBook.flipPrev();
-      });
-      document.getElementById('floatingPrevBtn')?.addEventListener('click', () => {
-         if (flipBook) flipBook.flipPrev();
-      });
-      document.getElementById('btnNextPage')?.addEventListener('click', () => {
-         if (flipBook) flipBook.flipNext();
-      });
-      document.getElementById('floatingNextBtn')?.addEventListener('click', () => {
-         if (flipBook) flipBook.flipNext();
-      });
+      async function renderSlide(num) {
+         if (num < 1) num = 1;
+         if (num > totalPagesCount) num = totalPagesCount;
 
-      // Bấm số trang -> nhảy trực tiếp đến trang đó
-      pageNumInput?.addEventListener('change', (e) => {
-         let targetPage = parseInt(e.target.value) || 1;
-         if (targetPage < 1) targetPage = 1;
-         if (targetPage > totalPagesCount) targetPage = totalPagesCount;
-         pageNumInput.value = targetPage;
-         if (flipBook) {
-            flipBook.flip(targetPage - 1);
+         if (isRendering) {
+            pendingPageNum = num;
+            if (currentRenderTask && typeof currentRenderTask.cancel === 'function') {
+               try { currentRenderTask.cancel(); } catch (e) {}
+            }
+            return;
          }
-      });
 
-      // Điều hướng bằng Phím mũi tên (ArrowLeft / ArrowRight)
-      document.addEventListener('keydown', (e) => {
-         if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
-         if (e.key === 'ArrowLeft') {
-            if (flipBook && flipbookWrapper.style.display !== 'none') flipBook.flipPrev();
-         } else if (e.key === 'ArrowRight') {
-            if (flipBook && flipbookWrapper.style.display !== 'none') flipBook.flipNext();
+         isRendering = true;
+         currentPage = num;
+
+         // Cập nhật UI
+         if (pageNumInput) pageNumInput.value = num;
+         if (btnPrev) btnPrev.disabled = (num <= 1);
+         if (floatPrev) floatPrev.disabled = (num <= 1);
+         if (btnNext) btnNext.disabled = (num >= totalPagesCount);
+         if (floatNext) floatNext.disabled = (num >= totalPagesCount);
+         if (progressBar) progressBar.style.width = ((num / totalPagesCount) * 100) + '%';
+
+         updateProgressUi(num);
+
+         // 1. Kiểm tra nếu trang đã có trong Cache -> 0ms
+         if (pageCache.has(num)) {
+            const cached = pageCache.get(num);
+            slideCanvas.width = cached.width;
+            slideCanvas.height = cached.height;
+            slideCanvas.style.width = cached.cssW;
+            slideCanvas.style.height = cached.cssH;
+            slideCtx.clearRect(0, 0, cached.width, cached.height);
+            slideCtx.drawImage(cached.canvas, 0, 0);
+
+            slideStage.style.opacity = '1';
+            if (loadingEl && loadingEl.style.display !== 'none') {
+               loadingEl.style.display = 'none';
+            }
+            isRendering = false;
+
+            preloadAdjacentSlides(num);
+            syncLearningProgress();
+            return;
          }
-      });
 
-      // Chuyển chế độ xem cuộn (dự phòng khi lỗi tải Sách lật 3D)
-      function switchToScrollMode() {
-         scrollWrapper.style.display = 'block';
-         flipbookWrapper.style.display = 'none';
+         // 2. Nếu chưa có -> Render từ PDF.js
+         try {
+            const page = await pdfDoc.getPage(num);
+
+            const style = getComputedStyle(slideWrapper);
+            const padX = parseFloat(style.paddingLeft || 0) + parseFloat(style.paddingRight || 0) + 30;
+            const padY = parseFloat(style.paddingTop || 0) + parseFloat(style.paddingBottom || 0) + 30;
+
+            const availW = Math.max(250, slideWrapper.clientWidth - padX);
+            const availH = Math.max(250, slideWrapper.clientHeight - padY);
+
+            const unscaledViewport = page.getViewport({ scale: 1 });
+            const pageRatio = unscaledViewport.height / unscaledViewport.width;
+
+            let fitW = Math.min(availW, availH / pageRatio) * currentZoom;
+            let fitH = fitW * pageRatio;
+
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const canvasW = Math.round(fitW * dpr);
+            const canvasH = Math.round(fitH * dpr);
+
+            slideCanvas.width = canvasW;
+            slideCanvas.height = canvasH;
+            slideCanvas.style.width = Math.round(fitW) + 'px';
+            slideCanvas.style.height = Math.round(fitH) + 'px';
+
+            const renderViewport = page.getViewport({ scale: canvasW / unscaledViewport.width });
+            currentRenderTask = page.render({
+               canvasContext: slideCtx,
+               viewport: renderViewport
+            });
+
+            await currentRenderTask.promise;
+            currentRenderTask = null;
+
+            // Lưu Cache
+            const offscreen = document.createElement('canvas');
+            offscreen.width = canvasW;
+            offscreen.height = canvasH;
+            const offCtx = offscreen.getContext('2d');
+            offCtx.drawImage(slideCanvas, 0, 0);
+
+            pageCache.set(num, {
+               canvas: offscreen,
+               width: canvasW,
+               height: canvasH,
+               cssW: Math.round(fitW) + 'px',
+               cssH: Math.round(fitH) + 'px'
+            });
+
+            if (pageCache.size > 15) {
+               const oldest = pageCache.keys().next().value;
+               pageCache.delete(oldest);
+            }
+
+            slideStage.style.opacity = '1';
+            if (loadingEl && loadingEl.style.display !== 'none') {
+               loadingEl.style.display = 'none';
+            }
+
+            syncLearningProgress();
+
+         } catch (err) {
+            if (err?.name !== 'RenderingCancelledException') {
+               console.warn("Lỗi vẽ slide " + num + ":", err);
+            }
+         } finally {
+            isRendering = false;
+            if (pendingPageNum !== null) {
+               const next = pendingPageNum;
+               pendingPageNum = null;
+               renderSlide(next);
+            } else {
+               preloadAdjacentSlides(num);
+            }
+         }
       }
 
-      // Nút xem Toàn màn hình
-      document.getElementById('btnFullscreen')?.addEventListener('click', () => {
+      async function preloadAdjacentSlides(current) {
+         if (!pdfDoc) return;
+         const targets = [current + 1, current - 1].filter(n => n >= 1 && n <= totalPagesCount && !pageCache.has(n));
+         for (const n of targets) {
+            try {
+               const page = await pdfDoc.getPage(n);
+               const style = getComputedStyle(slideWrapper);
+               const padX = parseFloat(style.paddingLeft || 0) + parseFloat(style.paddingRight || 0) + 30;
+               const padY = parseFloat(style.paddingTop || 0) + parseFloat(style.paddingBottom || 0) + 30;
+               const availW = Math.max(250, slideWrapper.clientWidth - padX);
+               const availH = Math.max(250, slideWrapper.clientHeight - padY);
+               const unscaledViewport = page.getViewport({ scale: 1 });
+               const pageRatio = unscaledViewport.height / unscaledViewport.width;
+
+               let fitW = Math.min(availW, availH / pageRatio) * currentZoom;
+               let fitH = fitW * pageRatio;
+               const dpr = Math.min(window.devicePixelRatio || 1, 2);
+               const canvasW = Math.round(fitW * dpr);
+               const canvasH = Math.round(fitH * dpr);
+
+               const offscreen = document.createElement('canvas');
+               offscreen.width = canvasW;
+               offscreen.height = canvasH;
+               const offCtx = offscreen.getContext('2d');
+
+               const renderViewport = page.getViewport({ scale: canvasW / unscaledViewport.width });
+               await page.render({
+                  canvasContext: offCtx,
+                  viewport: renderViewport
+               }).promise;
+
+               pageCache.set(n, {
+                  canvas: offscreen,
+                  width: canvasW,
+                  height: canvasH,
+                  cssW: Math.round(fitW) + 'px',
+                  cssH: Math.round(fitH) + 'px'
+               });
+            } catch (e) {}
+         }
+      }
+
+      function prevSlide() {
+         if (currentPage > 1) {
+            slideStage.style.opacity = '0.7';
+            renderSlide(currentPage - 1);
+         }
+      }
+
+      function nextSlide() {
+         if (currentPage < totalPagesCount) {
+            slideStage.style.opacity = '0.7';
+            renderSlide(currentPage + 1);
+         }
+      }
+
+      btnPrev?.addEventListener('click', prevSlide);
+      floatPrev?.addEventListener('click', prevSlide);
+      btnNext?.addEventListener('click', nextSlide);
+      floatNext?.addEventListener('click', nextSlide);
+
+      slideStage?.addEventListener('click', (e) => {
+         const rect = slideStage.getBoundingClientRect();
+         const clickX = e.clientX - rect.left;
+         if (clickX > rect.width * 0.5) {
+            nextSlide();
+         } else {
+            prevSlide();
+         }
+      });
+
+      pageNumInput?.addEventListener('change', (e) => {
+         let target = parseInt(e.target.value) || 1;
+         if (target < 1) target = 1;
+         if (target > totalPagesCount) target = totalPagesCount;
+         renderSlide(target);
+      });
+
+      document.addEventListener('keydown', (e) => {
+         if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+         if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            e.preventDefault();
+            prevSlide();
+         } else if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+            e.preventDefault();
+            nextSlide();
+         } else if (e.key === 'Home') {
+            e.preventDefault();
+            renderSlide(1);
+         } else if (e.key === 'End') {
+            e.preventDefault();
+            renderSlide(totalPagesCount);
+         } else if (e.key === 'f' || e.key === 'F') {
+            btnFullscreen?.click();
+         }
+      });
+
+      let touchStartX = 0;
+      let touchStartY = 0;
+      slideWrapper?.addEventListener('touchstart', (e) => {
+         touchStartX = e.changedTouches[0].screenX;
+         touchStartY = e.changedTouches[0].screenY;
+      }, { passive: true });
+
+      slideWrapper?.addEventListener('touchend', (e) => {
+         const diffX = e.changedTouches[0].screenX - touchStartX;
+         const diffY = e.changedTouches[0].screenY - touchStartY;
+         if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+            if (diffX > 0) prevSlide();
+            else nextSlide();
+         }
+      }, { passive: true });
+
+      function updateZoomText() {
+         if (btnZoomReset) btnZoomReset.innerText = Math.round(currentZoom * 100) + '%';
+      }
+
+      btnZoomIn?.addEventListener('click', () => {
+         if (currentZoom < 2.2) {
+            currentZoom = Math.min(2.2, +(currentZoom + 0.15).toFixed(2));
+            updateZoomText();
+            pageCache.clear();
+            renderSlide(currentPage);
+         }
+      });
+
+      btnZoomOut?.addEventListener('click', () => {
+         if (currentZoom > 0.6) {
+            currentZoom = Math.max(0.6, +(currentZoom - 0.15).toFixed(2));
+            updateZoomText();
+            pageCache.clear();
+            renderSlide(currentPage);
+         }
+      });
+
+      btnZoomReset?.addEventListener('click', () => {
+         if (currentZoom !== 1.0) {
+            currentZoom = 1.0;
+            updateZoomText();
+            pageCache.clear();
+            renderSlide(currentPage);
+         }
+      });
+
+      btnFullscreen?.addEventListener('click', () => {
          const elem = document.getElementById('lessonPlayer');
          if (!document.fullscreenElement) {
             if (elem.requestFullscreen) elem.requestFullscreen();
@@ -813,12 +1461,26 @@
          }
       });
 
-      // Tự động khởi tạo khi trang tải xong
+      let resizeTimer = null;
+      const resizeObserver = new ResizeObserver(() => {
+         clearTimeout(resizeTimer);
+         resizeTimer = setTimeout(() => {
+            if (pdfDoc) {
+               pageCache.clear();
+               renderSlide(currentPage);
+            }
+         }, 120);
+      });
+      if (slideWrapper) resizeObserver.observe(slideWrapper);
+
+      function switchToScrollMode() {
+         if (scrollWrapper) scrollWrapper.style.display = 'block';
+         if (slideWrapper) slideWrapper.style.display = 'none';
+      }
+
       window.addEventListener('DOMContentLoaded', () => {
-         initPdfFlipbook();
+         initSlideViewer();
       });
    </script>
-
 </body>
-
 </html>

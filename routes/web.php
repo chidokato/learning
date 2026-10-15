@@ -49,12 +49,21 @@ $courseLearnHandler = function (string $slug) {
 
     abort_unless($post, 404);
 
+    $userHistory = null;
     if (auth()->check()) {
         $userId = auth()->id();
-        \App\Models\UserCourseHistory::updateOrCreate(
+        $userHistory = \App\Models\UserCourseHistory::firstOrCreate(
             ['user_id' => $userId, 'post_id' => $post->id],
-            ['last_learned_at' => now()]
+            [
+                'last_learned_at' => now(),
+                'study_time_seconds' => 0,
+                'current_page' => 1,
+                'total_pages' => 0,
+                'progress_percent' => 0,
+            ]
         );
+        $userHistory->update(['last_learned_at' => now()]);
+
         $cacheKey = "user_{$userId}_learned_post_{$post->id}";
         if (!cache()->has($cacheKey)) {
             $post->increment('view_count');
@@ -66,9 +75,47 @@ $courseLearnHandler = function (string $slug) {
             $post->increment('view_count');
             session()->put($sessionKey, true);
         }
+        $guestData = session()->get("guest_learning_{$post->id}", [
+            'study_time_seconds' => 0,
+            'current_page' => 1,
+            'total_pages' => 0,
+            'progress_percent' => 0,
+        ]);
+        $userHistory = (object) $guestData;
     }
 
-    return view('frontend.course-learn', compact('post'));
+    // Lấy bài test riêng của khóa học hiện tại (post_id = $post->id)
+    $courseTests = \App\Models\Test::where('post_id', $post->id)
+        ->withCount('questions')
+        ->latest()
+        ->get();
+
+    // Lấy các bài test chung (post_id is null hoặc 0, hoặc bài test không thuộc khóa này)
+    $generalTests = \App\Models\Test::where(function ($q) use ($post) {
+            $q->whereNull('post_id')
+              ->orWhere('post_id', 0)
+              ->orWhere('post_id', '!=', $post->id);
+        })
+        ->withCount('questions')
+        ->latest()
+        ->get();
+
+    // Lấy kết quả làm bài của học viên (nếu đã đăng nhập)
+    $userTestResults = auth()->check()
+        ? \App\Models\UserTestResult::where('user_id', auth()->id())
+            ->get()
+            ->groupBy('test_id')
+            ->map(function ($items) {
+                return [
+                    'attempts'   => $items->count(),
+                    'max_score'  => $items->max('score'),
+                    'is_passed'  => $items->contains('is_passed', true),
+                    'latest'     => $items->sortByDesc('created_at')->first(),
+                ];
+            })
+        : collect();
+
+    return view('frontend.course-learn', compact('post', 'userHistory', 'courseTests', 'generalTests', 'userTestResults'));
 };
 
 $fallbackCourseDetailHandler = function () {
@@ -135,6 +182,9 @@ Route::get('auth/google/callback', [\App\Http\Controllers\GoogleAuthController::
 
 // AI Chatbot Widget API Route
 Route::post('/api/chatbot/ask', [ChatbotController::class, 'ask'])->name('api.chatbot.ask');
+
+// Learning Tracking Heartbeat API Route
+Route::post('/api/courses/{slug}/track-learning', [\App\Http\Controllers\CourseLearningController::class, 'trackLearning'])->name('api.course.track-learning');
 
 
 Route::prefix('admin')->name('backend.')->group(function () {
