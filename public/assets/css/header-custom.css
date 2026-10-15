@@ -222,6 +222,7 @@
 
 .site-main-logo {
    max-height: 48px;
+   max-width: 100%;
    width: auto;
    object-fit: contain;
    transition: transform 0.25s ease;
@@ -232,6 +233,10 @@
 }
 
 /* Nav Menu Items */
+.custom-nav-wrapper {
+   width: 100%;
+}
+
 .custom-nav-menu > ul {
    display: flex;
    align-items: center;
@@ -239,28 +244,43 @@
    padding: 0;
    list-style: none;
    gap: 4px;
+   flex-wrap: nowrap;
 }
 
 .custom-nav-menu > ul > li {
    position: relative;
    list-style: none;
+   flex-shrink: 0;
 }
 
 .custom-nav-menu > ul > li > a {
    display: inline-flex;
    align-items: center;
    gap: 6px;
-   padding: 8px 14px !important;
+   padding: 8px 12px !important;
    color: #334155 !important;
    font-size: 13.5px !important;
    font-weight: 600 !important;
-   letter-spacing: 0.025em;
+   letter-spacing: 0.02em;
    text-transform: uppercase;
    text-decoration: none !important;
    border-radius: 8px;
    position: relative;
    transition: all 0.25s ease;
    font-family: inherit;
+   white-space: nowrap !important;
+}
+
+/* Responsive adjustments for medium/large desktop screens */
+@media (min-width: 1200px) and (max-width: 1440px) {
+   .custom-nav-menu > ul {
+      gap: 2px;
+   }
+   .custom-nav-menu > ul > li > a {
+      padding: 7px 9px !important;
+      font-size: 12.5px !important;
+      letter-spacing: 0.01em;
+   }
 }
 
 .custom-nav-menu > ul > li > a::after {

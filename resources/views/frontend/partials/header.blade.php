@@ -3,7 +3,7 @@
 
 <!-- header-top-area-start -->
 <div class="it-header-top-area custom-header-top">
-   <div class="container">
+   <div class="container-fluid px-3 px-xl-5">
       <div class="row align-items-center">
          <!-- Contact Info (Hotline & Email) -->
          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
@@ -71,10 +71,10 @@
 <!-- Main Navigation Header -->
 <header class="it-header-height custom-header-wrapper">
    <div id="header-sticky" class="it-header-area custom-main-header">
-      <div class="container">
+      <div class="container-fluid px-3 px-xl-5">
          <div class="row align-items-center">
             <!-- Brand Logo -->
-            <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-8">
+            <div class="col-auto">
                <div class="it-header-logo custom-logo-box">
                   <a href="{{ route('frontend.home') }}">
                      <img src="{{ $siteSetting->logo_url }}" alt="Indochine" class="site-main-logo">
@@ -83,7 +83,7 @@
             </div>
 
             <!-- Desktop Menu -->
-            <div class="col-xxl-9 col-xl-9 d-none d-xl-block">
+            <div class="col flex-grow-1 d-none d-xl-block">
                <div class="custom-nav-wrapper d-flex align-items-center justify-content-end">
                   <nav class="custom-nav-menu">
                      <ul>
@@ -102,7 +102,7 @@
             </div>
 
             <!-- Mobile Toggle Bar -->
-            <div class="col-md-6 col-4 d-xl-none text-end">
+            <div class="col-auto ms-auto d-xl-none text-end">
                <div class="it-header-bar">
                   <button class="it-menu-bar custom-mobile-toggle" type="button" aria-label="Menu">
                      <i class="fal fa-bars"></i>

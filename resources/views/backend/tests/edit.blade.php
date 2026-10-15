@@ -71,8 +71,6 @@
         color: #fff;
     }
     .nav-pills-questions {
-        max-height: 120px;
-        overflow-y: auto;
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
