@@ -74,6 +74,16 @@ class Post extends Model
         return $this->hasMany(CustomerInquiry::class)->latest();
     }
 
+    public function tests()
+    {
+        return $this->hasMany(Test::class, 'post_id');
+    }
+
+    public function test()
+    {
+        return $this->hasOne(Test::class, 'post_id')->latestOfMany();
+    }
+
     public function getFrontendUrlAttribute(): string
     {
         if ($this->category?->slug) {

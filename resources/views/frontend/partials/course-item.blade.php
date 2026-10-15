@@ -17,7 +17,7 @@
     $displayCategoryName = $course->category?->name ?? ($category->name ?? null);
 @endphp
 
-<div class="{{ $colClass ?? 'col-xl-4 col-lg-4 col-md-6 mb-30' }}">
+<div class="{{ $colClass ?? 'col-xxl-3 col-xl-3 col-lg-4 col-md-6 mb-30' }}">
    <div class="modern-course-card">
       <!-- Thumbnail -->
       <div class="course-card-thumb">

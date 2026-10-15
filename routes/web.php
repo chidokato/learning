@@ -16,7 +16,7 @@ $postDetailHandler = function (string $slug) {
 
     $post = \App\Models\Post::query()
         ->where('slug', $cleanSlug)
-        ->with(['category', 'seller'])
+        ->with(['category', 'seller', 'tests.questions'])
         ->first();
 
 
@@ -75,7 +75,7 @@ $fallbackCourseDetailHandler = function () {
     $post = \App\Models\Post::query()
         ->where('type', \App\Models\Post::TYPE_COURSE)
         ->where('is_active', true)
-        ->with(['category', 'seller'])
+        ->with(['category', 'seller', 'tests.questions'])
         ->latest('published_at')
         ->first();
 
@@ -333,7 +333,7 @@ $categoryHandler = function (string $categorySlug) use ($postDetailHandler) {
         ->withCount('learningHistories')
         ->latest('published_at')
         ->latest('id')
-        ->paginate(9);
+        ->paginate(12);
 
     return view('frontend.category', compact('category', 'courses'));
 };

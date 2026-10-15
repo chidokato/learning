@@ -28,7 +28,7 @@
       cursor: pointer;
       box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       text-decoration: none !important;
    }
    .ai-chat-floating-btn:hover {
@@ -90,7 +90,7 @@
       transform: translateY(25px) scale(0.95);
       pointer-events: none;
       transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       border: 1px solid rgba(255, 255, 255, 0.8);
    }
    .ai-chat-window.active {

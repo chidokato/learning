@@ -7,12 +7,16 @@
     <meta name="description" content="Trang dang nhap khu vuc quan tri NhaDatVN." />
     <meta name="author" content="NhaDatVN" />
     <link rel="shortcut icon" href="{{ asset('admin-assets/images/favicon.ico') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
     <script src="{{ asset('admin-assets/js/layout.js') }}"></script>
     <link href="{{ asset('admin-assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin-assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin-assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin-assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin-assets/css/backend-admin.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
 
     <style>
         .nhadat-brand {

@@ -10,6 +10,11 @@
    <!-- Place favicon.ico in the root directory -->
    <link rel="shortcut icon" type="image/x-icon" href="{{ $siteSetting->favicon_url ?? asset('assets/img/logo/favicon.png') }}">
 
+   <!-- Google Fonts - Montserrat -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
    <!-- CSS Here -->
    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">        
    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome-pro.css') }}">     
@@ -19,7 +24,7 @@
    <link rel="stylesheet" href="{{ asset('assets/css/nice-select.css') }}">          
    <link rel="stylesheet" href="{{ asset('assets/css/custom-animation.css') }}">
    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">          
-   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">   
+   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v={{ time() }}">   
    <link rel="stylesheet" href="{{ asset('assets/css/auth.css') }}?v={{ time() }}">
 </head>
 

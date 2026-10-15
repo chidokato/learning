@@ -1,40 +1,60 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
 @font-face {
     font-family: 'Montserrat';
-    src: url('../../font/Montserrat/Montserrat-ExtraLight.ttf') format('truetype');
-    font-weight: 200;
+    src: local('Montserrat Thin'),
+         url('../fonts/Montserrat/Montserrat-ExtraLight.ttf') format('truetype'),
+         url('../../font/Montserrat/Montserrat-ExtraLight.ttf') format('truetype');
+    font-weight: 100 200;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat';
-    src: url('../../font/Montserrat/Montserrat-ExtraLightItalic.ttf') format('truetype');
-    font-weight: 200;
+    src: local('Montserrat ExtraLight Italic'),
+         url('../fonts/Montserrat/Montserrat-ExtraLightItalic.ttf') format('truetype'),
+         url('../../font/Montserrat/Montserrat-ExtraLightItalic.ttf') format('truetype');
+    font-weight: 100 200;
     font-style: italic;
+    font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat';
-    src: url('../../font/Montserrat/Montserrat-Medium.otf') format('opentype');
-    font-weight: 500;
+    src: local('Montserrat Regular'), local('Montserrat Medium'),
+         url('../fonts/Montserrat/Montserrat-Medium.otf') format('opentype'),
+         url('../../font/Montserrat/Montserrat-Medium.otf') format('opentype');
+    font-weight: 300 400 500;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat';
-    src: url('../../font/Montserrat/Montserrat-SemiBold_0.ttf') format('truetype');
+    src: local('Montserrat SemiBold'),
+         url('../fonts/Montserrat/Montserrat-SemiBold_0.ttf') format('truetype'),
+         url('../../font/Montserrat/Montserrat-SemiBold_0.ttf') format('truetype');
     font-weight: 600;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat';
-    src: url('../../font/Montserrat/Montserrat-Bold.otf') format('opentype');
+    src: local('Montserrat Bold'),
+         url('../fonts/Montserrat/Montserrat-Bold.otf') format('opentype'),
+         url('../../font/Montserrat/Montserrat-Bold.otf') format('opentype');
     font-weight: 700;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat';
-    src: url('../../font/Montserrat/Montserrat Extra Bold.OTF') format('opentype');
-    font-weight: 800;
+    src: local('Montserrat ExtraBold'), local('Montserrat Black'),
+         url('../fonts/Montserrat/Montserrat Extra Bold.OTF') format('opentype'),
+         url('../../font/Montserrat/Montserrat Extra Bold.OTF') format('opentype');
+    font-weight: 800 900;
     font-style: normal;
+    font-display: swap;
 }
-@charset "UTF-8";
 /*-----------------------------------------------------------------------------------
 
     Theme Name: Educeet -- Online Education & Courses Template
@@ -95,7 +115,7 @@
 /*----------------------------------------*/
 /* 01. THEME DEFAULT CSS START
 /*----------------------------------------*/
-@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&amp;family=Open+Sans:ital,wght@0,300..800;1,300..800&amp;family=Schoolbell&amp;family=Cinzel+Decorative:wght@400;700;900&amp;family=Oxanium:wght@200..800&amp;display=swap");
+/* Fonts imported at top of stylesheet */
 @font-face {
   font-family: "Spartan-Bold";
   src: url("../fonts/Spartan-Bold.woff2") format("woff2"), url("../fonts/Spartan-Bold.woff") format("woff");
@@ -152,16 +172,18 @@
   --it-ff-body: 'Montserrat', sans-serif;
   --it-ff-heading: 'Montserrat', sans-serif;
   --it-ff-jost: 'Montserrat', sans-serif;
-  --it-ff-newyork: 'NewYork-Regular', serif;
-  --it-ff-schoolbell: 'Schoolbell', scursive;
-  --it-ff-cinzel-decorative: 'Cinzel Decorative', scursive;
-  --it-ff-oxanium: 'Oxanium', sans-serif;
+  --it-ff-newyork: 'Montserrat', sans-serif;
+  --it-ff-schoolbell: 'Montserrat', sans-serif;
+  --it-ff-cinzel-decorative: 'Montserrat', sans-serif;
+  --it-ff-oxanium: 'Montserrat', sans-serif;
   --it-ff-spartan-semibold: 'Montserrat', sans-serif;
   --it-ff-spartan-medium: 'Montserrat', sans-serif;
   --it-ff-spartan-regular: 'Montserrat', sans-serif;
-  --it-ff-edensor-regular: 'Edensor-Regular', sans-serif;
-  --it-ff-edensor-semibold: 'Edensor-Semibold', sans-serif;
+  --it-ff-edensor-regular: 'Montserrat', sans-serif;
+  --it-ff-edensor-semibold: 'Montserrat', sans-serif;
   --it-ff-fontawesome: Font Awesome 6 Pro;
+  --bs-font-sans-serif: 'Montserrat', sans-serif;
+  --bs-body-font-family: 'Montserrat', sans-serif;
   /**
   @color declaration
   */
@@ -223,11 +245,15 @@
 /*---------------------------------
 	typography css start 
 ---------------------------------*/
+html, body {
+  font-family: 'Montserrat', sans-serif;
+}
+
 body {
   font-size: 16px;
   font-weight: 400;
   line-height: 1.3;
-  font-family: var(--it-ff-body);
+  font-family: 'Montserrat', sans-serif;
   color: var(--it-text-body);
 }
 
@@ -4520,7 +4546,7 @@ body .ui-tooltip {
 }
 
 .ui-widget, .ui-widget button, .ui-widget input, .ui-widget select, .ui-widget textarea {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1em;
 }
 
@@ -25983,56 +26009,42 @@ input[type=radio] {
 
 
 /* ===== CUSTOM MONTSERRAT FONT APPLIED GLOBALLY ===== */
-@font-face {
-    font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat-ExtraLight.ttf') format('truetype');
-    font-weight: 200;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat-Medium.otf') format('opentype');
-    font-weight: 400;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat-Medium.otf') format('opentype');
-    font-weight: 500;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat-SemiBold_0.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat-Bold.otf') format('opentype');
-    font-weight: 700;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat Extra Bold.OTF') format('opentype');
-    font-weight: 800;
-    font-style: normal;
-}
-
 :root {
-    --it-ff-body: 'Montserrat', sans-serif;
-    --it-ff-heading: 'Montserrat', sans-serif;
-    --it-ff-jost: 'Montserrat', sans-serif;
-    --it-ff-spartan-semibold: 'Montserrat', sans-serif;
-    --it-ff-spartan-medium: 'Montserrat', sans-serif;
-    --it-ff-spartan-regular: 'Montserrat', sans-serif;
+    --it-ff-body: 'Montserrat', sans-serif !important;
+    --it-ff-heading: 'Montserrat', sans-serif !important;
+    --it-ff-jost: 'Montserrat', sans-serif !important;
+    --it-ff-spartan-semibold: 'Montserrat', sans-serif !important;
+    --it-ff-spartan-medium: 'Montserrat', sans-serif !important;
+    --it-ff-spartan-regular: 'Montserrat', sans-serif !important;
     --it-ff-newyork: 'Montserrat', sans-serif !important;
     --it-ff-oxanium: 'Montserrat', sans-serif !important;
     --it-ff-edensor-regular: 'Montserrat', sans-serif !important;
     --it-ff-edensor-semibold: 'Montserrat', sans-serif !important;
+    --it-ff-schoolbell: 'Montserrat', sans-serif !important;
+    --it-ff-cinzel-decorative: 'Montserrat', sans-serif !important;
+    --bs-font-sans-serif: 'Montserrat', sans-serif !important;
+    --bs-body-font-family: 'Montserrat', sans-serif !important;
 }
 
-body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-hero-12-subtitle {
+*,
+*::before,
+*::after {
+    --bs-font-sans-serif: 'Montserrat', sans-serif !important;
+    --bs-body-font-family: 'Montserrat', sans-serif !important;
+}
+
+html, body {
     font-family: 'Montserrat', sans-serif !important;
 }
+
+body, button, input, select, textarea,
+h1, h2, h3, h4, h5, h6,
+p, a, li, label, table, th, td, blockquote, small, strong, em, b,
+.it-btn, .it-btn-yellow, .it-hero-title, .it-hero-12-subtitle,
+.nice-select, .nice-select .list .option, .nice-select .current,
+span:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]),
+div:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]),
+i:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]) {
+    font-family: 'Montserrat', sans-serif !important;
+}
+

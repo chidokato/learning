@@ -10,6 +10,11 @@
    <!-- Place favicon.ico in the root directory -->
    <link rel="shortcut icon" type="image/x-icon" href="{{ $siteSetting->favicon_url ?? asset('assets/img/logo/favicon.png') }}">
 
+   <!-- Google Fonts - Montserrat -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
    <!-- CSS Here -->
    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">        
    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome-pro.css') }}">     
@@ -90,63 +95,132 @@
    <main>
 
       <!-- breadcrumb-area-start -->
-      <div class="it-breadcrumb-area it-breadcrumb-ptb it-breadcrumb-course-details-style fix z-index-1" data-background="{{ asset('assets/img/shape/breadcrumb-details-bg.png') }}">
-         <img class="it-breadcrumb-shape-1" src="{{ asset('assets/img/shape/breadcrumb-1-1.png') }}" alt="">
-         <img class="it-breadcrumb-shape-3" src="{{ asset('assets/img/shape/breadcrumb-1-2.png') }}" alt="">
+      <div class="it-breadcrumb-area it-breadcrumb-course-details-style modern-course-hero fix z-index-1">
          <div class="container">
             <div class="row align-items-center">
                <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-12">
-                  <div class="it-breadcrumb-content z-index-1">
-                     <div class="it-breadcrumb-list-2 d-none d-md-flex align-items-center" style="max-width: 100%;">
-                        <span style="flex-shrink: 0;"><a href="{{ route('frontend.home') }}">Home</a></span>
-                        <span class="dvdr" style="flex-shrink: 0;">
-                           <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M14.6364 8.1364C14.9879 7.78492 14.9879 7.21508 14.6364 6.8636L8.90883 1.13604C8.55736 0.784567 7.98751 0.784567 7.63604 1.13604C7.28457 1.48751 7.28457 2.05736 7.63604 2.40883L12.7272 7.5L7.63604 12.5912C7.28457 12.9426 7.28457 13.5125 7.63604 13.864C7.98751 14.2154 8.55736 14.2154 8.90883 13.864L14.6364 8.1364ZM0 7.5V8.4H14V7.5V6.6H0V7.5Z" fill="white" />
-                           </svg>
+                  <div class="course-hero-content z-index-1">
+                     
+                     <!-- Modern Breadcrumb -->
+                     <nav class="course-hero-breadcrumb" aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                           <li class="breadcrumb-item">
+                              <a href="{{ route('frontend.home') }}"><i class="fa-solid fa-house me-1"></i> Trang chủ</a>
+                           </li>
+                           @if ($post->category)
+                           <li class="breadcrumb-item">
+                              <a href="{{ route('frontend.category.show', $post->category->slug) }}">{{ $post->category->name }}</a>
+                           </li>
+                           @endif
+                           <li class="breadcrumb-item active" aria-current="page">
+                              <span>{{ $post->title }}</span>
+                           </li>
+                        </ol>
+                     </nav>
+
+                     <!-- Badges -->
+                     <div class="course-hero-badges d-flex flex-wrap align-items-center gap-2">
+                        @if ($post->category)
+                        <span class="hero-badge badge-category">
+                           <i class="fa-solid fa-folder-open me-1"></i> {{ $post->category->name }}
                         </span>
-                        <span style="flex-shrink: 0;"><a href="{{ $post->category ? route('frontend.category.show', $post->category->slug) : '#' }}">{{ $post->category?->name ?? '' }}</a></span>
-                        <span class="dvdr" style="flex-shrink: 0;">
-                           <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M14.6364 8.1364C14.9879 7.78492 14.9879 7.21508 14.6364 6.8636L8.90883 1.13604C8.55736 0.784567 7.98751 0.784567 7.63604 1.13604C7.28457 1.48751 7.28457 2.05736 7.63604 2.40883L12.7272 7.5L7.63604 12.5912C7.28457 12.9426 7.28457 13.5125 7.63604 13.864C7.98751 14.2154 8.55736 14.2154 8.90883 13.864L14.6364 8.1364ZM0 7.5V8.4H14V7.5V6.6H0V7.5Z" fill="white" />
-                           </svg>
+                        @endif
+                        <span class="hero-badge badge-internal">
+                           <i class="fa-solid fa-shield-halved me-1"></i> Lưu hành nội bộ
                         </span>
-                        <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; display: block;">{{ $post->title }}</span>
+                        @if (isset($post->lesson_count) && $post->lesson_count > 0)
+                        <span class="hero-badge badge-lessons">
+                           <i class="fa-regular fa-circle-play me-1"></i> {{ $post->lesson_count }} bài học
+                        </span>
+                        @endif
+                        @if ($post->tests && $post->tests->isNotEmpty())
+                        <span class="hero-badge badge-has-test">
+                           <i class="fa-solid fa-clipboard-check me-1"></i> Có bài tập ({{ $post->tests->count() }})
+                        </span>
+                        @endif
                      </div>
-                     <div class="it-breadcrumb-list-wrap">
-                        <span class="it-breadcrumb-subtitle">{{ $post->category?->name ?? '' }}</span>
-                     </div>
-                     <div class="it-breadcrumb-title-box">
-                        <h3 class="it-section-title text-white">
-                           {{ $post->title }}
-                        </h3>
-                     </div>
-                     <div class="it-breadcrumb-author-wrapper mt-20 d-none d-md-flex align-items-center">
-                        @if ($post->seller?->name || $post->instructor)
-                        <div class="border-style d-flex align-items-center mb-20">
-                           <div class="it-breadcrumb-author">
-                              @if ($post->seller?->avatar)
-                              <img src="{{ asset($post->seller->avatar) }}" alt="">
+
+                     <!-- Course Title -->
+                     <h1 class="course-hero-title">
+                        {{ $post->title }}
+                     </h1>
+
+                     <!-- Meta Bar -->
+                     <div class="course-hero-meta-bar d-flex flex-wrap align-items-center">
+                        <!-- Instructor / Seller -->
+                        <div class="hero-meta-card d-flex align-items-center">
+                           <div class="meta-avatar">
+                              @if (!empty($post->seller?->avatar) && file_exists(public_path($post->seller->avatar)))
+                                 <img src="{{ asset($post->seller->avatar) }}" alt="{{ $post->seller->name }}" onerror="this.onerror=null; this.src='{{ asset('assets/img/avatar/avatar-default.png') }}';">
+                              @else
+                                 <div class="avatar-placeholder">
+                                    <i class="fa-solid fa-chalkboard-user"></i>
+                                 </div>
                               @endif
                            </div>
-                           <div class="it-breadcrumb-author-info">
-                              <span>Giảng viên</span>
-                              <span>{{ $post->seller?->name ?? ($post->instructor ?? '') }}</span>
+                           <div class="meta-info">
+                              <span class="meta-sub">Giảng viên / Phụ trách</span>
+                              <span class="meta-main">{{ $post->seller?->name ?? ($post->instructor ?? 'Học viện Indochine') }}</span>
+                           </div>
+                        </div>
+
+
+                        <!-- Student / Enrolled Count (if available) -->
+                        @if (isset($post->student_count) && $post->student_count > 0)
+                        <div class="hero-meta-card d-flex align-items-center">
+                           <div class="meta-icon-box">
+                              <i class="fa-solid fa-users"></i>
+                           </div>
+                           <div class="meta-info">
+                              <span class="meta-sub">Học viên</span>
+                              <span class="meta-main">{{ number_format($post->student_count) }} học viên</span>
                            </div>
                         </div>
                         @endif
-                        @if ($post->updated_at)
-                        <div class="it-breadcrumb-author-info border-style mb-20">
-                           <span>Cập nhật gần nhất</span>
-                           <span>{{ $post->updated_at?->format('d/m/Y') }}</span>
-                        </div>
+
+                        <!-- Nút Làm Bài Tập (nếu có bài tập của khóa học này) -->
+                        @if ($post->tests && $post->tests->isNotEmpty())
+                           @if ($post->tests->count() === 1)
+                              @php $singleTest = $post->tests->first(); @endphp
+                              <a href="{{ route('frontend.tests.show', $singleTest->id) }}" class="hero-exercise-btn" title="{{ $singleTest->title }}">
+                                 <i class="fa-solid fa-file-pen"></i>
+                                 <span>Làm bài tập</span>
+                                 @if ($singleTest->questions->count() > 0)
+                                    <span class="exercise-count-tag">{{ $singleTest->questions->count() }} câu</span>
+                                 @endif
+                              </a>
+                           @else
+                              <div class="dropdown hero-exercise-dropdown">
+                                 <button class="hero-exercise-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-file-pen"></i>
+                                    <span>Làm bài tập</span>
+                                    <span class="exercise-count-tag">{{ $post->tests->count() }} bài</span>
+                                 </button>
+                                 <ul class="dropdown-menu shadow-lg">
+                                    <li class="dropdown-header">Chọn bài kiểm tra:</li>
+                                    @foreach ($post->tests as $t)
+                                    <li>
+                                       <a class="dropdown-item" href="{{ route('frontend.tests.show', $t->id) }}">
+                                          <i class="fa-regular fa-file-lines me-2 text-warning"></i>
+                                          <span>{{ $t->title }}</span>
+                                          @if ($t->questions->count() > 0)
+                                             <span class="badge bg-light text-dark ms-auto" style="font-size: 11px;">{{ $t->questions->count() }} câu</span>
+                                          @endif
+                                       </a>
+                                    </li>
+                                    @endforeach
+                                 </ul>
+                              </div>
+                           @endif
                         @endif
                      </div>
+
                   </div>
                </div>
             </div>
-      <!-- breadcrumb-area-end -->
          </div>
       </div>
+      <!-- breadcrumb-area-end -->
 
       <!-- details-area-start -->
       <div class="it-course-details-area it-course-details-style-2 it-course-details-v1-style pt-120 pb-100">
@@ -212,8 +286,10 @@
                                  <li>
                                     <div class="postbox-comment-user d-flex">
                                        <div class="postbox-user-thumb">
-                                          @if ($post->seller?->avatar)
-                                             <img src="{{ asset($post->seller->avatar) }}" alt="">
+                                          @if (!empty($post->seller?->avatar) && file_exists(public_path($post->seller->avatar)))
+                                             <img src="{{ asset($post->seller->avatar) }}" alt="{{ $post->seller->name ?? 'Giảng viên' }}" onerror="this.onerror=null; this.src='{{ asset('assets/img/avatar/avatar-default.png') }}';">
+                                          @else
+                                             <img src="{{ asset('assets/img/avatar/avatar-default.png') }}" alt="{{ $post->seller?->name ?? 'Giảng viên' }}">
                                           @endif
                                        </div>
                                        <div class="mt-20">
@@ -238,11 +314,11 @@
                <div class="col-lg-4">
                   <div class="it-course-sidebar-wrap">
                      <div class="it-course-sidebar">
-                        @if ($post->image)
-                        <div class="it-course-sidebar-thumb thumb-overlay z-index-1" style="border-radius: 15px; overflow: hidden; margin-bottom: 25px;">
-                           <img style="width: 100%; height: 220px; object-fit: cover;" src="{{ asset($post->image) }}" alt="{{ $post->title }}">
+                        <div class="it-course-sidebar-thumb z-index-1">
+                           <img src="{{ (!empty($post->image) && file_exists(public_path($post->image))) ? asset($post->image) : asset('assets/img/course/course-1-1.jpg') }}" 
+                                alt="{{ $post->title }}"
+                                onerror="this.onerror=null; this.src='{{ asset('assets/img/course/course-1-1.jpg') }}';">
                         </div>
-                        @endif
                         <div class="price-section-box">
                            <div class="it-course-btn mb-20">
                               @auth
@@ -266,15 +342,46 @@
                               </script>
                               @endauth
                            </div>
+
+                           @if ($post->tests && $post->tests->isNotEmpty())
+                           <div class="it-course-test-action mb-20">
+                              @if ($post->tests->count() === 1)
+                                 @php $sideTest = $post->tests->first(); @endphp
+                                 <a href="{{ route('frontend.tests.show', $sideTest->id) }}" class="sidebar-test-btn w-100 text-center" title="{{ $sideTest->title }}">
+                                    <i class="fa-solid fa-file-pen me-2"></i>
+                                    <span>Làm bài tập @if($sideTest->questions->count() > 0)({{ $sideTest->questions->count() }} câu)@endif</span>
+                                 </a>
+                              @else
+                                 <div class="dropdown">
+                                    <button class="sidebar-test-btn w-100 text-center dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                       <i class="fa-solid fa-file-pen me-2"></i>
+                                       <span>Làm bài tập ({{ $post->tests->count() }} bài)</span>
+                                    </button>
+                                    <ul class="dropdown-menu w-100 shadow-lg">
+                                       <li class="dropdown-header">Chọn bài kiểm tra:</li>
+                                       @foreach ($post->tests as $t)
+                                       <li>
+                                          <a class="dropdown-item" href="{{ route('frontend.tests.show', $t->id) }}">
+                                             <i class="fa-regular fa-file-lines me-2 text-warning"></i>
+                                             <span>{{ $t->title }}</span>
+                                             @if ($t->questions->count() > 0)
+                                                <span class="badge bg-light text-dark ms-auto" style="font-size: 11px;">{{ $t->questions->count() }} câu</span>
+                                             @endif
+                                          </a>
+                                       </li>
+                                       @endforeach
+                                    </ul>
+                                 </div>
+                              @endif
+                           </div>
+                           @endif
                         </div>
                         @if ($siteSetting->hotline)
-                        <div class="contact-section-wrap gray-bg mt-20">
-                           <div class="contact-section text-center">
-                              <div class="call-box w-100">
-                                 <i class="fa-solid fa-phone-volume me-2" style="color: #03594E;"></i>
-                                 Hotline: <a href="tel:{{ preg_replace('/[^0-9+]/', '', $siteSetting->hotline) }}">{{ $siteSetting->hotline }}</a>
-                              </div>
-                            </div>
+                        <div class="sidebar-hotline-wrap">
+                           <a href="tel:{{ preg_replace('/[^0-9+]/', '', $siteSetting->hotline) }}" class="sidebar-hotline-btn">
+                              <i class="fa-solid fa-headset"></i>
+                              <span>Hotline hỗ trợ: <strong>{{ $siteSetting->hotline }}</strong></span>
+                           </a>
                         </div>
                         @endif
                      </div>

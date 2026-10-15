@@ -10,12 +10,17 @@
 
    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/logo/favicon.png') }}">
 
+   <!-- Google Fonts - Montserrat -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
    <!-- CSS Here -->
    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome-pro.css') }}">
    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">
-   <link rel="stylesheet" href="{{ asset('assets/css/course-curriculum.css') }}">
-   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}">
+   <link rel="stylesheet" href="{{ asset('assets/css/course-curriculum.css') }}?v={{ time() }}">
+   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v={{ time() }}">
 
    <style>
       * {
@@ -25,10 +30,18 @@
          margin: 0;
          padding: 0;
          height: 100%;
-         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+         font-family: 'Montserrat', sans-serif;
          background-color: #f8f9fa;
          color: #333;
          overflow: hidden;
+      }
+      body, button, input, select, textarea,
+      h1, h2, h3, h4, h5, h6,
+      p, a, li, label, table, th, td, blockquote, small, strong, em, b,
+      span:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]),
+      div:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]),
+      i:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]) {
+         font-family: 'Montserrat', sans-serif !important;
       }
       /* Top Navbar (60px) */
       .gitiho-header {

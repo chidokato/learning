@@ -97,14 +97,15 @@
    --it-common-white: #fff;
    --it-common-black: #1F2432;
    --it-gray-1: #F0F4F5;
-   --it-ff-spartan-semibold: 'Spartan-SemiBold', sans-serif;
-   --it-ff-spartan-medium: 'Spartan-Medium', sans-serif;
+   --it-ff-spartan-semibold: 'Montserrat', sans-serif;
+   --it-ff-spartan-medium: 'Montserrat', sans-serif;
+   font-family: 'Montserrat', sans-serif;
    color: #6C757D;
    font-size: 16px;
    line-height: 1.6;
 }
 .course-curriculum .it-details-title {
-   font-family: var(--it-ff-spartan-semibold);
+   font-family: 'Montserrat', sans-serif;
    font-size: 22px;
    font-weight: 600;
    line-height: 1.4;
@@ -112,10 +113,10 @@
    margin-bottom: 15px;
 }
 .course-curriculum .it-course-faq-top-text { gap: 12px; }
-.course-curriculum .it-course-faq-top-text span { font-family: var(--it-ff-spartan-medium); }
+.course-curriculum .it-course-faq-top-text span { font-family: 'Montserrat', sans-serif; }
 .course-curriculum .it-course-faq-top-text a {
    color: #03594E;
-   font-family: var(--it-ff-spartan-semibold);
+   font-family: 'Montserrat', sans-serif;
    text-decoration: none;
    flex-shrink: 0;
 }

@@ -4,7 +4,7 @@
       <div class="row gx-4 gy-4">
          @if (isset($courses) && $courses->isNotEmpty())
             @foreach ($courses as $course)
-               @include('frontend.partials.course-item', ['course' => $course, 'index' => $loop->index])
+               @include('frontend.partials.course-item', ['course' => $course, 'index' => $loop->index, 'colClass' => 'col-xxl-3 col-xl-3 col-lg-4 col-md-6 mb-30'])
             @endforeach
          @else
             <div class="col-12 text-center py-5">

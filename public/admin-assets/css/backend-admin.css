@@ -1,3 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+    --vz-body-font-family: 'Montserrat', sans-serif !important;
+    --vz-heading-font-family: 'Montserrat', sans-serif !important;
+}
+
+body, button, input, select, textarea,
+h1, h2, h3, h4, h5, h6,
+p, a, li, label, table, th, td, blockquote, small, strong, em, b,
+span:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]),
+div:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]),
+i:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]) {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
 .app-search .form-control {
     min-width: 240px;
 }

@@ -141,42 +141,61 @@
 /* ===== CUSTOM MONTSERRAT FONT APPLIED GLOBALLY ===== */
 @font-face {
     font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat-ExtraLight.ttf') format('truetype');
-    font-weight: 200;
+    src: local('Montserrat Thin'),
+         url('../fonts/Montserrat/Montserrat-ExtraLight.ttf') format('truetype');
+    font-weight: 100 200;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat-Medium.otf') format('opentype');
-    font-weight: 400;
-    font-style: normal;
+    src: local('Montserrat ExtraLight Italic'),
+         url('../fonts/Montserrat/Montserrat-ExtraLightItalic.ttf') format('truetype');
+    font-weight: 100 200;
+    font-style: italic;
+    font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat-Medium.otf') format('opentype');
-    font-weight: 500;
+    src: local('Montserrat Regular'), local('Montserrat Medium'),
+         url('../fonts/Montserrat/Montserrat-Medium.otf') format('opentype');
+    font-weight: 300 400 500;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat-SemiBold_0.ttf') format('truetype');
+    src: local('Montserrat SemiBold'),
+         url('../fonts/Montserrat/Montserrat-SemiBold_0.ttf') format('truetype');
     font-weight: 600;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat-Bold.otf') format('opentype');
+    src: local('Montserrat Bold'),
+         url('../fonts/Montserrat/Montserrat-Bold.otf') format('opentype');
     font-weight: 700;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat';
-    src: url('../fonts/Montserrat/Montserrat Extra Bold.OTF') format('opentype');
-    font-weight: 800;
+    src: local('Montserrat ExtraBold'), local('Montserrat Black'),
+         url('../fonts/Montserrat/Montserrat Extra Bold.OTF') format('opentype');
+    font-weight: 800 900;
     font-style: normal;
+    font-display: swap;
 }
 
-body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-hero-12-subtitle {
+body, button, input, select, textarea,
+h1, h2, h3, h4, h5, h6,
+p, a, li, label, table, th, td, blockquote, small, strong, em, b,
+.it-btn, .it-btn-yellow, .it-hero-title, .it-hero-12-subtitle,
+.nice-select, .nice-select .list .option, .nice-select .current,
+span:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]),
+div:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]),
+i:not([class*="fa-"]):not([class*="fal"]):not([class*="far"]):not([class*="fas"]):not([class*="fad"]):not([class*="fab"]):not([class*="flaticon-"]):not([class*="mdi"]):not([class*="ri-"]):not([class*="bx-"]) {
     font-family: 'Montserrat', sans-serif !important;
 }
 
@@ -266,7 +285,15 @@ body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-he
 }
 
 .category-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
-   color: rgba(255, 255, 255, 0.4);
+   content: '›' !important;
+   color: rgba(255, 255, 255, 0.45) !important;
+   font-size: 15px !important;
+   line-height: 1 !important;
+   padding: 0 8px !important;
+}
+
+.breadcrumb {
+   --bs-breadcrumb-divider: '›' !important;
 }
 
 .category-hero-title {
@@ -406,7 +433,7 @@ body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-he
 
 /* Card Body */
 .course-card-body {
-   padding: 20px 20px 22px 20px;
+   padding: 16px 16px 20px 16px;
    display: flex;
    flex-direction: column;
    flex: 1;
@@ -434,7 +461,7 @@ body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-he
    font-size: 13px;
    font-weight: 600;
    color: #475569;
-   max-width: 170px;
+   max-width: 135px;
    overflow: hidden;
    text-overflow: ellipsis;
    white-space: nowrap;
@@ -625,6 +652,11 @@ body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-he
    text-transform: uppercase;
    letter-spacing: 0.05em;
    margin-bottom: 8px;
+   font-family: 'Montserrat', sans-serif !important;
+}
+
+.home-section-badge span {
+   font-family: 'Montserrat', sans-serif !important;
 }
 
 .home-section-badge i {
@@ -634,8 +666,9 @@ body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-he
 
 /* Section Title */
 .home-section-title {
+   font-family: 'Montserrat', sans-serif !important;
    font-size: 25px;
-   font-weight: 800;
+   font-weight: 700;
    color: #0f172a;
    margin: 0;
    letter-spacing: -0.01em;
@@ -653,6 +686,7 @@ body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-he
 }
 
 .home-section-subtitle {
+   font-family: 'Montserrat', sans-serif !important;
    font-size: 13.5px;
    color: #64748b;
    font-weight: 500;
@@ -730,4 +764,892 @@ body, h1, h2, h3, h4, h5, h6, p, .it-btn, .it-btn-yellow, .it-hero-title, .it-he
       margin-top: 12px;
    }
 }
+
+/* ==========================================================================
+   MODERN FOOTER STYLING
+   ========================================================================== */
+.it-modern-footer {
+   position: relative;
+   background: linear-gradient(180deg, #022a24 0%, #011b17 100%);
+   color: rgba(255, 255, 255, 0.8);
+   font-family: 'Montserrat', sans-serif;
+}
+
+/* 1. Newsletter Card */
+.it-footer-newsletter-wrap {
+   position: relative;
+   margin-bottom: -55px;
+   z-index: 10;
+}
+
+.footer-newsletter-card {
+   background: linear-gradient(135deg, #03594E 0%, #067869 50%, #03594E 100%);
+   border: 1px solid rgba(26, 182, 157, 0.3);
+   border-radius: 20px;
+   padding: 38px 45px;
+   box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.35);
+   position: relative;
+   overflow: hidden;
+}
+
+.footer-newsletter-card::before {
+   content: '';
+   position: absolute;
+   top: -50%;
+   right: -10%;
+   width: 400px;
+   height: 400px;
+   background: radial-gradient(circle, rgba(26, 182, 157, 0.18) 0%, transparent 70%);
+   border-radius: 50%;
+   pointer-events: none;
+}
+
+.newsletter-tag {
+   display: inline-flex;
+   align-items: center;
+   background: rgba(255, 255, 255, 0.15);
+   backdrop-filter: blur(8px);
+   -webkit-backdrop-filter: blur(8px);
+   color: #ffffff;
+   font-size: 11.5px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.08em;
+   padding: 4px 12px;
+   border-radius: 20px;
+   margin-bottom: 10px;
+}
+
+.newsletter-title {
+   font-size: 22px;
+   font-weight: 800;
+   line-height: 1.35;
+   letter-spacing: -0.01em;
+}
+
+.newsletter-desc {
+   font-size: 13.5px;
+   line-height: 1.5;
+   color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Newsletter Input Group */
+.newsletter-form {
+   position: relative;
+}
+
+.newsletter-input-group {
+   display: flex;
+   align-items: center;
+   background: #ffffff;
+   border-radius: 14px;
+   padding: 6px 6px 6px 18px;
+   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+   transition: all 0.3s ease;
+}
+
+.newsletter-input-group:focus-within {
+   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 0 3px rgba(26, 182, 157, 0.35);
+}
+
+.newsletter-input-group .input-icon {
+   color: #94a3b8;
+   font-size: 16px;
+   margin-right: 12px;
+   flex-shrink: 0;
+}
+
+.newsletter-input-group input {
+   border: none !important;
+   outline: none !important;
+   box-shadow: none !important;
+   font-size: 14px;
+   color: #1e293b;
+   width: 100%;
+   background: transparent;
+   padding: 10px 0;
+   font-weight: 500;
+}
+
+.newsletter-input-group input::placeholder {
+   color: #94a3b8;
+}
+
+.btn-newsletter-submit {
+   background: linear-gradient(135deg, #1AB69D 0%, #03594E 100%);
+   color: #ffffff !important;
+   border: none;
+   border-radius: 10px;
+   font-size: 13.5px;
+   font-weight: 700;
+   padding: 12px 24px;
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   white-space: nowrap;
+   cursor: pointer;
+   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+   box-shadow: 0 4px 14px rgba(3, 89, 78, 0.25);
+   flex-shrink: 0;
+}
+
+.btn-newsletter-submit:hover {
+   background: linear-gradient(135deg, #03594E 0%, #02453c 100%);
+   transform: translateY(-2px);
+   box-shadow: 0 8px 20px rgba(3, 89, 78, 0.4);
+}
+
+.btn-newsletter-submit:hover i {
+   transform: translateX(3px);
+}
+
+.btn-newsletter-submit i {
+   transition: transform 0.25s ease;
+}
+
+/* 2. Main Footer Area */
+.it-footer-main {
+   padding-top: 105px;
+   padding-bottom: 55px;
+   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Brand Column */
+.footer-logo-img {
+   max-width: 175px;
+   max-height: 55px;
+   width: auto;
+   filter: brightness(0) invert(1);
+   transition: opacity 0.3s ease;
+}
+
+.footer-logo-img:hover {
+   opacity: 0.9;
+}
+
+.footer-brand-desc {
+   font-size: 13.5px;
+   line-height: 1.65;
+   color: rgba(255, 255, 255, 0.72);
+}
+
+.footer-brand-desc strong {
+   color: #ffffff;
+   font-weight: 700;
+}
+
+.btn-footer-contact {
+   display: inline-flex;
+   align-items: center;
+   padding: 10px 22px;
+   border-radius: 10px;
+   background: rgba(26, 182, 157, 0.12);
+   border: 1.5px solid rgba(26, 182, 157, 0.4);
+   color: #1AB69D !important;
+   font-size: 13.5px;
+   font-weight: 700;
+   text-decoration: none !important;
+   transition: all 0.3s ease;
+}
+
+.btn-footer-contact:hover {
+   background: #1AB69D;
+   color: #ffffff !important;
+   border-color: #1AB69D;
+   transform: translateY(-2px);
+   box-shadow: 0 6px 18px rgba(26, 182, 157, 0.3);
+}
+
+/* Widget Headings */
+.footer-widget-title {
+   font-size: 16.5px;
+   font-weight: 800;
+   color: #ffffff;
+   margin-bottom: 0;
+   letter-spacing: 0.02em;
+   text-transform: uppercase;
+}
+
+.footer-title-line {
+   width: 38px;
+   height: 3px;
+   background: linear-gradient(90deg, #1AB69D 0%, rgba(26, 182, 157, 0.2) 100%);
+   border-radius: 2px;
+   margin-top: 8px;
+   margin-bottom: 22px;
+}
+
+/* Links List */
+.footer-links-list {
+   list-style: none !important;
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
+.footer-links-list li {
+   margin-bottom: 12px;
+}
+
+.footer-links-list li a {
+   color: rgba(255, 255, 255, 0.72) !important;
+   font-size: 13.5px;
+   font-weight: 500;
+   text-decoration: none !important;
+   display: inline-flex;
+   align-items: center;
+   transition: all 0.25s ease;
+}
+
+.footer-links-list li a .link-arrow {
+   font-size: 11px;
+   color: #1AB69D;
+   transition: transform 0.25s ease;
+}
+
+.footer-links-list li a:hover {
+   color: #1AB69D !important;
+   transform: translateX(4px);
+}
+
+.footer-links-list li a:hover .link-arrow {
+   transform: translateX(2px);
+}
+
+/* Contact Info Items */
+.contact-item {
+   display: flex;
+   align-items: flex-start;
+   gap: 12px;
+}
+
+.contact-item .contact-icon {
+   width: 34px;
+   height: 34px;
+   border-radius: 8px;
+   background: rgba(26, 182, 157, 0.15);
+   border: 1px solid rgba(26, 182, 157, 0.25);
+   color: #1AB69D;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 13px;
+   flex-shrink: 0;
+   margin-top: 2px;
+}
+
+.contact-item .contact-info {
+   display: flex;
+   flex-direction: column;
+}
+
+.contact-item .contact-label {
+   font-size: 11.5px;
+   font-weight: 600;
+   color: rgba(255, 255, 255, 0.5);
+   text-transform: uppercase;
+   letter-spacing: 0.04em;
+   margin-bottom: 2px;
+}
+
+.contact-item .contact-value {
+   font-size: 13.5px;
+   font-weight: 600;
+   color: #ffffff !important;
+   text-decoration: none !important;
+   transition: color 0.25s ease;
+}
+
+.contact-item a.contact-value:hover {
+   color: #1AB69D !important;
+}
+
+/* Social Buttons */
+.social-label {
+   font-size: 12px;
+   font-weight: 600;
+   color: rgba(255, 255, 255, 0.5);
+   letter-spacing: 0.03em;
+}
+
+.footer-social-icons {
+   display: flex;
+   gap: 10px;
+}
+
+.social-btn {
+   width: 38px;
+   height: 38px;
+   border-radius: 10px;
+   background: rgba(255, 255, 255, 0.08);
+   border: 1px solid rgba(255, 255, 255, 0.12);
+   color: #ffffff !important;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 14px;
+   text-decoration: none !important;
+   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.social-btn:hover {
+   background: #1AB69D;
+   border-color: #1AB69D;
+   color: #ffffff !important;
+   transform: translateY(-3px);
+   box-shadow: 0 6px 16px rgba(26, 182, 157, 0.35);
+}
+
+/* 3. Footer Bottom (Copyright) */
+.it-footer-bottom {
+   background: #011612;
+   padding: 18px 0;
+}
+
+.copyright-text {
+   font-size: 13px;
+   color: rgba(255, 255, 255, 0.65);
+}
+
+.copyright-brand {
+   color: #1AB69D !important;
+   font-weight: 700;
+   text-decoration: none !important;
+   transition: color 0.25s ease;
+}
+
+.copyright-brand:hover {
+   color: #ffffff !important;
+}
+
+.footer-bottom-links {
+   display: inline-flex;
+   align-items: center;
+   gap: 10px;
+   font-size: 12.5px;
+}
+
+.footer-bottom-links a {
+   color: rgba(255, 255, 255, 0.6) !important;
+   text-decoration: none !important;
+   transition: color 0.25s ease;
+}
+
+.footer-bottom-links a:hover {
+   color: #1AB69D !important;
+}
+
+.footer-bottom-links .divider {
+   color: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+   .footer-newsletter-card {
+      padding: 30px 25px;
+   }
+   .it-footer-main {
+      padding-top: 90px;
+      padding-bottom: 40px;
+   }
+   .newsletter-title {
+      font-size: 19px;
+   }
+}
+
+@media (max-width: 575px) {
+   .newsletter-input-group {
+      flex-direction: column;
+      padding: 12px;
+      gap: 10px;
+   }
+   .btn-newsletter-submit {
+      width: 100%;
+      justify-content: center;
+   }
+   .newsletter-input-group input {
+      text-align: center;
+   }
+   .footer-bottom-links {
+      flex-wrap: wrap;
+      justify-content: center;
+   }
+}
+
+/* ==========================================================================
+   MODERN COURSE HERO (COURSE DETAILS)
+   ========================================================================== */
+.modern-course-hero {
+   position: relative;
+   background: linear-gradient(135deg, #022a24 0%, #03483f 50%, #011b17 100%) !important;
+   padding-top: 60px !important;
+   padding-bottom: 95px !important;
+   overflow: hidden;
+}
+
+.modern-course-hero::before {
+   content: '';
+   position: absolute;
+   top: -20%;
+   right: -10%;
+   width: 650px;
+   height: 650px;
+   background: radial-gradient(circle, rgba(26, 182, 157, 0.16) 0%, transparent 65%);
+   border-radius: 50%;
+   pointer-events: none;
+   z-index: 0;
+}
+
+.modern-course-hero::after {
+   content: '';
+   position: absolute;
+   bottom: -30%;
+   left: -10%;
+   width: 500px;
+   height: 500px;
+   background: radial-gradient(circle, rgba(3, 89, 78, 0.25) 0%, transparent 60%);
+   border-radius: 50%;
+   pointer-events: none;
+   z-index: 0;
+}
+
+.course-hero-content {
+   position: relative;
+   z-index: 1;
+}
+
+/* Modern Breadcrumbs */
+.course-hero-breadcrumb .breadcrumb {
+   background: transparent !important;
+   padding: 0 !important;
+   margin: 0 !important;
+   font-size: 13.5px;
+   font-weight: 500;
+}
+
+.course-hero-breadcrumb .breadcrumb-item a {
+   color: rgba(255, 255, 255, 0.75) !important;
+   text-decoration: none !important;
+   transition: color 0.25s ease;
+}
+
+.course-hero-breadcrumb .breadcrumb-item a:hover {
+   color: #1AB69D !important;
+}
+
+.course-hero-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+   content: '›' !important;
+   color: rgba(255, 255, 255, 0.45) !important;
+   font-size: 16px !important;
+   line-height: 1 !important;
+   padding: 0 10px !important;
+}
+
+.course-hero-breadcrumb .breadcrumb-item.active span {
+   color: rgba(255, 255, 255, 0.55);
+   max-width: 300px;
+   display: inline-block;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   vertical-align: bottom;
+}
+
+/* Badges */
+.course-hero-badges {
+   margin: 18px 0 14px 0;
+}
+
+.hero-badge {
+   display: inline-flex;
+   align-items: center;
+   font-size: 12px;
+   font-weight: 700;
+   padding: 5px 14px;
+   border-radius: 20px;
+   text-transform: uppercase;
+   letter-spacing: 0.04em;
+   backdrop-filter: blur(6px);
+   -webkit-backdrop-filter: blur(6px);
+}
+
+.hero-badge.badge-category {
+   background: rgba(26, 182, 157, 0.18);
+   border: 1px solid rgba(26, 182, 157, 0.45);
+   color: #1AB69D;
+}
+
+.hero-badge.badge-internal {
+   background: rgba(255, 180, 0, 0.15);
+   border: 1px solid rgba(255, 180, 0, 0.38);
+   color: #ffb400;
+}
+
+.hero-badge.badge-lessons {
+   background: rgba(255, 255, 255, 0.1);
+   border: 1px solid rgba(255, 255, 255, 0.2);
+   color: #ffffff;
+}
+
+/* Course Title */
+.course-hero-title {
+   font-size: 32px;
+   font-weight: 800;
+   line-height: 1.35;
+   letter-spacing: -0.015em;
+   margin-bottom: 22px;
+   color: #ffffff;
+   font-family: 'Montserrat', sans-serif;
+}
+
+@media (max-width: 991px) {
+   .course-hero-title {
+      font-size: 26px;
+   }
+}
+
+@media (max-width: 575px) {
+   .course-hero-title {
+      font-size: 22px;
+   }
+}
+
+/* Meta Bar */
+.course-hero-meta-bar {
+   gap: 24px;
+   padding-top: 18px;
+   border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.hero-meta-card {
+   gap: 12px;
+}
+
+.hero-meta-card .meta-avatar {
+   width: 42px;
+   height: 42px;
+   min-width: 42px;
+   max-width: 42px;
+   border-radius: 50%;
+   overflow: hidden;
+   flex-shrink: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.hero-meta-card .meta-avatar img {
+   width: 42px;
+   height: 42px;
+   min-width: 42px;
+   max-width: 42px;
+   border-radius: 50%;
+   object-fit: cover;
+   border: 2px solid rgba(26, 182, 157, 0.5);
+   background: #0f172a;
+   flex-shrink: 0;
+   display: block;
+}
+
+.hero-meta-card .meta-avatar .avatar-placeholder {
+   width: 42px;
+   height: 42px;
+   min-width: 42px;
+   max-width: 42px;
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: #1AB69D;
+   background: rgba(26, 182, 157, 0.15);
+   border: 2px solid rgba(26, 182, 157, 0.5);
+   font-size: 16px;
+   flex-shrink: 0;
+}
+
+.hero-meta-card .meta-icon-box {
+   width: 38px;
+   height: 38px;
+   border-radius: 10px;
+   background: rgba(255, 255, 255, 0.08);
+   border: 1px solid rgba(255, 255, 255, 0.12);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: #1AB69D;
+   font-size: 15px;
+}
+
+.hero-meta-card .meta-info {
+   display: flex;
+   flex-direction: column;
+}
+
+.hero-meta-card .meta-sub {
+   font-size: 11.5px;
+   font-weight: 500;
+   color: rgba(255, 255, 255, 0.55);
+   text-transform: uppercase;
+   letter-spacing: 0.03em;
+   margin-bottom: 2px;
+}
+
+.hero-meta-card .meta-main {
+   font-size: 14px;
+   font-weight: 700;
+   color: #ffffff;
+}
+
+/* ==========================================================================
+   RIGHT SIDEBAR - UNIFIED & BALANCED STYLING
+   ========================================================================== */
+.it-course-sidebar {
+   border-radius: 20px !important;
+   border: 1px solid rgba(26, 182, 157, 0.22) !important;
+   box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+   overflow: hidden !important;
+   padding: 20px !important;
+   background: #ffffff !important;
+}
+
+/* Reset main.css template padding inside sidebar */
+.it-course-sidebar .price-section-box {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
+/* Thumbnail - perfectly flush with action buttons */
+.it-course-sidebar .it-course-sidebar-thumb {
+   border-radius: 14px !important;
+   overflow: hidden !important;
+   margin: 0 0 15px 0 !important;
+   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+   width: 100% !important;
+   max-width: 100% !important;
+}
+
+.it-course-sidebar .it-course-sidebar-thumb::after {
+   display: none !important;
+}
+
+.it-course-sidebar .it-course-sidebar-thumb img {
+   width: 100% !important;
+   height: 205px !important;
+   object-fit: cover !important;
+   display: block !important;
+}
+
+/* Action button 1: Vào Học Ngay / Đăng Nhập */
+.it-course-sidebar .it-course-btn {
+   margin-bottom: 12px !important;
+   width: 100% !important;
+}
+
+.it-course-sidebar .btn-beautiful {
+   height: 48px !important;
+   padding: 0 20px !important;
+   border-radius: 12px !important;
+   display: flex !important;
+   align-items: center !important;
+   justify-content: center !important;
+   font-size: 15px !important;
+   font-weight: 700 !important;
+   letter-spacing: 0.01em !important;
+   width: 100% !important;
+   box-shadow: 0 4px 14px rgba(3, 89, 78, 0.28) !important;
+}
+
+.it-course-sidebar .btn-beautiful-login {
+   box-shadow: 0 4px 14px rgba(245, 166, 35, 0.32) !important;
+}
+
+/* Action button 2: Làm bài tập */
+.it-course-sidebar .it-course-test-action {
+   margin-bottom: 12px !important;
+   width: 100% !important;
+}
+
+.it-course-sidebar .sidebar-test-btn {
+   height: 48px !important;
+   padding: 0 20px !important;
+   border-radius: 12px !important;
+   display: flex !important;
+   align-items: center !important;
+   justify-content: center !important;
+   gap: 8px !important;
+   width: 100% !important;
+   font-size: 14.5px !important;
+   font-weight: 700 !important;
+   background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+   border: 1.5px solid #f59e0b !important;
+   color: #b45309 !important;
+   box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15) !important;
+   transition: all 0.25s ease !important;
+   cursor: pointer !important;
+}
+
+.it-course-sidebar .sidebar-test-btn:hover {
+   background: #f59e0b !important;
+   color: #ffffff !important;
+   transform: translateY(-1px) !important;
+   box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3) !important;
+}
+
+.it-course-sidebar .sidebar-test-btn i {
+   font-size: 15px !important;
+}
+
+/* Action button 3: Hotline hỗ trợ */
+.it-course-sidebar .sidebar-hotline-wrap {
+   margin-top: 12px !important;
+   padding-top: 12px !important;
+   border-top: 1px solid #f1f5f9 !important;
+   width: 100% !important;
+}
+
+.it-course-sidebar .sidebar-hotline-btn {
+   height: 46px !important;
+   padding: 0 16px !important;
+   border-radius: 12px !important;
+   display: flex !important;
+   align-items: center !important;
+   justify-content: center !important;
+   gap: 8px !important;
+   width: 100% !important;
+   font-size: 13.5px !important;
+   font-weight: 600 !important;
+   background: rgba(3, 89, 78, 0.05) !important;
+   border: 1px dashed rgba(3, 89, 78, 0.3) !important;
+   color: #03594E !important;
+   text-decoration: none !important;
+   transition: all 0.25s ease !important;
+}
+
+.it-course-sidebar .sidebar-hotline-btn:hover {
+   background: rgba(3, 89, 78, 0.1) !important;
+   border-color: #03594E !important;
+   color: #023831 !important;
+   transform: translateY(-1px) !important;
+}
+
+.it-course-sidebar .sidebar-hotline-btn i {
+   color: #1AB69D !important;
+   font-size: 15px !important;
+}
+
+/* ==========================================================================
+   COURSE EXERCISE / TEST BUTTONS
+   ========================================================================== */
+.hero-exercise-btn {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   gap: 8px;
+   height: 42px;
+   padding: 0 20px;
+   border-radius: 50px;
+   background: linear-gradient(135deg, #ffb400 0%, #f59e0b 100%);
+   color: #0f172a !important;
+   font-size: 13.5px;
+   font-weight: 700;
+   letter-spacing: 0.01em;
+   text-decoration: none !important;
+   border: 1px solid rgba(255, 255, 255, 0.35);
+   box-shadow: 0 4px 16px rgba(245, 158, 11, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+   transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+   white-space: nowrap;
+   cursor: pointer;
+}
+
+.hero-exercise-btn:hover {
+   transform: translateY(-2px);
+   background: linear-gradient(135deg, #ffc021 0%, #fbbf24 100%);
+   color: #000000 !important;
+   box-shadow: 0 7px 22px rgba(245, 158, 11, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.hero-exercise-btn:active {
+   transform: translateY(0);
+   box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+}
+
+.hero-exercise-btn i {
+   font-size: 14px;
+   color: #0f172a;
+   transition: transform 0.25s ease;
+}
+
+.hero-exercise-btn:hover i {
+   transform: scale(1.15) rotate(-6deg);
+}
+
+.hero-exercise-btn .exercise-count-tag {
+   background: rgba(0, 0, 0, 0.12);
+   color: #0f172a;
+   font-size: 11.5px;
+   font-weight: 800;
+   padding: 2px 8px;
+   border-radius: 12px;
+   margin-left: 2px;
+}
+
+/* Dropdown styling for multiple tests in hero */
+.hero-exercise-dropdown {
+   display: inline-block;
+}
+
+.hero-exercise-dropdown .dropdown-toggle::after {
+   margin-left: 6px;
+   vertical-align: 0.15em;
+}
+
+.hero-exercise-dropdown .dropdown-menu {
+   background: #ffffff;
+   border-radius: 14px;
+   border: 1px solid rgba(0, 0, 0, 0.08);
+   box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.25);
+   padding: 8px;
+   min-width: 290px;
+   margin-top: 10px !important;
+   animation: dropdownFadeIn 0.25s ease;
+}
+
+@keyframes dropdownFadeIn {
+   from { opacity: 0; transform: translateY(6px); }
+   to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-exercise-dropdown .dropdown-header {
+   font-size: 11px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+   color: #64748b;
+   padding: 6px 12px;
+}
+
+.hero-exercise-dropdown .dropdown-item {
+   display: flex;
+   align-items: center;
+   padding: 9px 12px;
+   font-size: 13.5px;
+   font-weight: 600;
+   color: #1e293b;
+   border-radius: 8px;
+   transition: all 0.2s ease;
+}
+
+.hero-exercise-dropdown .dropdown-item:hover {
+   background: rgba(3, 89, 78, 0.08);
+   color: #03594E;
+   transform: translateX(3px);
+}
+
+/* Badge for test in hero top badges */
+.hero-badge.badge-has-test {
+   background: rgba(255, 180, 0, 0.16);
+   border: 1px solid rgba(255, 180, 0, 0.45);
+   color: #ffb400;
+}
+
+
 
