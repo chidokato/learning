@@ -95,19 +95,15 @@
                                 </td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <button type="button" class="btn btn-warning btn-sm text-dark btn-edit-test"
-                                            data-id="{{ $test->id }}"
-                                            data-title="{{ $test->title }}"
-                                            data-post-id="{{ $test->post_id ?? '' }}"
-                                            data-pass-score="{{ $test->pass_score }}"
-                                            data-duration="{{ $test->duration ?? 0 }}"
-                                            data-url="{{ route('backend.tests.update', $test->id) }}">
-                                            Sửa
-                                        </button>
+                                        <a href="{{ route('backend.tests.edit', $test->id) }}" class="btn btn-warning btn-sm text-dark">
+                                            <i class="ri-pencil-line align-bottom me-1"></i> Sửa
+                                        </a>
                                         <form action="{{ route('backend.tests.destroy', $test->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài kiểm tra này?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-danger btn-sm">Xóa</button>
+                                            <button class="btn btn-danger btn-sm">
+                                                <i class="ri-delete-bin-line align-bottom me-1"></i> Xóa
+                                            </button>
                                         </form>
                                     </div>
                                 </td>
@@ -121,76 +117,4 @@
         </div>
     </div>
 </div>
-
-<!-- Modal Chỉnh sửa Bài kiểm tra -->
-<div class="modal fade" id="editTestModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <form id="editTestForm" method="POST" action="">
-                @csrf
-                @method('PUT')
-                <div class="modal-header">
-                    <h5 class="modal-title">Chỉnh sửa bài kiểm tra</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Tên bài test</label>
-                        <input type="text" name="title" id="edit_title" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Chọn Khóa học</label>
-                        <select name="post_id" id="edit_post_id" class="form-select">
-                            <option value="">-- Bài kiểm tra chung (Không thuộc khóa nào) --</option>
-                            @foreach($courses as $course)
-                                <option value="{{ $course->id }}">{{ $course->title }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Số câu đúng để qua</label>
-                            <input type="number" name="pass_score" id="edit_pass_score" class="form-control" required min="1">
-                            <small class="text-muted">VD: 35 (học viên đúng >= 35 câu sẽ qua)</small>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Thời gian làm bài (phút)</label>
-                            <input type="number" name="duration" id="edit_duration" class="form-control" placeholder="0 nếu không giới hạn" min="0">
-                            <small class="text-muted">Nhập số phút (0 là không giới hạn)</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const editButtons = document.querySelectorAll('.btn-edit-test');
-        const editModalEl = document.getElementById('editTestModal');
-        const editForm = document.getElementById('editTestForm');
-        const editTitle = document.getElementById('edit_title');
-        const editPostId = document.getElementById('edit_post_id');
-        const editPassScore = document.getElementById('edit_pass_score');
-        const editDuration = document.getElementById('edit_duration');
-
-        editButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                editForm.action = this.dataset.url;
-                editTitle.value = this.dataset.title;
-                editPostId.value = this.dataset.postId || '';
-                editPassScore.value = this.dataset.passScore;
-                editDuration.value = this.dataset.duration || 0;
-                
-                const modal = new bootstrap.Modal(editModalEl);
-                modal.show();
-            });
-        });
-    });
-</script>
 @endsection

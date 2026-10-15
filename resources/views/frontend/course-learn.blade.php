@@ -834,20 +834,20 @@
                                     <i class="fa-regular fa-stopwatch text-danger"></i> {{ $cTest->duration ? $cTest->duration . ' phút' : 'Không giới hạn' }}
                                  </span>
                                  <span class="test-meta-badge">
-                                    <i class="fa-regular fa-bullseye-arrow text-success"></i> Điểm đạt: {{ $cTest->pass_score }}đ
+                                    <i class="fa-regular fa-bullseye-arrow text-success"></i> Yêu cầu đạt: {{ $cTest->pass_score }}/{{ $cTest->questions_count }} câu
                                  </span>
                               </div>
 
                               @if($res)
                                  @if($res['is_passed'])
                                     <div class="alert alert-success py-2 px-3 mb-3 d-flex justify-content-between align-items-center" style="font-size: 12px; border-radius: 8px;">
-                                       <span><i class="fa-solid fa-circle-check text-success me-1"></i> <strong>ĐÃ ĐẠT:</strong> {{ $res['max_score'] }} điểm</span>
+                                       <span><i class="fa-solid fa-circle-check text-success me-1"></i> <strong>ĐÃ ĐẠT:</strong> {{ $res['max_score'] }}/{{ $cTest->questions_count }} câu</span>
                                        <span class="text-muted" style="font-size: 11px;">(Đã làm {{ $res['attempts'] }} lần)</span>
                                     </div>
                                  @else
                                     <div class="alert alert-warning py-2 px-3 mb-3 d-flex justify-content-between align-items-center" style="font-size: 12px; border-radius: 8px;">
-                                       <span><i class="fa-solid fa-triangle-exclamation text-warning me-1"></i> <strong>CHƯA ĐẠT:</strong> {{ $res['max_score'] }} điểm</span>
-                                       <span class="text-muted" style="font-size: 11px;">(Cần {{ $cTest->pass_score }}đ)</span>
+                                       <span><i class="fa-solid fa-triangle-exclamation text-warning me-1"></i> <strong>CHƯA ĐẠT:</strong> {{ $res['max_score'] }}/{{ $cTest->questions_count }} câu</span>
+                                       <span class="text-muted" style="font-size: 11px;">(Cần đạt {{ $cTest->pass_score }}/{{ $cTest->questions_count }} câu)</span>
                                     </div>
                                  @endif
                               @else
@@ -899,11 +899,11 @@
                                  @if($gRes)
                                     @if($gRes['is_passed'])
                                        <span class="badge bg-success" style="font-size: 10.5px; flex-shrink: 0;">
-                                          <i class="fa-solid fa-check me-1"></i> Đạt ({{ $gRes['max_score'] }}đ)
+                                          <i class="fa-solid fa-check me-1"></i> Đạt ({{ $gRes['max_score'] }}/{{ $gTest->questions_count }} câu)
                                        </span>
                                     @else
                                        <span class="badge bg-warning text-dark" style="font-size: 10.5px; flex-shrink: 0;">
-                                          Chưa đạt ({{ $gRes['max_score'] }}đ)
+                                          Chưa đạt ({{ $gRes['max_score'] }}/{{ $gTest->questions_count }} câu)
                                        </span>
                                     @endif
                                  @endif
@@ -915,7 +915,7 @@
                                     <span>•</span>
                                     <span><i class="fa-regular fa-clock me-1"></i> {{ $gTest->duration ? $gTest->duration . 'p' : 'Tự do' }}</span>
                                     <span>•</span>
-                                    <span><i class="fa-regular fa-bullseye me-1"></i> Đạt: {{ $gTest->pass_score }}đ</span>
+                                    <span><i class="fa-regular fa-bullseye me-1"></i> Đạt: {{ $gTest->pass_score }}/{{ $gTest->questions_count }} câu</span>
                                  </div>
                                  <a href="{{ route('frontend.tests.show', $gTest->id) }}" class="btn btn-sm btn-outline-primary px-3 py-1" style="font-size: 12px; font-weight: 600; border-radius: 6px;">
                                     {{ $gRes ? 'Làm lại' : 'Vào thi' }} <i class="fa-solid fa-angle-right ms-1"></i>

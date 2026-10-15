@@ -225,6 +225,7 @@ Route::prefix('admin')->name('backend.')->group(function () {
     Route::controller(\App\Http\Controllers\AdminTestController::class)->group(function () {
         Route::get('tests', 'index')->name('tests.index');
         Route::get('tests/{test}', 'show')->name('tests.show');
+        Route::get('tests/{test}/edit', 'edit')->name('tests.edit');
         Route::post('tests/import', 'import')->name('tests.import');
         Route::put('tests/{test}', 'update')->name('tests.update');
         Route::delete('tests/{test}', 'destroy')->name('tests.destroy');
