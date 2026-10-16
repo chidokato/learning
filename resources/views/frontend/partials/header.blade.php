@@ -1,5 +1,5 @@
 <!-- Header Custom Stylesheet -->
-<link rel="stylesheet" href="{{ asset('assets/css/header-custom.css') }}?v={{ time() }}">
+<link rel="stylesheet" href="{{ asset('assets/css/header-custom.css') }}?v=1.0.1">
 
 <!-- header-top-area-start -->
 <div class="it-header-top-area custom-header-top">

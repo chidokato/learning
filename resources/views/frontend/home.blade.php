@@ -15,19 +15,26 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
+    <!-- Preload LCP Image & Shape -->
+    @if(isset($firstSlider) && !empty($firstSlider->image_url))
+    <link rel="preload" as="image" href="{{ $firstSlider->image_url }}" fetchpriority="high">
+    @endif
+    <link rel="preload" as="image" href="{{ asset('assets/img/shape/hero-1-2.png') }}" fetchpriority="high">
+
     <!-- CSS Here -->
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">        
-   <link rel="stylesheet" href="assets/css/font-awesome-pro.css">     
-   <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">   
-   <link rel="stylesheet" href="assets/css/slick.css">              
-   <link rel="stylesheet" href="assets/css/magnific-popup.css">      
-   <link rel="stylesheet" href="assets/css/nice-select.css">          
-   <link rel="stylesheet" href="assets/css/custom-animation.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome-pro.css') }}">     
+    <link rel="stylesheet" href="{{ asset('assets/css/swiper-bundle.min.css') }}">   
+    <link rel="stylesheet" href="{{ asset('assets/css/slick.css') }}">              
+    <link rel="stylesheet" href="{{ asset('assets/css/magnific-popup.css') }}">      
+    <link rel="stylesheet" href="{{ asset('assets/css/nice-select.css') }}">          
+    <link rel="stylesheet" href="{{ asset('assets/css/custom-animation.css') }}">
 
-   <!-- Theme / Main CSS -->
-   <link rel="stylesheet" href="assets/css/spacing.css">          
-   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v={{ time() }}">   
-   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v={{ time() }}">   
+    <!-- Theme / Main CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">          
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v=1.0.1">   
+    <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v=1.0.1">   
+    <link rel="stylesheet" href="{{ asset('assets/css/header-custom.css') }}?v=1.0.1">   
 
 </head>
 
@@ -169,7 +176,6 @@
    <script src="assets/js/jquery.js"></script>                     
    <script src="assets/js/bootstrap.bundle.min.js"></script>      
    <script src="assets/js/purecounter.js"></script>          
-   <script src="assets/js/range-slider.js"></script>          
    <script src="assets/js/nice-select.js"></script>             
    <script src="assets/js/swiper-bundle.min.js"></script>         
    <script src="assets/js/isotope-pkgd.js"></script>     

@@ -20,8 +20,8 @@
    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome-pro.css') }}">
    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">
-   <link rel="stylesheet" href="{{ asset('assets/css/course-curriculum.css') }}?v={{ time() }}">
-   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v={{ time() }}">
+   <link rel="stylesheet" href="{{ asset('assets/css/course-curriculum.css') }}?v=1.0.1">
+   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v=1.0.1">
 
    <style>
       * {

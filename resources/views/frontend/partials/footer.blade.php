@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v={{ time() }}">
-
 <footer class="it-modern-footer">
    <!-- newsletter-area-start -->
    <div class="it-footer-newsletter-wrap">

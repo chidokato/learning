@@ -19,7 +19,7 @@
    <link rel="stylesheet" href="{{ asset('assets/css/nice-select.css') }}">          
    <link rel="stylesheet" href="{{ asset('assets/css/custom-animation.css') }}">
    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">          
-   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v={{ time() }}">   
+   <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v=1.0.1">   
    <meta name="csrf-token" content="{{ csrf_token() }}">
    
    <style>

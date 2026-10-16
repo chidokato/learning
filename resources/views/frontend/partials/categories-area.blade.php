@@ -1,7 +1,9 @@
 <section class="it-categories-area pt-30 pb-30">
    <div class="container">
       @php
-         $homepageCategories = \App\Models\HomepageCategory::where('is_active', true)->orderBy('sort_order')->get();
+         $homepageCategories = \Illuminate\Support\Facades\Cache::remember('home_homepage_categories', 600, function () {
+             return \App\Models\HomepageCategory::where('is_active', true)->orderBy('sort_order')->get();
+         });
          $count = $homepageCategories->count();
          $rowColsClass = match($count) {
              1 => 'row-cols-1 justify-content-center',
@@ -85,7 +87,7 @@
             @endif
                <span>
                   @if($cat->image)
-                     <img src="{{ asset($cat->image) }}" alt="icon" style="max-width: 80px; max-height: 80px;">
+                     <img src="{{ asset($cat->image) }}" alt="icon" style="max-width: 80px; max-height: 80px;" loading="lazy" decoding="async" width="80" height="80">
                   @elseif($cat->svg_icon)
                      {!! $cat->svg_icon !!}
                   @endif

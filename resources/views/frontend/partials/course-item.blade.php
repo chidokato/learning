@@ -8,11 +8,8 @@
         'assets/img/course/course-5-1.jpg',
     ];
     $fallbackImage = asset($defaultImages[($course->id ?? 0) % count($defaultImages)]);
-    $hasImage = !empty($course->image) && file_exists(public_path(ltrim($course->image, '/')));
-    $courseImage = $hasImage ? asset(ltrim($course->image, '/')) : $fallbackImage;
-    
-    $hasAvatar = !empty($course->seller?->avatar) && file_exists(public_path(ltrim($course->seller->avatar, '/')));
-    $avatarImage = $hasAvatar ? asset(ltrim($course->seller->avatar, '/')) : asset('assets/img/avatar/avatar-1-5.png');
+    $courseImage = !empty($course->image) ? asset(ltrim($course->image, '/')) : $fallbackImage;
+    $avatarImage = !empty($course->seller?->avatar) ? asset(ltrim($course->seller->avatar, '/')) : asset('assets/img/avatar/avatar-1-5.png');
 
     $displayCategoryName = $course->category?->name ?? ($category->name ?? null);
 @endphp
@@ -26,7 +23,8 @@
                  src="{{ $courseImage }}" 
                  alt="{{ $course->title }}"
                  onerror="this.onerror=null; this.src='{{ $fallbackImage }}';"
-                 loading="lazy">
+                 loading="lazy"
+                 decoding="async">
          </a>
 
          @if($displayCategoryName)
@@ -48,7 +46,11 @@
                <img class="course-author-avatar" 
                     src="{{ $avatarImage }}" 
                     alt="{{ $course->seller ? $course->seller->name : 'Indochine' }}"
-                    onerror="this.onerror=null; this.src='{{ asset('assets/img/avatar/avatar-1-5.png') }}';">
+                    onerror="this.onerror=null; this.src='{{ asset('assets/img/avatar/avatar-1-5.png') }}';"
+                    loading="lazy"
+                    decoding="async"
+                    width="34"
+                    height="34">
                <span class="course-author-name">{{ $course->seller ? $course->seller->name : 'Indochine' }}</span>
             </div>
 

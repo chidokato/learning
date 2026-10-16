@@ -1,5 +1,7 @@
 @php
-   $sliders = \App\Models\Slider::where('is_active', true)->orderBy('sort_order')->get();
+   $sliders = \Illuminate\Support\Facades\Cache::remember('home_sliders', 600, function() {
+       return \App\Models\Slider::where('is_active', true)->orderBy('sort_order')->get();
+   });
 @endphp
 
 @if($sliders->count() > 0)
@@ -10,8 +12,8 @@
          @foreach($sliders as $slider)
          <div class="swiper-slide">
             <section class="it-hero-12-area theme-bg z-index-1"> 
-               <img class="it-hero-shape-2" src="{{ asset('assets/img/shape/hero-1-2.png') }}" alt="">
-               <img class="it-hero-shape-3 d-none d-lg-block" src="{{ asset('assets/img/shape/hero-1-3.png') }}" alt="">
+               <img class="it-hero-shape-2" src="{{ asset('assets/img/shape/hero-1-2.png') }}" alt="" width="260" height="262" decoding="async">
+               <img class="it-hero-shape-3 d-none d-lg-block" src="{{ asset('assets/img/shape/hero-1-3.png') }}" alt="" width="124" height="124" decoding="async">
                <div class="container">
                   <div class="row align-items-center">
                      <div class="col-xl-6 col-lg-6">
@@ -47,7 +49,9 @@
                      </div>
                      <div class="col-xl-6 col-lg-6">
                         <div class="it-hero-thumb z-index-1">
-                           <img src="{{ $slider->image_url }}" alt="">
+                           <img src="{{ $slider->image_url }}" alt="{{ $slider->title ?? 'Banner' }}" 
+                                @if($loop->first) fetchpriority="high" loading="eager" @else loading="lazy" @endif 
+                                decoding="async" width="560" height="560">
                         </div>
                      </div>
                   </div>
