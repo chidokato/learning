@@ -373,25 +373,52 @@
       .flipbook-loading {
          position: absolute;
          inset: 0;
-         background: #121315;
+         background: #0f172a;
          display: flex;
          flex-direction: column;
          align-items: center;
          justify-content: center;
          z-index: 15;
          color: #fff;
+         padding: 24px;
+         text-align: center;
       }
       .spinner-book {
-         width: 50px;
-         height: 50px;
-         border: 4px solid rgba(255, 255, 255, 0.1);
-         border-top-color: #d32f2f;
+         width: 44px;
+         height: 44px;
+         border: 3.5px solid rgba(255, 255, 255, 0.12);
+         border-top-color: #ef4444;
          border-radius: 50%;
-         animation: spin 1s linear infinite;
-         margin-bottom: 15px;
+         animation: spin 0.85s linear infinite;
+         margin-bottom: 14px;
       }
       @keyframes spin {
          to { transform: rotate(360deg); }
+      }
+      .loading-progress-box {
+         width: 100%;
+         max-width: 320px;
+         background: rgba(255, 255, 255, 0.08);
+         border-radius: 999px;
+         height: 7px;
+         overflow: hidden;
+         margin: 12px 0 8px;
+         position: relative;
+         box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+      }
+      .loading-progress-bar-fill {
+         height: 100%;
+         width: 0%;
+         background: linear-gradient(90deg, #ef4444, #f97316);
+         border-radius: 999px;
+         transition: width 0.2s ease-out;
+         box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+      }
+      .loading-detail-text {
+         font-size: 13px;
+         color: #94a3b8;
+         font-variant-numeric: tabular-nums;
+         font-weight: 500;
       }
 
       /* Slide E-Learning Viewer (FULL RESPONSIVE & HIGH DEFINITION) */
@@ -699,8 +726,14 @@
                <!-- 1. Loading Overlay -->
                <div class="flipbook-loading" id="flipbookLoading">
                   <div class="spinner-book"></div>
-                  <h5 class="mb-2" style="font-weight: 700;">Đang mở bài giảng...</h5>
-                  <p class="loading-text text-white-50 mb-0" style="font-size: 13.5px;">Vui lòng đợi trong giây lát</p>
+                  <h5 class="mb-1" style="font-weight: 700; letter-spacing: -0.3px;">Đang mở bài giảng...</h5>
+                  <div class="loading-progress-box">
+                     <div class="loading-progress-bar-fill" id="loadingProgressFill"></div>
+                  </div>
+                  <p class="loading-detail-text mb-2" id="loadingDetailText">Đang kết nối tới máy chủ...</p>
+                  <span class="badge bg-dark border border-secondary text-white-50 px-3 py-1" style="font-size: 11.5px; font-weight: 500;">
+                     <i class="fa-solid fa-bolt me-1 text-warning"></i> Chế độ truyền tải phân đoạn (Range Streaming)
+                  </span>
                </div>
 
                <!-- 2. Slide E-Learning Mode Container -->
@@ -954,8 +987,13 @@
 
    <!-- JS Libraries -->
    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-   <!-- PDF.js CDN for E-Learning Slide Viewer -->
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+   <!-- PDF.js: Local asset with CDN fallback -->
+   <script src="{{ asset('assets/js/pdf.min.js') }}"></script>
+   <script>
+      if (typeof pdfjsLib === 'undefined') {
+         document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"><\/script>');
+      }
+   </script>
 
    <script>
       // ========================================================
@@ -1142,7 +1180,7 @@
       }
 
       // ========================================================
-      // 3. KHỞI TẠO & RENDER SLIDE (PDF.JS + CACHE)
+      // 3. KHỞI TẠO & RENDER SLIDE (PDF.JS + STREAMING + CACHE)
       // ========================================================
       async function initSlideViewer() {
          if (!pdfUrl) {
@@ -1158,15 +1196,49 @@
                throw new Error("Thư viện PDF.js chưa tải thành công");
             }
 
-            pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+            // Ưu tiên Worker cục bộ
+            pdfjsLib.GlobalWorkerOptions.workerSrc = "{{ asset('assets/js/pdf.worker.min.js') }}";
 
-            const loadingTask = pdfjsLib.getDocument(pdfUrl);
+            const loadingProgressFill = document.getElementById('loadingProgressFill');
+            const loadingDetailText = document.getElementById('loadingDetailText');
+
+            // 1. Cấu hình Range Request (Streaming)
+            const loadingTask = pdfjsLib.getDocument({
+               url: pdfUrl,
+               rangeChunkSize: 65536,
+               disableAutoFetch: true,
+               disableStream: false,
+               cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+               cMapPacked: true
+            });
+
+            // 2. Lắng nghe % dữ liệu đang tải về
+            loadingTask.onProgress = function(progressData) {
+               if (progressData.total > 0) {
+                  const percent = Math.min(100, Math.round((progressData.loaded / progressData.total) * 100));
+                  const loadedMB = (progressData.loaded / (1024 * 1024)).toFixed(1);
+                  const totalMB = (progressData.total / (1024 * 1024)).toFixed(1);
+                  if (loadingProgressFill) loadingProgressFill.style.width = percent + '%';
+                  if (loadingDetailText) {
+                     loadingDetailText.innerText = `Đang tải tài liệu: ${percent}% (${loadedMB} MB / ${totalMB} MB)...`;
+                  }
+               } else if (progressData.loaded > 0) {
+                  const loadedMB = (progressData.loaded / (1024 * 1024)).toFixed(1);
+                  if (loadingDetailText) {
+                     loadingDetailText.innerText = `Đang tải: ${loadedMB} MB...`;
+                  }
+               }
+            };
+
             pdfDoc = await loadingTask.promise;
             totalPagesCount = pdfDoc.numPages;
             if (totalPagesText) totalPagesText.innerText = totalPagesCount;
             if (pageNumInput) {
                pageNumInput.max = totalPagesCount;
             }
+
+            if (loadingProgressFill) loadingProgressFill.style.width = '100%';
+            if (loadingDetailText) loadingDetailText.innerText = 'Đã tải xong cấu trúc. Đang mở bài học...';
 
             // Tự động nhảy đến slide học dở lần trước (nếu có)
             let startPage = initialCurrentPage;
@@ -1176,9 +1248,32 @@
             await renderSlide(startPage);
 
          } catch (err) {
-            console.warn("Chuyển sang chế độ cuộn do lỗi tải Slide:", err);
-            if (loadingEl) loadingEl.style.display = 'none';
-            switchToScrollMode();
+            console.warn("Lỗi tải phân đoạn, kích hoạt cơ chế dự phòng:", err);
+            try {
+               // Fallback nếu máy chủ không trả Partial Content
+               const fallbackTask = pdfjsLib.getDocument(pdfUrl);
+               fallbackTask.onProgress = function(p) {
+                  const fill = document.getElementById('loadingProgressFill');
+                  const txt = document.getElementById('loadingDetailText');
+                  if (p.total > 0) {
+                     const pct = Math.round((p.loaded / p.total) * 100);
+                     if (fill) fill.style.width = pct + '%';
+                     if (txt) txt.innerText = `Đang tải (Dự phòng): ${pct}%...`;
+                  }
+               };
+               pdfDoc = await fallbackTask.promise;
+               totalPagesCount = pdfDoc.numPages;
+               if (totalPagesText) totalPagesText.innerText = totalPagesCount;
+               if (pageNumInput) pageNumInput.max = totalPagesCount;
+               let startPage = initialCurrentPage;
+               if (startPage < 1 || startPage > totalPagesCount) startPage = 1;
+               updateProgressUi(startPage);
+               await renderSlide(startPage);
+            } catch (fallbackErr) {
+               console.warn("Chuyển sang chế độ cuộn:", fallbackErr);
+               if (loadingEl) loadingEl.style.display = 'none';
+               switchToScrollMode();
+            }
          }
       }
 
