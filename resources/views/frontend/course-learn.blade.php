@@ -646,6 +646,13 @@
       </div>
 
       <div class="gitiho-header-right">
+         @if ($post->allow_download_pdf && $post->pdf_file)
+         <a href="{{ route('frontend.course.download-pdf', $post->slug) }}" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-2 px-3 py-1 fw-semibold" style="border-radius: 6px; font-size: 13px;" title="Tải tài liệu bài học">
+            <i class="fa-solid fa-download"></i>
+            <span class="d-none d-md-inline">Tải tài liệu</span>
+         </a>
+         @endif
+
          <!-- Active Learning Presence & Time Tracker -->
          <div class="learning-tracker-box">
             <div class="tracker-status-indicator" id="trackerIndicator" title="Trạng thái theo dõi thời gian học thực tế">
@@ -705,6 +712,11 @@
                </div>
 
                <div class="toolbar-right">
+                  @if ($post->allow_download_pdf && $post->pdf_file)
+                  <a href="{{ route('frontend.course.download-pdf', $post->slug) }}" class="btn-toolbar-icon text-white text-decoration-none" title="Tải tài liệu bài học ({{ basename($post->pdf_file) }})" style="display: inline-flex; align-items: center; justify-content: center;">
+                     <i class="fa-solid fa-download"></i>
+                  </a>
+                  @endif
                   <button class="btn-toolbar-icon" id="btnZoomOut" title="Thu nhỏ (-)">
                      <i class="fa-solid fa-minus"></i>
                   </button>
@@ -763,8 +775,12 @@
                   <iframe id="pdfViewerFrame" src="{{ $post->pdf_url }}#toolbar=1&view=FitH" allowfullscreen>
                      <div class="p-5 text-center bg-white" style="height: 100%;">
                         <h5 class="text-danger mb-3">Trình duyệt không hỗ trợ xem trực tiếp PDF</h5>
+                        @if ($post->allow_download_pdf)
                         <p class="mb-4">Vui lòng tải tài liệu để xem trên thiết bị của bạn.</p>
-                        <a href="{{ $post->pdf_url }}" download class="btn btn-success">Tải tài liệu PDF ngay</a>
+                        <a href="{{ route('frontend.course.download-pdf', $post->slug) }}" class="btn btn-success">Tải tài liệu PDF ngay</a>
+                        @else
+                        <p class="mb-0 text-muted">Vui lòng sử dụng trình duyệt hiện đại (Chrome/Edge/Firefox) để xem tài liệu.</p>
+                        @endif
                      </div>
                   </iframe>
                   @endif
@@ -803,6 +819,14 @@
                      Hỏi đáp
                   </button>
                </li>
+               @if ($post->allow_download_pdf && $post->pdf_file)
+               <!-- 4. TÀI LIỆU -->
+               <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="materials-tab" data-bs-toggle="tab" data-bs-target="#tab-materials" type="button" role="tab" aria-selected="false">
+                     <i class="fa-solid fa-file-arrow-down me-1 text-danger"></i> Tài liệu
+                  </button>
+               </li>
+               @endif
             </ul>
          </div>
 
@@ -969,13 +993,24 @@
                </div>
 
                <div class="tab-pane fade" id="tab-qa" role="tabpanel"></div>
-               <div class="tab-pane fade" id="tab-articles" role="tabpanel">
-                  @if ($post->pdf_url)
-                     <a href="{{ $post->pdf_url }}" download class="btn btn-outline-danger">
-                        <i class="fa-solid fa-download me-1"></i> {{ basename($post->pdf_file) }}
-                     </a>
-                  @endif
+               @if ($post->allow_download_pdf && $post->pdf_file)
+               <div class="tab-pane fade" id="tab-materials" role="tabpanel">
+                  <div class="p-3 bg-white rounded border shadow-sm">
+                     <div class="d-flex align-items-center gap-3">
+                        <div class="text-danger" style="font-size: 32px; flex-shrink: 0;">
+                           <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <div class="flex-grow-1 overflow-hidden">
+                           <h6 class="mb-1 text-truncate fw-bold" style="font-size: 13.5px;" title="{{ basename($post->pdf_file) }}">{{ basename($post->pdf_file) }}</h6>
+                           <small class="text-muted">{{ strtoupper(pathinfo($post->pdf_file, PATHINFO_EXTENSION)) ?: 'PDF' }} • Tài liệu bài học</small>
+                        </div>
+                        <a href="{{ route('frontend.course.download-pdf', $post->slug) }}" class="btn btn-danger btn-sm d-inline-flex align-items-center gap-1 px-3 py-2 fw-semibold" style="border-radius: 6px; flex-shrink: 0;">
+                           <i class="fa-solid fa-download"></i> Tải về
+                        </a>
+                     </div>
+                  </div>
                </div>
+               @endif
                <div class="tab-pane fade" id="tab-cert" role="tabpanel"></div>
 
             </div>

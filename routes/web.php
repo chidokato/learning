@@ -145,6 +145,25 @@ Route::get('courses-v1.html', fn () => view('frontend.home'));
 Route::get('courses-details-v2.html', $fallbackCourseDetailHandler)->name('frontend.courses.details.demo');
 Route::get('courses/{slug}/hoc', fn (string $slug) => $courseLearnHandler($slug))->name('frontend.course.learn.prefix');
 Route::get('hoc-khoa-hoc/{slug}', fn (string $slug) => $courseLearnHandler($slug))->name('frontend.course.learn');
+Route::get('courses/{slug}/download-pdf', function (string $slug) {
+    $post = \App\Models\Post::query()
+        ->where('slug', $slug)
+        ->firstOrFail();
+
+    if (! $post->allow_download_pdf || empty($post->pdf_file)) {
+        abort(403, 'Tài liệu khóa học này không cho phép tải về.');
+    }
+
+    $filePath = public_path(ltrim($post->pdf_file, '/'));
+    if (! file_exists($filePath)) {
+        abort(404, 'File tài liệu không tồn tại trên hệ thống.');
+    }
+
+    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+    $downloadName = \Illuminate\Support\Str::slug($post->title) . '.' . ($extension ?: 'pdf');
+
+    return response()->download($filePath, $downloadName);
+})->name('frontend.course.download-pdf');
 Route::get('courses/{slug}', fn (string $slug) => $postDetailHandler($slug))->name('frontend.courses.show');
 Route::get('products/{slug}', fn (string $slug) => $postDetailHandler($slug))->name('frontend.products.show.legacy');
 Route::get('news/{slug}', fn () => view('frontend.home'))->name('frontend.news.show.legacy');

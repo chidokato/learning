@@ -306,6 +306,14 @@
                                 </button>
                             </div>
 
+                            <div class="form-check mt-3 pt-2 border-top">
+                                <input class="form-check-input" type="checkbox" id="allow_download_pdf" name="allow_download_pdf" value="1" {{ old('allow_download_pdf', $post->allow_download_pdf ?? false) ? 'checked' : '' }}>
+                                <label class="form-check-label fw-semibold text-dark" for="allow_download_pdf">
+                                    Cho phép tải tài liệu
+                                </label>
+                                <div class="text-muted small mt-1">Cho phép học viên tải file tài liệu về máy. Mặc định là không cho phép.</div>
+                            </div>
+
                             @error('pdf_file_input')
                                 <div class="text-danger small mt-2">{{ $message }}</div>
                             @enderror

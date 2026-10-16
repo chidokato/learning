@@ -343,6 +343,15 @@
                               @endauth
                            </div>
 
+                           @if ($post->allow_download_pdf && $post->pdf_file)
+                           <div class="it-course-download-action mb-20">
+                              <a href="{{ route('frontend.course.download-pdf', $post->slug) }}" class="sidebar-download-btn w-100 text-center" title="Tải tài liệu bài học">
+                                 <i class="fa-solid fa-file-arrow-down me-2"></i>
+                                 <span>Tải tài liệu bài học</span>
+                              </a>
+                           </div>
+                           @endif
+
                            @if ($post->tests && $post->tests->isNotEmpty())
                            <div class="it-course-test-action mb-20">
                               @if ($post->tests->count() === 1)

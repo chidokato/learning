@@ -30,6 +30,7 @@ class Post extends Model
         'course_requirements',
         'image',
         'pdf_file',
+        'allow_download_pdf',
         'price',
         'is_active',
         'is_featured',
@@ -39,6 +40,7 @@ class Post extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
+        'allow_download_pdf' => 'boolean',
         'area' => 'decimal:2',
         'area_from' => 'decimal:2',
         'area_to' => 'decimal:2',
