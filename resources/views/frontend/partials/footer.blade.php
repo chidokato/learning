@@ -1,3 +1,6 @@
+<!-- Footer & Modern Components Stylesheet -->
+<link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v=1.0.1">
+
 <footer class="it-modern-footer">
    <!-- newsletter-area-start -->
    <div class="it-footer-newsletter-wrap">

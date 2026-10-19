@@ -8,14 +8,26 @@ use App\Models\UserTestResult;
 
 class FrontendTestController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tests = Test::whereNull('post_id')->latest()->get();
+        $search = trim($request->input('search', ''));
+
+        $query = Test::query()
+            ->withCount('questions')
+            ->with(['post:id,title,slug', 'topics:id,name,slug'])
+            ->latest();
+
+        if ($search !== '') {
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        $tests = $query->get();
         
-        $user_id = auth()->id() ?? 1; // Fallback to 1 for testing if not logged in
+        $userId = auth()->id() ?? 1; // Fallback to 1 for testing if not logged in
         
         // Lấy thống kê làm bài của user theo từng bài test
-        $userResults = UserTestResult::where('user_id', $user_id)
+        $userResults = UserTestResult::where('user_id', $userId)
+            ->whereIn('test_id', $tests->pluck('id'))
             ->get()
             ->groupBy('test_id')
             ->map(function ($items) {
@@ -27,7 +39,9 @@ class FrontendTestController extends Controller
                 ];
             });
 
-        return view('frontend.tests.index', compact('tests', 'userResults'));
+        $topics = \App\Models\Topic::test()->withCount('tests')->orderBy('name')->get();
+
+        return view('frontend.tests.index', compact('tests', 'userResults', 'search', 'topics'));
     }
 
     public function show($id)

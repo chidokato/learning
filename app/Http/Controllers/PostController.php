@@ -36,7 +36,7 @@ class PostController extends Controller
 
         $categories = $this->getCategoryOptions($type);
         $sellerOptions = User::orderBy('name')->pluck('name', 'id');
-        $topicOptions = \App\Models\Topic::orderBy('name')->pluck('name', 'id');
+        $topicOptions = \App\Models\Topic::course()->orderBy('name')->pluck('name', 'id');
         $selectedTopics = [];
 
         return view('backend.contents.create', compact('type', 'typeLabel', 'categories', 'sellerOptions', 'topicOptions', 'selectedTopics'));
@@ -186,7 +186,7 @@ class PostController extends Controller
 
         $categories = $this->getCategoryOptions($type);
         $sellerOptions = User::orderBy('name')->pluck('name', 'id');
-        $topicOptions = \App\Models\Topic::orderBy('name')->pluck('name', 'id');
+        $topicOptions = \App\Models\Topic::course()->orderBy('name')->pluck('name', 'id');
         $selectedTopics = $post->topics->pluck('id')->toArray();
 
         return view('backend.contents.edit', compact('type', 'typeLabel', 'categories', 'sellerOptions', 'topicOptions', 'selectedTopics', 'post'));

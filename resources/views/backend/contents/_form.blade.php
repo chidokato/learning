@@ -465,7 +465,8 @@
                         type: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
-                            name: name
+                            name: name,
+                            type: 'course'
                         },
                         success: function(response) {
                             if (response.success) {

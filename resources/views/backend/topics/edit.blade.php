@@ -16,13 +16,27 @@
                     <form action="{{ route('backend.topics.update', $topic) }}" method="POST">
                         @csrf
                         @method('PUT')
+
                         <div class="mb-3">
-                            <label for="name" class="form-label">Tên Chủ đề <span class="text-danger">*</span></label>
+                            <label for="type" class="form-label fw-semibold">Phân loại Topic <span class="text-danger">*</span></label>
+                            <select id="type" name="type" class="form-select @error('type') is-invalid @enderror" required>
+                                <option value="course" {{ old('type', $topic->type ?? 'course') === 'course' ? 'selected' : '' }}>Khóa học (Dành riêng cho Khóa học)</option>
+                                <option value="test" {{ old('type', $topic->type ?? 'course') === 'test' ? 'selected' : '' }}>Bài kiểm tra (Dành riêng cho Đề thi / Test)</option>
+                            </select>
+                            <small class="text-muted">Phân loại giúp hiển thị đúng topic trong mục Khóa học hoặc Bài test.</small>
+                            @error('type')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-semibold">Tên Chủ đề <span class="text-danger">*</span></label>
                             <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $topic->name) }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
                         <div class="mb-3">
                             <label for="slug" class="form-label">Slug (Tùy chọn)</label>
                             <input type="text" id="slug" name="slug" class="form-control @error('slug') is-invalid @enderror" value="{{ old('slug', $topic->slug) }}">
@@ -30,6 +44,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
                         <div class="card border mb-3">
                             <div class="card-header bg-light">
                                 <h5 class="card-title mb-0">Cấu hình SEO</h5>
@@ -51,7 +66,9 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="ri-save-line me-1"></i> Cập nhật Chủ đề
+                        </button>
                     </form>
                 </div>
             </div>

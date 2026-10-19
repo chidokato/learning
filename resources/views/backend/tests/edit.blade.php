@@ -197,6 +197,37 @@
                             <small class="text-muted">Chọn khóa học nếu bài test này bắt buộc cho khóa học đó.</small>
                         </div>
 
+                        <!-- CHỌN TOPIC / MỤC PHÂN CHIA BÀI TEST (CÓ THÊM NHANH) -->
+                        @php
+                            $selectedTopicIds = old('topic_ids', $test->topics->pluck('id')->toArray());
+                            if (empty($selectedTopicIds) && $test->topic_id) {
+                                $selectedTopicIds = [$test->topic_id];
+                            }
+                        @endphp
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <label class="form-label fw-bold mb-0">
+                                    <i class="ri-price-tag-3-line text-primary me-1"></i> Topic / Mục Bài kiểm tra
+                                </label>
+                                <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none fw-semibold" data-bs-toggle="modal" data-bs-target="#quickAddTopicModal" title="Thêm nhanh Topic mới">
+                                    <i class="ri-add-line"></i> + Thêm nhanh
+                                </button>
+                            </div>
+                            <div class="border rounded p-2 bg-light bg-opacity-25" style="max-height: 140px; overflow-y: auto;" id="topic_checkboxes_container">
+                                @forelse ($topics as $topic)
+                                    <div class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox" name="topic_ids[]" value="{{ $topic->id }}" id="topic_{{ $topic->id }}" {{ in_array($topic->id, $selectedTopicIds) ? 'checked' : '' }}>
+                                        <label class="form-check-label user-select-none" for="topic_{{ $topic->id }}">
+                                            {{ $topic->name }}
+                                        </label>
+                                    </div>
+                                @empty
+                                    <div class="text-muted small fst-italic py-1" id="topic_empty_text">Chưa có Topic bài kiểm tra nào. Bấm <b>"+ Thêm nhanh"</b> để tạo mới.</div>
+                                @endforelse
+                            </div>
+                            <small class="text-muted">Topic riêng biệt dành cho bài kiểm tra (không chung với khóa học).</small>
+                        </div>
+
                         <div class="row">
                             <div class="col-sm-6 mb-3">
                                 <label class="form-label fw-bold">Số câu đúng để qua <span class="text-danger">*</span></label>
@@ -419,6 +450,33 @@
         </div>
     </form>
 </div>
+
+<!-- Modal Thêm Nhanh Topic -->
+<div class="modal fade" id="quickAddTopicModal" tabindex="-1" aria-labelledby="quickAddTopicModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quickAddTopicModalLabel">
+                    <i class="ri-price-tag-3-line me-1 text-primary"></i> Thêm nhanh Topic Bài kiểm tra
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="quick_add_topic_name" class="form-label fw-semibold">Tên Topic Bài kiểm tra <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="quick_add_topic_name" placeholder="Ví dụ: Kiểm tra chuyên môn, Đánh giá nội bộ..." autocomplete="off">
+                    <div class="invalid-feedback" id="quick_add_topic_error"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="btn-quick-add-topic">
+                    <i class="ri-check-line me-1"></i> Lưu và Chọn
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -426,6 +484,107 @@
     document.addEventListener('DOMContentLoaded', function () {
         initQuickNav();
         updateStats();
+
+        // Xử lý thêm nhanh Topic
+        const btnQuickAdd = document.getElementById('btn-quick-add-topic');
+        const nameInput = document.getElementById('quick_add_topic_name');
+        const errorFeedback = document.getElementById('quick_add_topic_error');
+        const container = document.getElementById('topic_checkboxes_container');
+        const modalEl = document.getElementById('quickAddTopicModal');
+        let modalInstance = null;
+
+        if (modalEl && typeof bootstrap !== 'undefined') {
+            modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        }
+
+        if (btnQuickAdd && nameInput) {
+            btnQuickAdd.addEventListener('click', function() {
+                const name = nameInput.value.trim();
+                if (!name) {
+                    nameInput.classList.add('is-invalid');
+                    errorFeedback.textContent = 'Vui lòng nhập tên Topic Bài kiểm tra.';
+                    return;
+                }
+
+                nameInput.classList.remove('is-invalid');
+                errorFeedback.textContent = '';
+                btnQuickAdd.disabled = true;
+                btnQuickAdd.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Đang lưu...';
+
+                fetch('{{ route("backend.topics.quick-add") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ name: name, type: 'test' })
+                })
+                .then(response => response.json().then(data => ({ status: response.status, body: data })))
+                .then(res => {
+                    btnQuickAdd.disabled = false;
+                    btnQuickAdd.innerHTML = '<i class="ri-check-line me-1"></i> Lưu và Chọn';
+
+                    if (res.body.success && res.body.topic) {
+                        const topic = res.body.topic;
+                        const emptyText = document.getElementById('topic_empty_text');
+                        if (emptyText) emptyText.remove();
+
+                        let existingCheckbox = document.getElementById('topic_' + topic.id);
+                        if (existingCheckbox) {
+                            existingCheckbox.checked = true;
+                        } else if (container) {
+                            const div = document.createElement('div');
+                            div.className = 'form-check mb-1';
+                            div.innerHTML = `
+                                <input class="form-check-input" type="checkbox" name="topic_ids[]" value="${topic.id}" id="topic_${topic.id}" checked>
+                                <label class="form-check-label user-select-none" for="topic_${topic.id}">${topic.name}</label>
+                            `;
+                            container.appendChild(div);
+                        }
+
+                        nameInput.value = '';
+                        if (modalInstance) {
+                            modalInstance.hide();
+                        } else if (typeof $ !== 'undefined') {
+                            $('#quickAddTopicModal').modal('hide');
+                        }
+
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công!',
+                                text: 'Đã thêm Topic: ' + topic.name,
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    } else {
+                        nameInput.classList.add('is-invalid');
+                        let msg = 'Đã có lỗi xảy ra.';
+                        if (res.body.errors && res.body.errors.name) {
+                            msg = res.body.errors.name[0];
+                        } else if (res.body.message) {
+                            msg = res.body.message;
+                        }
+                        errorFeedback.textContent = msg;
+                    }
+                })
+                .catch(err => {
+                    btnQuickAdd.disabled = false;
+                    btnQuickAdd.innerHTML = '<i class="ri-check-line me-1"></i> Lưu và Chọn';
+                    nameInput.classList.add('is-invalid');
+                    errorFeedback.textContent = 'Không thể kết nối đến máy chủ. Vui lòng thử lại.';
+                });
+            });
+
+            nameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    btnQuickAdd.click();
+                }
+            });
+        }
 
         // Top button add question
         const btnAddTop = document.getElementById('btn-add-question-top');
