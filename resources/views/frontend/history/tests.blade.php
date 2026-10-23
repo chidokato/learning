@@ -26,6 +26,8 @@
    <!-- Theme / Main CSS -->
    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">          
    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v=1.0.1">   
+   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v=1.0.1">   
+   <link rel="stylesheet" href="{{ asset('assets/css/header-custom.css') }}?v=1.0.1">   
 
    <style>
       .sidebar-widget {
