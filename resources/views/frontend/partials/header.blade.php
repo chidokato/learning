@@ -34,7 +34,13 @@
                @auth
                   <div class="auth-logged-in-pill">
                      <a href="{{ route('frontend.profile') }}" class="user-profile-link" title="Xem hồ sơ cá nhân">
-                        <span class="user-avatar-mini"><i class="fas fa-user"></i></span>
+                        <span class="user-avatar-mini">
+                           @if(!empty(Auth::user()->avatar))
+                              <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                           @else
+                              <i class="fas fa-user"></i>
+                           @endif
+                        </span>
                         <span class="user-name-text">{{ Auth::user()->name }}</span>
                      </a>
                      @if(Auth::user()->isAdmin())

@@ -27,7 +27,7 @@
    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v=1.0.1">   
    <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v=1.0.1">   
    <link rel="stylesheet" href="{{ asset('assets/css/header-custom.css') }}?v=1.0.1">   
-   <link rel="stylesheet" href="{{ asset('assets/css/auth.css') }}?v=1.0.1">
+   <link rel="stylesheet" href="{{ asset('assets/css/auth.css') }}?v=1.0.2">
 </head>
 
 <body>
@@ -67,6 +67,42 @@
                                        @endforeach
                                     </ul>
                                  </div>
+                              </div>
+                           </div>
+                        @endif
+
+                        @if (session('error'))
+                           <div class="auth-alert auth-alert-danger">
+                              <div class="d-flex align-items-center gap-2">
+                                 <i class="fas fa-exclamation-circle flex-shrink-0"></i>
+                                 <div>{{ session('error') }}</div>
+                              </div>
+                           </div>
+                        @endif
+
+                        @if (session('warning'))
+                           <div class="auth-alert auth-alert-warning">
+                              <div class="d-flex align-items-center gap-2">
+                                 <i class="fas fa-exclamation-triangle flex-shrink-0"></i>
+                                 <div>{{ session('warning') }}</div>
+                              </div>
+                           </div>
+                        @endif
+
+                        @if (session('success'))
+                           <div class="auth-alert auth-alert-success">
+                              <div class="d-flex align-items-center gap-2">
+                                 <i class="fas fa-check-circle flex-shrink-0"></i>
+                                 <div>{{ session('success') }}</div>
+                              </div>
+                           </div>
+                        @endif
+
+                        @if (session('info'))
+                           <div class="auth-alert auth-alert-info">
+                              <div class="d-flex align-items-center gap-2">
+                                 <i class="fas fa-info-circle flex-shrink-0"></i>
+                                 <div>{{ session('info') }}</div>
                               </div>
                            </div>
                         @endif
@@ -160,7 +196,7 @@
 
                            <!-- Google Register -->
                            <div>
-                              <a href="{{ route('auth.google') }}" class="auth-btn-google">
+                              <a href="{{ route('auth.google') }}" class="auth-btn-google" id="btnGoogleRegister">
                                  <svg width="18" height="18" viewBox="0 0 24 24">
                                     <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
                                     <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
@@ -215,9 +251,24 @@
          }
       }
 
-      function showDemoToast(provider) {
-         alert('Tính năng đăng ký nhanh với ' + provider + ' đang được hoàn thiện. Vui lòng sử dụng đăng ký bằng Email / Mật khẩu để tiếp tục!');
-      }
+      // Visual feedback when clicking Google Register
+      document.addEventListener('DOMContentLoaded', function() {
+         var googleBtn = document.getElementById('btnGoogleRegister');
+         if (googleBtn) {
+            googleBtn.addEventListener('click', function(e) {
+               if (this.dataset.submitting === 'true') {
+                  e.preventDefault();
+                  return;
+               }
+               this.dataset.submitting = 'true';
+               this.classList.add('is-loading');
+               var span = this.querySelector('span');
+               if (span) {
+                  span.textContent = 'Đang chuyển hướng sang Google...';
+               }
+            });
+         }
+      });
    </script>
 </body>
 </html>
