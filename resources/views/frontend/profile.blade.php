@@ -224,6 +224,52 @@
          color: #64748b !important;
          cursor: not-allowed !important;
       }
+
+      /* Khối liên kết tài khoản Google */
+      .oauth-connect-box {
+         background: #f8fafc;
+         border: 1px solid #e2e8f0;
+         border-radius: 12px;
+         padding: 16px 20px;
+         transition: all 0.2s ease;
+      }
+      .oauth-connect-box:hover {
+         border-color: #cbd5e1;
+      }
+      .btn-google-action {
+         display: inline-flex;
+         align-items: center;
+         gap: 8px;
+         font-size: 13px;
+         font-weight: 600;
+         padding: 8px 16px;
+         border-radius: 6px;
+         transition: all 0.2s ease;
+         text-decoration: none !important;
+         cursor: pointer;
+      }
+      .btn-google-connect {
+         background: #ffffff;
+         color: #1f2937 !important;
+         border: 1px solid #d1d5db;
+         box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      }
+      .btn-google-connect:hover {
+         background: #f3f4f6;
+         border-color: #9ca3af;
+         color: #111827 !important;
+         box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      }
+      .btn-google-unlink {
+         background: #ffffff;
+         color: #dc2626 !important;
+         border: 1px solid #fecaca;
+      }
+      .btn-google-unlink:hover {
+         background: #fef2f2;
+         border-color: #f87171;
+         color: #b91c1c !important;
+      }
    </style>
 </head>
 
@@ -280,6 +326,61 @@
                            </div>
                         </div>
 
+                        <!-- Khu vực liên kết Google -->
+                        <div class="pt-20 border-top mt-20">
+                           <div class="d-flex align-items-center justify-content-between mb-2">
+                              <label class="form-label mb-0 d-flex align-items-center gap-2">
+                                 <i class="fab fa-google text-danger"></i> Liên kết tài khoản Google
+                              </label>
+                           </div>
+                           
+                           <div class="oauth-connect-box d-flex align-items-center justify-content-between flex-wrap gap-3">
+                              <div class="d-flex align-items-center gap-3">
+                                 <div style="width: 44px; height: 44px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); flex-shrink: 0;">
+                                    <svg width="22" height="22" viewBox="0 0 48 48">
+                                       <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                                       <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                                       <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.79l7.97-6.2z"/>
+                                       <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                                    </svg>
+                                 </div>
+                                 <div>
+                                    <div class="d-flex align-items-center gap-2">
+                                       <span style="font-size: 14px; font-weight: 600; color: #1e293b;">Google Account</span>
+                                       @if(!empty(Auth::user()->google_id))
+                                          <span class="badge" style="background: rgba(16, 185, 129, 0.12); color: #059669; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px;">
+                                             <i class="fas fa-check-circle me-1"></i> Đã liên kết
+                                          </span>
+                                       @else
+                                          <span class="badge" style="background: #f1f5f9; color: #64748b; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px;">
+                                             <i class="far fa-circle me-1"></i> Chưa liên kết
+                                          </span>
+                                       @endif
+                                    </div>
+                                    <p class="text-muted mb-0" style="font-size: 12.5px; margin-top: 2px;">
+                                       @if(!empty(Auth::user()->google_id))
+                                          Tài khoản này đã được kết nối với Google. Bạn có thể sử dụng nút Đăng nhập bằng Google để vào hệ thống bất kỳ lúc nào.
+                                       @else
+                                          Liên kết tài khoản Google để có thể đăng nhập nhanh chóng chỉ với một cú nhấp chuột mà không cần gõ mật khẩu.
+                                       @endif
+                                    </p>
+                                 </div>
+                              </div>
+
+                              <div>
+                                 @if(!empty(Auth::user()->google_id))
+                                    <button type="button" onclick="confirmUnlinkGoogle()" class="btn-google-action btn-google-unlink">
+                                       <i class="far fa-unlink me-1"></i> Hủy liên kết
+                                    </button>
+                                 @else
+                                    <a href="{{ route('auth.google') }}" class="btn-google-action btn-google-connect">
+                                       <i class="fab fa-google text-danger me-1"></i> Liên kết Google ngay
+                                    </a>
+                                 @endif
+                              </div>
+                           </div>
+                        </div>
+
                         <!-- Đổi mật khẩu section -->
                         <div class="pt-20 border-top mt-20">
                            @php
@@ -325,6 +426,10 @@
                            </button>
                         </div>
                      </form>
+
+                     <form id="unlinkGoogleForm" action="{{ route('frontend.profile.unlink-google') }}" method="POST" class="d-none">
+                        @csrf
+                     </form>
                   </div>
                </div>
 
@@ -354,6 +459,11 @@
    <script src="{{ asset('assets/js/slider.js') }}"></script>                
    <script src="{{ asset('assets/js/main.js') }}"></script>  
    <script>
+      function confirmUnlinkGoogle() {
+         if (confirm('Bạn có chắc chắn muốn hủy liên kết với tài khoản Google này? Sau khi hủy, bạn sẽ đăng nhập bằng email và mật khẩu bình thường.')) {
+            document.getElementById('unlinkGoogleForm').submit();
+         }
+      }
       $(document).ready(function() {
          $('#changePasswordToggle').on('change', function() {
             var isChecked = $(this).is(':checked');

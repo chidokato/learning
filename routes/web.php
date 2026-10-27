@@ -198,6 +198,7 @@ Route::controller(AuthController::class)->group(function () {
 // Google Authentication Routes
 Route::get('auth/google', [\App\Http\Controllers\GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [\App\Http\Controllers\GoogleAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+Route::post('profile/unlink-google', [\App\Http\Controllers\GoogleAuthController::class, 'unlinkGoogle'])->name('frontend.profile.unlink-google')->middleware('auth');
 
 // AI Chatbot Widget API Route
 Route::post('/api/chatbot/ask', [ChatbotController::class, 'ask'])->name('api.chatbot.ask');

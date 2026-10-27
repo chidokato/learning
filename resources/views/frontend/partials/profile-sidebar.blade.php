@@ -168,8 +168,8 @@
    @if(Auth::check())
       <div class="profile-user-info">
          <div class="profile-avatar-box">
-            @if($currentUser->avatar && file_exists(public_path($currentUser->avatar)))
-               <img src="{{ asset($currentUser->avatar) }}" alt="{{ $currentUser->name }}">
+            @if(!empty($currentUser->avatar))
+               <img src="{{ Str::startsWith($currentUser->avatar, ['http://', 'https://']) ? $currentUser->avatar : asset($currentUser->avatar) }}" alt="{{ $currentUser->name }}" onerror="this.style.display='none';">
             @else
                {{ mb_strtoupper(mb_substr($currentUser->name ?? 'U', 0, 1, 'UTF-8'), 'UTF-8') }}
             @endif
@@ -177,11 +177,18 @@
          <div class="overflow-hidden flex-grow-1">
             <h5 class="profile-user-name text-truncate">{{ $currentUser->name }}</h5>
             <div class="profile-user-email text-truncate">{{ $currentUser->email }}</div>
-            @if($currentUser->isAdmin())
-               <span class="profile-role-badge badge-admin"><i class="far fa-shield-alt"></i> Quản trị viên</span>
-            @else
-               <span class="profile-role-badge"><i class="far fa-user-graduate"></i> Học viên</span>
-            @endif
+            <div class="d-flex align-items-center flex-wrap gap-1 mt-1">
+               @if(!empty($currentUser->google_id))
+                  <span class="badge" style="background: rgba(66, 133, 244, 0.1); color: #1a73e8; font-size: 10.5px; font-weight: 600; padding: 2px 6px; border-radius: 4px;">
+                     <i class="fab fa-google me-1"></i> Google
+                  </span>
+               @endif
+               @if($currentUser->isAdmin())
+                  <span class="profile-role-badge badge-admin"><i class="far fa-shield-alt"></i> Quản trị viên</span>
+               @else
+                  <span class="profile-role-badge"><i class="far fa-user-graduate"></i> Học viên</span>
+               @endif
+            </div>
          </div>
       </div>
    @else

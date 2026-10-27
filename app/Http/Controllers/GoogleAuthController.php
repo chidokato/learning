@@ -149,9 +149,20 @@ class GoogleAuthController extends Controller
         // 1. Trường hợp người dùng đang đăng nhập sẵn và thực hiện liên kết Google
         if (Auth::check()) {
             $currentUser = Auth::user();
+
+            // Kiểm tra xem Google ID này đã được liên kết với tài khoản khác chưa
             if ($hasGoogleId) {
+                $existingWithGoogle = User::where('google_id', $googleUser->getId())
+                    ->where('id', '!=', $currentUser->id)
+                    ->first();
+
+                if ($existingWithGoogle) {
+                    return redirect()->route('frontend.profile')->with('error', 'Tài khoản Google này đã được liên kết với một tài khoản khác (' . $existingWithGoogle->email . ').');
+                }
+
                 $currentUser->google_id = $googleUser->getId();
             }
+
             $avatar = $googleUser->getAvatar();
             if ($avatar && (empty($currentUser->avatar) || str_contains($currentUser->avatar, 'googleusercontent.com'))) {
                 $currentUser->avatar = Str::limit($avatar, 250, '');
@@ -222,5 +233,25 @@ class GoogleAuthController extends Controller
         Auth::login($newUser, true);
 
         return redirect()->intended(route('frontend.home'))->with('success', 'Chào mừng bạn! Đăng ký và đăng nhập thành công bằng tài khoản Google.');
+    }
+
+    /**
+     * Hủy liên kết tài khoản Google
+     */
+    public function unlinkGoogle()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('frontend.login');
+        }
+
+        $user = Auth::user();
+        if (empty($user->google_id)) {
+            return redirect()->route('frontend.profile')->with('info', 'Tài khoản chưa từng liên kết với Google.');
+        }
+
+        $user->google_id = null;
+        $user->save();
+
+        return redirect()->route('frontend.profile')->with('success', 'Đã hủy liên kết tài khoản Google thành công.');
     }
 }
