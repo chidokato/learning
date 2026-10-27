@@ -152,6 +152,7 @@
                                 'Hệ thống' => [
                                     ['label' => 'SEO', 'icon' => 'ri-search-eye-line', 'route' => 'backend.seo.edit', 'active' => request()->routeIs('backend.seo.*')],
                                     ['label' => 'Setting', 'icon' => 'ri-settings-3-line', 'route' => 'backend.settings.edit', 'active' => request()->routeIs('backend.settings.*')],
+                                    ['label' => 'Cấu hình Google', 'icon' => 'ri-google-fill', 'route' => 'backend.google-auth.index', 'active' => request()->routeIs('backend.google-auth.*')],
                                     ['label' => 'User', 'icon' => 'ri-user-3-line', 'route' => 'backend.users.index', 'active' => request()->routeIs('backend.users.*')],
                                 ]
                             ];
@@ -223,7 +224,7 @@
         data-upload-url="{{ route('backend.admin.uploads.editor-image') }}"
         data-success-message="{{ session('success', '') }}"
         data-error-message="{{ session('error', '') }}"
-        data-validation-message="{{ $errors->any() ? collect($errors->all())->implode(' | ') : '' }}"
+        data-validation-message="{{ (isset($errors) && $errors->any()) ? collect($errors->all())->implode(' | ') : '' }}"
     ></div>
 
     <button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top">

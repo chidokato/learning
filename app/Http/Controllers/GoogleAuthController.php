@@ -5,19 +5,44 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use App\Services\GoogleAuthConfigService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
 class GoogleAuthController extends Controller
 {
     /**
+     * Tự động đảm bảo cột google_id tồn tại trong bảng users (tránh lỗi 1054 Unknown column)
+     */
+    protected function ensureGoogleIdColumnExists(): bool
+    {
+        try {
+            if (Schema::hasColumn('users', 'google_id')) {
+                return true;
+            }
+
+            // Tự động thêm cột google_id nếu chưa có trong DB (ví dụ máy chủ chưa chạy migration)
+            Schema::table('users', function ($table) {
+                $table->string('google_id')->nullable()->after('email')->index();
+            });
+
+            Log::info('Auto-created missing column google_id in users table successfully.');
+            return true;
+        } catch (\Throwable $e) {
+            Log::warning('Could not auto-add google_id column: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Xác định Callback URL một cách an toàn và tự động tương thích (Local & Production HTTPS)
      */
     protected function getRedirectUrl(): string
     {
-        $configured = config('services.google.redirect');
+        $configured = GoogleAuthConfigService::get('redirect_uri') ?: config('services.google.redirect');
         $host = request()->getHost();
 
         // Nếu chạy trên domain chính thức indochinerealestate.vn thì luôn dùng URL callback HTTPS chuẩn
@@ -42,14 +67,29 @@ class GoogleAuthController extends Controller
      */
     public function redirectToGoogle()
     {
-        $clientId = config('services.google.client_id');
-        $clientSecret = config('services.google.client_secret');
+        // 1. Kiểm tra bật/tắt tính năng
+        if (!GoogleAuthConfigService::get('is_enabled', true)) {
+            return redirect()->route('frontend.login')->with('warning', 'Tính năng đăng nhập bằng Google hiện đang tạm tắt để bảo trì.');
+        }
+
+        $clientId = GoogleAuthConfigService::get('client_id') ?: config('services.google.client_id');
+        $clientSecret = GoogleAuthConfigService::get('client_secret') ?: config('services.google.client_secret');
 
         if (empty($clientId) || empty($clientSecret)) {
-            return redirect()->route('frontend.login')->with('warning', 'Hệ thống chưa cấu hình GOOGLE_CLIENT_ID và GOOGLE_CLIENT_SECRET trong file .env. Vui lòng thiết lập để kích hoạt tính năng này.');
+            return redirect()->route('frontend.login')->with('warning', 'Hệ thống chưa cấu hình GOOGLE_CLIENT_ID và GOOGLE_CLIENT_SECRET. Quản trị viên vui lòng thiết lập trong trang Quản trị > Cấu hình Google.');
         }
 
         $redirectUrl = $this->getRedirectUrl();
+
+        // Tự động kiểm tra và tạo cột google_id trong DB ngay khi người dùng bấm nút đăng nhập
+        $this->ensureGoogleIdColumnExists();
+
+        // Cập nhật runtime config cho Socialite
+        config([
+            'services.google.client_id' => $clientId,
+            'services.google.client_secret' => $clientSecret,
+            'services.google.redirect' => $redirectUrl,
+        ]);
 
         return Socialite::driver('google')
             ->redirectUrl($redirectUrl)
@@ -71,16 +111,22 @@ class GoogleAuthController extends Controller
             return redirect()->route('frontend.login')->with('error', 'Đăng nhập Google không thành công: ' . $error);
         }
 
-        $clientId = config('services.google.client_id');
-        $clientSecret = config('services.google.client_secret');
+        $clientId = GoogleAuthConfigService::get('client_id') ?: config('services.google.client_id');
+        $clientSecret = GoogleAuthConfigService::get('client_secret') ?: config('services.google.client_secret');
 
         if (empty($clientId) || empty($clientSecret)) {
-            return redirect()->route('frontend.login')->with('warning', 'Hệ thống chưa cấu hình GOOGLE_CLIENT_ID và GOOGLE_CLIENT_SECRET trong file .env.');
+            return redirect()->route('frontend.login')->with('warning', 'Hệ thống chưa cấu hình Google Client ID & Secret.');
         }
 
-        try {
-            $redirectUrl = $this->getRedirectUrl();
+        $redirectUrl = $this->getRedirectUrl();
 
+        config([
+            'services.google.client_id' => $clientId,
+            'services.google.client_secret' => $clientSecret,
+            'services.google.redirect' => $redirectUrl,
+        ]);
+
+        try {
             // Sử dụng stateless() để tránh lỗi InvalidStateException do session / cookie cross-site
             $googleUser = Socialite::driver('google')
                 ->redirectUrl($redirectUrl)
@@ -97,10 +143,15 @@ class GoogleAuthController extends Controller
             return redirect()->route('frontend.login')->with('error', 'Không thể lấy thông tin email từ tài khoản Google của bạn.');
         }
 
-        // Trường hợp người dùng đang đăng nhập sẵn và thực hiện liên kết Google
+        // Đảm bảo cột google_id tồn tại trong DB, nếu chưa có sẽ tự động tạo ngay
+        $hasGoogleId = $this->ensureGoogleIdColumnExists();
+
+        // 1. Trường hợp người dùng đang đăng nhập sẵn và thực hiện liên kết Google
         if (Auth::check()) {
             $currentUser = Auth::user();
-            $currentUser->google_id = $googleUser->getId();
+            if ($hasGoogleId) {
+                $currentUser->google_id = $googleUser->getId();
+            }
             $avatar = $googleUser->getAvatar();
             if ($avatar && (empty($currentUser->avatar) || str_contains($currentUser->avatar, 'googleusercontent.com'))) {
                 $currentUser->avatar = Str::limit($avatar, 250, '');
@@ -109,8 +160,11 @@ class GoogleAuthController extends Controller
             return redirect()->route('frontend.profile')->with('success', 'Đã liên kết tài khoản Google thành công!');
         }
 
-        // 1. Kiểm tra tài khoản đã từng đăng nhập bằng google_id
-        $user = User::where('google_id', $googleUser->getId())->first();
+        // 2. Kiểm tra tài khoản đã từng đăng nhập bằng google_id
+        $user = null;
+        if ($hasGoogleId) {
+            $user = User::where('google_id', $googleUser->getId())->first();
+        }
 
         if ($user) {
             $avatar = $googleUser->getAvatar();
@@ -126,11 +180,13 @@ class GoogleAuthController extends Controller
             return redirect()->intended(route('frontend.home'))->with('success', 'Đăng nhập thành công bằng tài khoản Google!');
         }
 
-        // 2. Kiểm tra nếu email đã tồn tại (đã đăng ký trước đó bằng form thông thường)
+        // 3. Kiểm tra nếu email đã tồn tại (đã đăng ký trước đó bằng form thông thường)
         $existingUser = User::where('email', $googleUser->getEmail())->first();
 
         if ($existingUser) {
-            $existingUser->google_id = $googleUser->getId();
+            if ($hasGoogleId) {
+                $existingUser->google_id = $googleUser->getId();
+            }
             $avatar = $googleUser->getAvatar();
             if ($avatar && (empty($existingUser->avatar) || str_contains($existingUser->avatar, 'googleusercontent.com'))) {
                 $existingUser->avatar = Str::limit($avatar, 250, '');
@@ -144,19 +200,24 @@ class GoogleAuthController extends Controller
             return redirect()->intended(route('frontend.home'))->with('success', 'Đăng nhập Google thành công! Tài khoản của bạn đã được liên kết.');
         }
 
-        // 3. Người dùng mới hoàn toàn -> Tự động tạo tài khoản học viên
+        // 4. Người dùng mới hoàn toàn -> Tự động tạo tài khoản học viên
         $userName = $googleUser->getName() ?: ($googleUser->getNickname() ?: 'Học viên');
         $avatar = $googleUser->getAvatar();
 
-        $newUser = User::create([
+        $userData = [
             'name' => $userName,
             'email' => $googleUser->getEmail(),
-            'google_id' => $googleUser->getId(),
             'password' => Hash::make(Str::random(32)),
             'email_verified_at' => now(),
             'avatar' => $avatar ? Str::limit($avatar, 250, '') : null,
             'permission' => 5, // Quyền học viên (Student)
-        ]);
+        ];
+
+        if ($hasGoogleId) {
+            $userData['google_id'] = $googleUser->getId();
+        }
+
+        $newUser = User::create($userData);
 
         Auth::login($newUser, true);
 

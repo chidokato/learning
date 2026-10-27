@@ -148,6 +148,7 @@
                               </button>
                            </div>
 
+                           @if (\App\Services\GoogleAuthConfigService::get('is_enabled', true))
                            <!-- Divider -->
                            <div class="auth-divider">
                               <span>hoặc tiếp tục với</span>
@@ -165,6 +166,7 @@
                                  <span>Đăng nhập với Google</span>
                               </a>
                            </div>
+                           @endif
 
                            <!-- Switch to Register -->
                            <p class="auth-switch-text">

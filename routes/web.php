@@ -281,6 +281,12 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::put('settings', 'update')->name('settings.update');
     });
 
+    Route::controller(\App\Http\Controllers\AdminGoogleAuthController::class)->group(function () {
+        Route::get('google-auth', 'index')->name('google-auth.index');
+        Route::post('google-auth', 'update')->name('google-auth.update');
+        Route::match(['get', 'post'], 'google-auth/fix-db', 'fixDatabase')->name('google-auth.fix-db');
+    });
+
     Route::controller(AdminChatbotController::class)->group(function () {
         Route::get('chatbot', 'edit')->name('chatbot.edit');
         Route::put('chatbot', 'update')->name('chatbot.update');
