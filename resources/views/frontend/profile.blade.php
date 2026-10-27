@@ -460,8 +460,37 @@
    <script src="{{ asset('assets/js/main.js') }}"></script>  
    <script>
       function confirmUnlinkGoogle() {
-         if (confirm('Bạn có chắc chắn muốn hủy liên kết với tài khoản Google này? Sau khi hủy, bạn sẽ đăng nhập bằng email và mật khẩu bình thường.')) {
-            document.getElementById('unlinkGoogleForm').submit();
+         const showCenterModal = () => {
+            Swal.fire({
+               title: 'Hủy liên kết Google?',
+               text: 'Sau khi hủy, bạn sẽ đăng nhập bằng email và mật khẩu bình thường.',
+               icon: 'warning',
+               showCancelButton: true,
+               confirmButtonColor: '#dc2626',
+               cancelButtonColor: '#64748b',
+               confirmButtonText: '<i class="far fa-unlink me-1"></i> Đồng ý hủy',
+               cancelButtonText: 'Không, giữ lại',
+               reverseButtons: true,
+               focusCancel: true
+            }).then((result) => {
+               if (result.isConfirmed) {
+                  document.getElementById('unlinkGoogleForm').submit();
+               }
+            });
+         };
+
+         if (typeof Swal !== 'undefined') {
+            showCenterModal();
+         } else {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
+            script.onload = showCenterModal;
+            script.onerror = () => {
+               if (confirm('Bạn có chắc chắn muốn hủy liên kết với tài khoản Google này? Sau khi hủy, bạn sẽ đăng nhập bằng email và mật khẩu bình thường.')) {
+                  document.getElementById('unlinkGoogleForm').submit();
+               }
+            };
+            document.head.appendChild(script);
          }
       }
       $(document).ready(function() {
