@@ -8,6 +8,7 @@ use App\Models\Setting;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Paginator::useBootstrapFive();
+
         View::composer('*', function ($view) {
             $view->with('siteSetting', Cache::remember('site_setting', 1800, function () {
                 return Setting::query()->firstOrCreate([]);

@@ -12,6 +12,7 @@ use App\Imports\TestImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class AdminTestController extends Controller
 {
@@ -63,15 +64,20 @@ class AdminTestController extends Controller
             }
             $primaryTopicId = !empty($topicIds) ? $topicIds[0] : ($request->topic_id ?: null);
 
-            $test = Test::create([
+            $createData = [
                 'post_id' => $request->post_id ?: null,
-                'topic_id' => $primaryTopicId,
                 'title' => $request->title,
                 'pass_score' => $request->pass_score,
                 'duration' => $request->duration ? (int)$request->duration : 0,
-            ]);
+            ];
 
-            if (!empty($topicIds)) {
+            if (Schema::hasColumn('tests', 'topic_id')) {
+                $createData['topic_id'] = $primaryTopicId;
+            }
+
+            $test = Test::create($createData);
+
+            if (!empty($topicIds) && Schema::hasTable('test_topic')) {
                 $test->topics()->sync($topicIds);
             }
 
@@ -103,15 +109,22 @@ class AdminTestController extends Controller
                 }
                 $primaryTopicId = !empty($topicIds) ? $topicIds[0] : ($request->topic_id ?: null);
 
-                $test->update([
+                $updateData = [
                     'title' => $request->title,
                     'post_id' => $request->post_id ?: null,
-                    'topic_id' => $primaryTopicId,
                     'pass_score' => $request->pass_score,
                     'duration' => $request->duration ? (int)$request->duration : 0,
-                ]);
+                ];
 
-                $test->topics()->sync($topicIds);
+                if (Schema::hasColumn('tests', 'topic_id')) {
+                    $updateData['topic_id'] = $primaryTopicId;
+                }
+
+                $test->update($updateData);
+
+                if (Schema::hasTable('test_topic')) {
+                    $test->topics()->sync($topicIds);
+                }
 
                 if ($request->filled('questions_data')) {
                     $questionsData = json_decode($request->questions_data, true);

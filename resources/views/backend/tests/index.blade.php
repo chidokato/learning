@@ -157,7 +157,9 @@
                             @endforelse
                         </tbody>
                     </table>
-                    {{ $tests->links() }}
+                    <div class="d-flex justify-content-end mt-3">
+                        {{ $tests->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>
