@@ -303,35 +303,36 @@
 <div class="row g-3">
    <!-- ================= CỘT TRÁI (Nội dung câu hỏi và đáp án) ================= -->
    <div class="col-lg-8 col-xl-8 order-lg-1 order-2">
-      <!-- Thanh chú thích (Legend) -->
+      <!-- Thanh chú thích (Legend) kết hợp thông báo gọn gàng trên 1 dòng -->
       <div class="legend-bar">
-         <div class="fw-bold text-dark fs-12">
-            <i class="fa-solid fa-clipboard-check text-primary me-1"></i> Chi tiết bài làm:
+         <div class="d-flex align-items-center flex-wrap gap-2">
+            <div class="fw-bold text-dark fs-12">
+               <i class="fa-solid fa-clipboard-check text-primary me-1"></i> Chi tiết bài làm:
+            </div>
+            @if(empty($userAnswers))
+               <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle fw-normal fs-11 py-1 px-2 d-inline-flex align-items-center gap-1">
+                  <i class="fa-solid fa-circle-info"></i> Lượt thi này chưa lưu phương án đã chọn (hiển thị đáp án chuẩn)
+               </span>
+            @endif
          </div>
+
          <div class="legend-items">
-            <div class="legend-item">
-               <span class="legend-dot" style="background: #16a34a;"></span>
-               <span>Bạn chọn đúng</span>
-            </div>
-            <div class="legend-item">
-               <span class="legend-dot" style="background: #dc2626;"></span>
-               <span>Bạn chọn sai</span>
-            </div>
+            @if(!empty($userAnswers))
+               <div class="legend-item">
+                  <span class="legend-dot" style="background: #16a34a;"></span>
+                  <span>Bạn chọn đúng</span>
+               </div>
+               <div class="legend-item">
+                  <span class="legend-dot" style="background: #dc2626;"></span>
+                  <span>Bạn chọn sai</span>
+               </div>
+            @endif
             <div class="legend-item">
                <span class="legend-dot" style="background: #ffffff; border: 1.5px dashed #16a34a;"></span>
                <span>Đáp án đúng của đề</span>
             </div>
          </div>
       </div>
-
-      @if(empty($userAnswers))
-         <div class="alert alert-warning border-warning-subtle d-flex align-items-center gap-2 mb-3 py-2 px-3" style="border-radius: 8px;">
-            <i class="fa-solid fa-circle-info fs-16"></i>
-            <div class="fs-12">
-               Lượt làm bài này được thực hiện trước khi hệ thống lưu chi tiết phương án chọn. Dưới đây là đáp án chuẩn của đề thi để bạn đối chiếu.
-            </div>
-         </div>
-      @endif
 
       <!-- Danh sách câu hỏi và đáp án -->
       <div class="review-questions-wrap">
