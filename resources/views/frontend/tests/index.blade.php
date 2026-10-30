@@ -390,6 +390,73 @@
       justify-content: center;
    }
 
+   /* Tests Pagination */
+   .tests-pagination-wrapper {
+      border-top: 1px solid #e9ebec !important;
+   }
+   .pagination-info {
+      font-size: 13.5px;
+      color: #64748b;
+   }
+   .custom-tests-pagination {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 0;
+      padding-left: 0;
+      list-style: none;
+   }
+   .custom-tests-pagination .page-item {
+      margin: 0;
+   }
+   .custom-tests-pagination .page-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 36px;
+      padding: 0 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px !important;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+   }
+   .custom-tests-pagination .page-link:hover {
+      background: #f0fdf4;
+      border-color: #03594e;
+      color: #03594e;
+   }
+   .custom-tests-pagination .page-item.active .page-link {
+      background: #03594e !important;
+      border-color: #03594e !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 6px rgba(3, 89, 78, 0.25);
+      cursor: default;
+   }
+   .custom-tests-pagination .page-item.disabled .page-link {
+      background: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+      color: #cbd5e1 !important;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
+   }
+   .custom-tests-pagination .page-ellipsis {
+      min-width: 24px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      font-weight: 700;
+   }
+
    @media (max-width: 991.98px) {
       .test-list-item {
          flex-direction: column;
@@ -570,6 +637,16 @@
       @endforeach
    </div>
 
+   <!-- Phân trang 15 items/trang -->
+   <div id="testsPaginationWrapper" class="tests-pagination-wrapper d-flex align-items-center justify-content-between flex-wrap gap-3 mt-4 pt-3 border-top">
+      <div class="pagination-info text-muted fs-13" id="paginationInfoText">
+         Hiển thị <span id="pageStartItem" class="fw-bold text-dark">1</span> - <span id="pageEndItem" class="fw-bold text-dark">15</span> trên tổng số <span id="pageTotalItems" class="fw-bold text-dark">{{ $tests->count() }}</span> bài thi
+      </div>
+      <nav aria-label="Phân trang bài kiểm tra" id="testsPaginationNav">
+         <ul class="pagination pagination-sm mb-0 custom-tests-pagination" id="testsPaginationList"></ul>
+      </nav>
+   </div>
+
    <!-- Empty state khi tìm kiếm không có kết quả -->
    <div id="noSearchMatches" class="empty-test-card d-none mt-3">
       <div class="empty-icon-circle mb-3">
@@ -603,6 +680,7 @@
       }
       $('.tests-select-wrapper .nice-select').remove();
 
+      const ITEMS_PER_PAGE = 15;
       const $searchInput = $('#testSearchInput');
       const $clearBtn = $('#clearSearchBtn');
       const $topicSelect = $('#topicFilterSelect');
@@ -611,9 +689,18 @@
       const $noMatches = $('#noSearchMatches');
       const $visibleCount = $('#visibleTestCount');
       const $btnReset = $('#btnResetSearch');
+      const $paginationWrapper = $('#testsPaginationWrapper');
+      const $paginationNav = $('#testsPaginationNav');
+      const $paginationList = $('#testsPaginationList');
       
       let currentStatus = 'all';
       let currentTopic = 'all';
+      let matchedItems = [];
+
+      // Đọc số trang ban đầu từ query param ?page=X nếu có
+      const urlParams = new URLSearchParams(window.location.search);
+      let initialPage = parseInt(urlParams.get('page')) || 1;
+      let currentPage = Math.max(1, initialPage);
 
       // Chuẩn hóa tiếng Việt không dấu
       function removeVietnameseTones(str) {
@@ -654,8 +741,141 @@
          $('#optStatusFailed').text(`Chưa đạt (${totalFailed})`);
       }
 
-      // Lọc danh sách thời gian thực
-      function filterTests() {
+      // Render danh sách nút phân trang
+      function renderPagination(totalPages) {
+         $paginationList.empty();
+
+         if (totalPages <= 1) {
+            $paginationNav.addClass('d-none');
+            return;
+         }
+         $paginationNav.removeClass('d-none');
+
+         // 1. Nút Trước (Prev)
+         const isPrevDisabled = (currentPage === 1);
+         $paginationList.append(`
+            <li class="page-item ${isPrevDisabled ? 'disabled' : ''}">
+               <a class="page-link" href="javascript:void(0)" data-page="${currentPage - 1}" title="Trang trước" aria-label="Trang trước">
+                  <i class="fa-solid fa-chevron-left"></i>
+               </a>
+            </li>
+         `);
+
+         // 2. Danh sách trang
+         const delta = 2;
+         const range = [];
+         for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+            range.push(i);
+         }
+
+         if (currentPage - delta > 2) {
+            range.unshift('...');
+         }
+         if (currentPage + delta < totalPages - 1) {
+            range.push('...');
+         }
+
+         range.unshift(1);
+         if (totalPages > 1 && !range.includes(totalPages)) {
+            range.push(totalPages);
+         }
+
+         // Tạo nút bấm từ range
+         const finalPages = [];
+         range.forEach(p => {
+            if (p === '...' || !finalPages.includes(p)) {
+               finalPages.push(p);
+            }
+         });
+
+         finalPages.forEach(p => {
+            if (p === '...') {
+               $paginationList.append(`<li class="page-item disabled"><span class="page-ellipsis">…</span></li>`);
+            } else {
+               const isActive = (p === currentPage);
+               $paginationList.append(`
+                  <li class="page-item ${isActive ? 'active' : ''}">
+                     <a class="page-link" href="javascript:void(0)" data-page="${p}">${p}</a>
+                  </li>
+               `);
+            }
+         });
+
+         // 3. Nút Sau (Next)
+         const isNextDisabled = (currentPage === totalPages);
+         $paginationList.append(`
+            <li class="page-item ${isNextDisabled ? 'disabled' : ''}">
+               <a class="page-link" href="javascript:void(0)" data-page="${currentPage + 1}" title="Trang sau" aria-label="Trang sau">
+                  <i class="fa-solid fa-chevron-right"></i>
+               </a>
+            </li>
+         `);
+      }
+
+      // Hiển thị các bài thi của trang hiện tại
+      function renderPage(shouldScroll = false) {
+         const totalMatched = matchedItems.length;
+         const totalPages = Math.ceil(totalMatched / ITEMS_PER_PAGE) || 1;
+
+         if (currentPage > totalPages) currentPage = totalPages;
+         if (currentPage < 1) currentPage = 1;
+
+         // Ẩn toàn bộ bài thi
+         $items.hide();
+
+         if (totalMatched === 0) {
+            $noMatches.removeClass('d-none');
+            $paginationWrapper.addClass('d-none');
+            $visibleCount.text(0);
+            return;
+         }
+
+         $noMatches.addClass('d-none');
+         $paginationWrapper.removeClass('d-none');
+
+         const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+         const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalMatched);
+
+         // Hiển thị các item thuộc trang hiện tại
+         for (let i = startIndex; i < endIndex; i++) {
+            $(matchedItems[i]).show();
+         }
+
+         // Cập nhật thông số hiển thị
+         $('#pageStartItem').text(startIndex + 1);
+         $('#pageEndItem').text(endIndex);
+         $('#pageTotalItems').text(totalMatched);
+         $visibleCount.text(totalMatched);
+
+         // Render các nút phân trang
+         renderPagination(totalPages);
+
+         // Cập nhật query param ?page=X trên URL mà không load lại trang
+         const currentUrl = new URL(window.location.href);
+         if (currentPage > 1) {
+            currentUrl.searchParams.set('page', currentPage);
+         } else {
+            currentUrl.searchParams.delete('page');
+         }
+         window.history.replaceState({}, '', currentUrl.toString());
+
+         // Cuộn lên đầu danh sách bài thi khi chuyển trang
+         if (shouldScroll) {
+            const listOffset = $('#testsListContainer').offset();
+            if (listOffset) {
+               $('html, body').animate({
+                  scrollTop: Math.max(0, listOffset.top - 90)
+               }, 200);
+            }
+         }
+      }
+
+      // Lọc danh sách theo từ khóa + Topic + Trạng thái
+      function filterTests(resetToFirstPage = true) {
+         if (resetToFirstPage) {
+            currentPage = 1;
+         }
+
          const rawKeyword = $searchInput.val().trim();
          const keyword = removeVietnameseTones(rawKeyword);
 
@@ -665,7 +885,7 @@
             $clearBtn.addClass('d-none');
          }
 
-         let visibleItemsCount = 0;
+         matchedItems = [];
 
          $items.each(function() {
             const $item = $(this);
@@ -684,17 +904,11 @@
             const matchesTopic = (currentTopic === 'all') || itemTopics.includes(String(currentTopic));
 
             if (matchesSearch && matchesStatus && matchesTopic) {
-               $item.stop(true, true).fadeIn(150);
-               visibleItemsCount++;
-            } else {
-               $item.stop(true, true).hide();
+               matchedItems.push(this);
             }
          });
 
-         $visibleCount.text(visibleItemsCount);
-
-         if (visibleItemsCount === 0 && $items.length > 0) {
-            $noMatches.removeClass('d-none');
+         if (matchedItems.length === 0 && $items.length > 0) {
             if (rawKeyword) {
                $('#noSearchDesc').text(`Không có bài kiểm tra nào khớp với từ khóa "${rawKeyword}".`);
             } else if (currentTopic !== 'all' || currentStatus !== 'all') {
@@ -702,30 +916,43 @@
             } else {
                $('#noSearchDesc').text(`Không có bài kiểm tra nào.`);
             }
-         } else {
-            $noMatches.addClass('d-none');
          }
+
+         renderPage(false);
       }
+
+      // Event click chuyển trang
+      $(document).on('click', '#testsPaginationList .page-link', function(e) {
+         e.preventDefault();
+         const targetPage = parseInt($(this).data('page'));
+         if (targetPage && targetPage !== currentPage) {
+            currentPage = targetPage;
+            renderPage(true);
+         }
+      });
 
       updateStatusCounts();
 
+      // Khởi tạo hiển thị trang đầu hoặc trang từ query param
+      filterTests(false);
+
       $searchInput.on('input keyup', function() {
-         filterTests();
+         filterTests(true);
       });
 
       $clearBtn.on('click', function() {
          $searchInput.val('').focus();
-         filterTests();
+         filterTests(true);
       });
 
       $statusSelect.on('change', function() {
          currentStatus = $(this).val();
-         filterTests();
+         filterTests(true);
       });
 
       $topicSelect.on('change', function() {
          currentTopic = $(this).val();
-         filterTests();
+         filterTests(true);
       });
 
       $btnReset.on('click', function() {
@@ -734,12 +961,8 @@
          currentTopic = 'all';
          $statusSelect.val('all');
          $topicSelect.val('all');
-         filterTests();
+         filterTests(true);
       });
-
-      if ($searchInput.val().trim() !== '') {
-         filterTests();
-      }
    });
 
    $(window).on('load', function() {
