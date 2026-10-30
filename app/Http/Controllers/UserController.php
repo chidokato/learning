@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserSampleExport;
+use App\Imports\UserImport;
 use App\Models\Department;
 use App\Models\User;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -62,6 +65,8 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'employee_code' => ['nullable', 'string', 'max:100'],
+            'username' => ['nullable', 'string', 'max:100'],
             'department_id' => ['nullable', 'exists:departments,id'],
             'job_title' => ['nullable', 'string', 'max:255'],
             'bio' => ['nullable', 'string'],
@@ -84,6 +89,8 @@ class UserController extends Controller
 
         User::create([
             'name' => $validated['name'],
+            'employee_code' => $validated['employee_code'] ?? null,
+            'username' => $validated['username'] ?? null,
             'department_id' => $validated['department_id'] ?? null,
             'job_title' => $validated['job_title'] ?? null,
             'bio' => $validated['bio'] ?? null,
@@ -113,6 +120,8 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'employee_code' => ['nullable', 'string', 'max:100'],
+            'username' => ['nullable', 'string', 'max:100'],
             'department_id' => ['nullable', 'exists:departments,id'],
             'job_title' => ['nullable', 'string', 'max:255'],
             'bio' => ['nullable', 'string'],
@@ -146,6 +155,8 @@ class UserController extends Controller
 
         $data = [
             'name' => $validated['name'],
+            'employee_code' => $validated['employee_code'] ?? null,
+            'username' => $validated['username'] ?? null,
             'department_id' => $validated['department_id'] ?? null,
             'job_title' => $validated['job_title'] ?? null,
             'bio' => $validated['bio'] ?? null,
@@ -277,5 +288,43 @@ class UserController extends Controller
         }
 
         return redirect()->back()->with('success', $message);
+    }
+
+    public function downloadSampleExcel()
+    {
+        return Excel::download(new UserSampleExport(), 'mau_nhap_nguoi_dung.xlsx');
+    }
+
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx,xls,csv', 'max:10240'],
+        ], [
+            'file.required' => 'Vui lòng chọn file Excel để tải lên.',
+            'file.mimes' => 'File phải có định dạng .xlsx, .xls hoặc .csv.',
+            'file.max' => 'Dung lượng file tối đa là 10MB.',
+        ]);
+
+        try {
+            $updateExisting = $request->boolean('update_existing', true);
+            $autoCreateDept = $request->boolean('auto_create_department', true);
+            $defaultPassword = $request->input('default_password', '123456');
+
+            $import = new UserImport($updateExisting, $autoCreateDept, $defaultPassword ?: '123456');
+            Excel::import($import, $request->file('file'));
+
+            $msg = "Nhập dữ liệu thành công! Thêm mới: {$import->createdCount}, Cập nhật: {$import->updatedCount}";
+            if ($import->skippedCount > 0) {
+                $msg .= ", Bỏ qua/lỗi: {$import->skippedCount}";
+            }
+
+            return redirect()
+                ->route('backend.users.index')
+                ->with('success', $msg);
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Có lỗi xảy ra khi xử lý file Excel: ' . $e->getMessage());
+        }
     }
 }

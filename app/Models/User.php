@@ -31,6 +31,8 @@ class User extends Authenticatable
         'avatar',
         'permission',
         'department_id',
+        'employee_code',
+        'username',
     ];
 
     /**

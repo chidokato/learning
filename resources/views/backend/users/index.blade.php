@@ -11,7 +11,13 @@
                 <h4 class="card-title mb-0">Danh sách người dùng</h4>
                 <p class="text-muted small mb-0">Quản lý tài khoản, phân quyền và gán phòng ban nhân sự.</p>
             </div>
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <a href="{{ route('backend.users.sample-excel') }}" class="btn btn-soft-success" title="Tải file mẫu Excel chuẩn">
+                    <i class="ri-file-download-line align-bottom me-1"></i> File mẫu
+                </a>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importExcelModal">
+                    <i class="ri-file-excel-2-line align-bottom me-1"></i> Nhập từ Excel
+                </button>
                 <a href="{{ route('backend.departments.index') }}" class="btn btn-soft-secondary">
                     <i class="ri-building-line align-bottom me-1"></i> Quản lý phòng ban
                 </a>
@@ -157,7 +163,19 @@
                                                 </span>
                                             </div>
                                         @endif
-                                        <span class="fw-medium">{{ $user->name }}</span>
+                                        <div>
+                                            <div class="fw-medium text-dark">{{ $user->name }}</div>
+                                            @if ($user->employee_code || $user->username)
+                                                <div class="small mt-1">
+                                                    @if ($user->employee_code)
+                                                        <span class="badge bg-secondary-subtle text-dark border font-monospace me-1" style="font-size: 10px;">{{ $user->employee_code }}</span>
+                                                    @endif
+                                                    @if ($user->username)
+                                                        <span class="text-muted font-monospace" style="font-size: 11px;">@ {{ $user->username }}</span>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
                                 </td>
                                 <td>
@@ -217,6 +235,122 @@
                 <div>
                     {{ $users->links('pagination::bootstrap-4') }}
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Nhập người dùng từ Excel --}}
+    <div class="modal fade" id="importExcelModal" tabindex="-1" aria-labelledby="importExcelModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <form action="{{ route('backend.users.import-excel') }}" method="POST" enctype="multipart/form-data" id="import-excel-form">
+                    @csrf
+                    <div class="modal-header bg-light pb-3">
+                        <h5 class="modal-title d-flex align-items-center gap-2" id="importExcelModalLabel">
+                            <i class="ri-file-excel-2-line text-success fs-20"></i>
+                            Nhập danh sách người dùng từ file Excel
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="alert alert-info alert-border-left mb-3">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="ri-information-line fs-18 text-info mt-1"></i>
+                                <div class="w-100">
+                                    <h6 class="alert-heading mb-1">Cấu trúc các cột trong file Excel (theo đúng mẫu của bạn):</h6>
+                                    <div class="table-responsive mt-2">
+                                        <table class="table table-bordered table-sm text-center mb-1 font-monospace" style="font-size: 11px; background: #fff;">
+                                            <thead style="background: #FCE8A6; color: #7B4A00;">
+                                                <tr>
+                                                    <th>user (Cột A)</th>
+                                                    <th>pass (Cột B)</th>
+                                                    <th>Mã nv (Cột C)</th>
+                                                    <th>Họ tên (Cột D)</th>
+                                                    <th>Chức danh (Cột E)</th>
+                                                    <th>Phòng ban (Cột F)</th>
+                                                    <th>Email (Cột G)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="text-muted">
+                                                <tr>
+                                                    <td>thuythp</td>
+                                                    <td>123456</td>
+                                                    <td>DXMB001</td>
+                                                    <td>Phương Thúy</td>
+                                                    <td>Chuyên viên KD</td>
+                                                    <td>Phòng Kinh Doanh 1</td>
+                                                    <td>thuythp.idc@dxmb.vn</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="small text-muted mt-2">
+                                        • Hệ thống tự động khớp <strong>Phòng ban</strong> theo tên hoặc mã. Nếu chưa có phòng ban, hệ thống sẽ tự tạo mới.<br>
+                                        • Cột <strong>pass</strong>: nếu để trống sẽ dùng mật khẩu mặc định bên dưới.<br>
+                                        • Cột <strong>Email</strong> hoặc <strong>user</strong> dùng để nhận diện tài khoản người dùng trong hệ thống.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="excel-file-input" class="form-label fw-semibold">
+                                Chọn file Excel (.xlsx, .xls, .csv) <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="excel-file-input"
+                                name="file"
+                                accept=".xlsx, .xls, .csv"
+                                required
+                            >
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="default_password" class="form-label fw-semibold">Mật khẩu mặc định (khi cột pass trống)</label>
+                                <input
+                                    type="text"
+                                    class="form-control form-control-sm"
+                                    id="default_password"
+                                    name="default_password"
+                                    value="123456"
+                                    placeholder="123456"
+                                >
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end">
+                                <a href="{{ route('backend.users.sample-excel') }}" class="btn btn-sm btn-outline-success w-100">
+                                    <i class="ri-download-2-line align-bottom me-1"></i> Tải file Excel mẫu chuẩn (.xlsx)
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="border rounded p-3 bg-light bg-opacity-50">
+                            <h6 class="fs-13 fw-semibold mb-2">Tùy chọn xử lý:</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="update_existing" id="update_existing" value="1" checked>
+                                <label class="form-check-label fs-13" for="update_existing">
+                                    <strong>Cập nhật thông tin</strong> nếu email / mã nhân viên đã tồn tại trong hệ thống
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="auto_create_department" id="auto_create_department" value="1" checked>
+                                <label class="form-check-label fs-13" for="auto_create_department">
+                                    <strong>Tự động tạo phòng ban mới</strong> nếu tên phòng ban trong file Excel chưa tồn tại
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-success" id="btn-submit-import">
+                            <i class="ri-upload-cloud-2-line align-bottom me-1"></i> Bắt đầu tải lên & nhập dữ liệu
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -466,6 +600,16 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
+
+    // Form import Excel loading state
+    var importForm = document.getElementById('import-excel-form');
+    var btnSubmitImport = document.getElementById('btn-submit-import');
+    if (importForm && btnSubmitImport) {
+        importForm.addEventListener('submit', function () {
+            btnSubmitImport.disabled = true;
+            btnSubmitImport.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Đang xử lý file...';
+        });
+    }
 });
 </script>
 @endpush

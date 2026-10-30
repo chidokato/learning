@@ -311,6 +311,8 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::post('users', 'store')->name('users.store');
         Route::post('users/quick-add', 'quickAdd')->name('users.quick-add');
         Route::post('users/bulk-department', 'bulkUpdateDepartment')->name('users.bulk-department');
+        Route::get('users/sample-excel', 'downloadSampleExcel')->name('users.sample-excel');
+        Route::post('users/import-excel', 'importExcel')->name('users.import-excel');
         Route::get('users/{user}/edit', 'edit')->name('users.edit');
         Route::put('users/{user}', 'update')->name('users.update');
         Route::delete('users/{user}', 'destroy')->name('users.destroy');

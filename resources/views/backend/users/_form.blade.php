@@ -21,6 +21,26 @@
 
                     <div class="col-lg-6">
                         <div class="mb-3">
+                            <label for="employee_code" class="form-label">Mã nhân viên (Mã nv)</label>
+                            <input type="text" class="form-control @error('employee_code') is-invalid @enderror" id="employee_code" name="employee_code" value="{{ old('employee_code', $user->employee_code ?? '') }}" placeholder="Ví dụ: DXMB001">
+                            @error('employee_code')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Tài khoản (Username)</label>
+                            <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username', $user->username ?? '') }}" placeholder="Ví dụ: thuythp">
+                            @error('username')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->email ?? '') }}" readonly>
                             @error('email')
