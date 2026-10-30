@@ -285,8 +285,8 @@
    /* Popup Lịch sử làm bài thu gọn (Compact Modal - Thoáng mắt, mỗi lần thi 1 dòng) */
    #userTestHistoryModal .modal-dialog {
       width: 95% !important;
-      max-width: 820px !important;
-      margin: 2rem auto !important;
+      max-width: 860px !important;
+      margin: 1.75rem auto !important;
    }
    #userTestHistoryModal .modal-content {
       border-radius: 14px !important;
@@ -327,6 +327,7 @@
    #userTestHistoryModal .modal-body {
       padding: 18px 20px !important;
       background-color: #f8fafc !important;
+      overflow-x: hidden !important;
    }
    #userTestHistoryModal .modal-footer {
       padding: 10px 20px !important;
@@ -758,7 +759,7 @@
 
 <!-- ================= 4. MODAL POPUP: DANH SÁCH CÁC LẦN LÀM BÀI (THU GỌN) ================= -->
 <div class="modal fade" id="userTestHistoryModal" tabindex="-1" aria-labelledby="userTestHistoryModalLabel" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
       <div class="modal-content">
          <div class="modal-header">
             <div class="d-flex align-items-center gap-2">
@@ -808,21 +809,25 @@
                      </div>
                   </div>
 
-                  <!-- 2. Hộp thông tin Bài thi & Bài giảng liên kết (2 dòng riêng biệt, thẻ badge căn chỉnh chuẩn tuyệt đối) -->
+                  <!-- 2. Hộp thông tin Bài thi & Bài giảng liên kết (Tự động co giãn dòng, không vỡ giao diện kể cả khi tên dài) -->
                   <div class="modal-meta-box">
                      <!-- Dòng 1: Bài thi & Yêu cầu đạt -->
-                     <div class="d-flex align-items-center justify-content-between gap-3 mb-2" style="min-width: 0;">
-                        <div class="d-flex align-items-center gap-2.5 min-width-0 flex-grow-1">
-                           <span class="modal-meta-tag tag-test">BÀI THI</span>
-                           <span class="fw-bold text-dark fs-13.5 text-truncate" id="modalTestTitle" title=""></span>
+                     <div class="d-flex align-items-start gap-2.5 mb-2.5" style="min-width: 0;">
+                        <span class="modal-meta-tag tag-test mt-0.5">BÀI THI</span>
+                        <div class="min-width-0 flex-grow-1">
+                           <div class="d-flex align-items-start justify-content-between gap-2 flex-wrap">
+                              <div class="fw-bold text-dark fs-13.5 pe-2" id="modalTestTitle" style="word-break: break-word; line-height: 1.45; flex: 1 1 240px; min-width: 0;"></div>
+                              <div id="modalTestRequirement" class="flex-shrink-0 ms-auto"></div>
+                           </div>
                         </div>
-                        <div id="modalTestRequirement" class="flex-shrink-0 text-nowrap"></div>
                      </div>
 
                      <!-- Dòng 2: Bài giảng liên quan -->
-                     <div id="modalCourseRow" class="d-flex align-items-center gap-2.5 min-width-0" style="display: none;">
-                        <span class="modal-meta-tag tag-course">BÀI GIẢNG</span>
-                        <span class="text-secondary fs-12.5 text-truncate fw-medium" id="modalTestCourse" title=""></span>
+                     <div id="modalCourseRow" class="d-flex align-items-start gap-2.5" style="display: none; min-width: 0;">
+                        <span class="modal-meta-tag tag-course mt-0.5">BÀI GIẢNG</span>
+                        <div class="min-width-0 flex-grow-1">
+                           <div class="text-secondary fs-12.5 fw-medium" id="modalTestCourse" style="word-break: break-word; line-height: 1.45;"></div>
+                        </div>
                      </div>
                   </div>
                </div>
@@ -954,7 +959,7 @@
 
                   var reqHtml = '';
                   if (test.pass_score) {
-                     reqHtml = '<span class="badge" style="background: #ffffff; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; font-size: 11.5px; padding: 4px 10px; border-radius: 6px;"><i class="fa-solid fa-bullseye text-primary me-1"></i> Yêu cầu đạt: <strong class="text-dark">' + test.pass_score + '/' + test.total_questions + '</strong> câu</span>';
+                     reqHtml = '<span class="badge" style="background: #ffffff; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; font-size: 11.5px; padding: 4px 10px; border-radius: 6px; white-space: nowrap;"><i class="fa-solid fa-bullseye text-primary me-1"></i> Yêu cầu đạt: <strong class="text-dark">' + test.pass_score + '/' + test.total_questions + '</strong> câu</span>';
                   }
                   $('#modalTestRequirement').html(reqHtml);
 
