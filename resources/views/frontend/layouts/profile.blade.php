@@ -37,12 +37,12 @@
       .profile-dashboard-wrapper {
          display: flex;
          width: 100%;
-         min-height: calc(100vh - 120px);
+         min-height: calc(100vh - var(--site-header-height, 76px));
          background-color: #f3f3f9;
          position: relative;
       }
 
-      /* Cột Sidebar bên trái: Docked sát mép trái, full chiều cao như Admin */
+      /* Cột Sidebar bên trái: Docked sát mép trái, full chiều cao như Admin, bám sát ngay dưới thanh menu đã ghim */
       .profile-dashboard-sidebar {
          width: 270px;
          min-width: 270px;
@@ -53,8 +53,8 @@
          flex-direction: column;
          flex-shrink: 0;
          position: sticky;
-         top: 75px;
-         height: calc(100vh - 75px);
+         top: var(--site-header-height, 76px);
+         height: calc(100vh - var(--site-header-height, 76px));
          overflow-y: auto;
          z-index: 10;
          transition: all 0.25s ease;
@@ -250,6 +250,20 @@
    <script src="{{ asset('assets/js/parallax.js') }}"></script>                
    <script src="{{ asset('assets/js/slider.js') }}"></script>                
    <script src="{{ asset('assets/js/main.js') }}"></script>  
+   <script>
+      function updateStickyHeaderHeight() {
+         var headerWrap = document.querySelector('.custom-header-wrapper');
+         if (headerWrap) {
+            var h = headerWrap.offsetHeight;
+            document.documentElement.style.setProperty('--site-header-height', h + 'px');
+         }
+      }
+      $(document).ready(function() {
+         updateStickyHeaderHeight();
+         $(window).on('resize', updateStickyHeaderHeight);
+      });
+      $(window).on('load', updateStickyHeaderHeight);
+   </script>
    @stack('scripts')
 </body>
 </html>

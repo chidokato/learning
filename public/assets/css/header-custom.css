@@ -2,7 +2,7 @@
    CUSTOM HEADER & NAVIGATION STYLES - INDOCHINE
    ========================================================================== */
 
-/* --- 1. Top Bar --- */
+/* --- 1. Top Bar (Thanh bên trên: Không ghim, cuộn tự nhiên theo trang) --- */
 .custom-header-top {
    background: linear-gradient(90deg, #022b25 0%, #033f37 50%, #022b25 100%) !important;
    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -173,18 +173,23 @@
 }
 
 
-/* --- 2. Main Navigation Bar --- */
+/* --- 2. Main Navigation Bar (Thanh bên dưới: Ghim cố định ở đỉnh màn hình khi cuộn) --- */
 .custom-header-wrapper {
-   position: relative;
-   z-index: 99;
+   position: sticky !important;
+   top: 0 !important;
+   left: 0 !important;
+   right: 0 !important;
+   width: 100% !important;
+   z-index: 1000 !important;
+   background: #ffffff !important;
 }
 
 .custom-main-header {
    background: #ffffff !important;
    border-bottom: 1px solid #edf2f7;
    padding: 14px 0 !important;
-   box-shadow: 0 2px 14px -2px rgba(15, 23, 42, 0.05);
-   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08) !important;
+   transition: all 0.25s ease;
 }
 
 /* Sticky Header Behavior */

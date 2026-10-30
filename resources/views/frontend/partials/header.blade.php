@@ -1,7 +1,7 @@
 <!-- Header Custom Stylesheet -->
-<link rel="stylesheet" href="{{ asset('assets/css/header-custom.css') }}?v=1.0.1">
+<link rel="stylesheet" href="{{ asset('assets/css/header-custom.css') }}?v={{ time() }}">
 
-<!-- header-top-area-start -->
+<!-- header-top-area-start: Thanh bên trên (không ghim, cuộn tự nhiên) -->
 <div class="it-header-top-area custom-header-top">
    <div class="container-fluid px-3 px-xl-5">
       <div class="row align-items-center">
