@@ -282,14 +282,14 @@
       line-height: 1.4;
    }
 
-   /* Popup Lịch sử làm bài thu gọn (Compact Modal - Mỗi lần thi 1 dòng) */
+   /* Popup Lịch sử làm bài thu gọn (Compact Modal - Thoáng mắt, mỗi lần thi 1 dòng) */
    #userTestHistoryModal .modal-dialog {
       width: 95% !important;
       max-width: 820px !important;
       margin: 2rem auto !important;
    }
    #userTestHistoryModal .modal-content {
-      border-radius: 12px !important;
+      border-radius: 14px !important;
       border: 1px solid #cbd5e1 !important;
       box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.2), 0 8px 10px -6px rgba(15, 23, 42, 0.1) !important;
       overflow: hidden !important;
@@ -298,7 +298,7 @@
    #userTestHistoryModal .modal-header {
       background: #03594e !important;
       color: #ffffff !important;
-      padding: 12px 18px !important;
+      padding: 13px 20px !important;
       border: none !important;
       display: flex !important;
       align-items: center !important;
@@ -325,16 +325,16 @@
       background: rgba(255, 255, 255, 0.15) !important;
    }
    #userTestHistoryModal .modal-body {
-      padding: 14px 16px !important;
+      padding: 18px 20px !important;
       background-color: #f8fafc !important;
    }
    #userTestHistoryModal .modal-footer {
-      padding: 8px 16px !important;
+      padding: 10px 20px !important;
       background-color: #ffffff !important;
       border-top: 1px solid #e2e8f0 !important;
    }
    #userTestHistoryModal .history-table thead th {
-      padding: 9px 12px !important;
+      padding: 10px 14px !important;
       font-size: 11.5px !important;
       background: #f1f5f9 !important;
       color: #475569 !important;
@@ -345,12 +345,12 @@
       white-space: nowrap !important;
    }
    #userTestHistoryModal .history-table tbody td {
-      padding: 9px 12px !important;
-      font-size: 12.5px !important;
+      padding: 10px 14px !important;
+      font-size: 13px !important;
       vertical-align: middle !important;
       border-bottom: 1px solid #f1f5f9 !important;
       white-space: nowrap !important;
-      line-height: 1.4 !important;
+      line-height: 1.5 !important;
    }
    #userTestHistoryModal .history-table tbody tr:hover td {
       background-color: #f8fafc !important;
@@ -361,7 +361,7 @@
       gap: 5px !important;
       background: #03594e !important;
       color: #ffffff !important;
-      font-size: 11.5px !important;
+      font-size: 12px !important;
       font-weight: 600 !important;
       padding: 4px 12px !important;
       border-radius: 6px !important;
@@ -374,6 +374,68 @@
       background: #02433b !important;
       color: #ffffff !important;
       transform: translateY(-1px) !important;
+   }
+
+   /* Modal Profile & Meta Card (SaaS Enterprise Level) */
+   .modal-profile-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+   }
+   .user-avatar-modal {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #03594e 0%, #057d6e 100%);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 0 1px #cbd5e1;
+   }
+   .user-avatar-modal img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+   }
+   .modal-meta-box {
+      background: #f8fafc;
+      border: 1px solid #eef2f6;
+      border-radius: 10px;
+      padding: 11px 15px;
+      margin-top: 13px;
+   }
+   .modal-meta-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 82px;
+      height: 23px;
+      border-radius: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      line-height: 1;
+      flex-shrink: 0;
+   }
+   .modal-meta-tag.tag-test {
+      background: rgba(3, 89, 78, 0.08);
+      color: #03594e;
+      border: 1px solid rgba(3, 89, 78, 0.2);
+   }
+   .modal-meta-tag.tag-course {
+      background: #ffffff;
+      color: #475569;
+      border: 1px solid #cbd5e1;
    }
 
    /* Empty State */
@@ -725,31 +787,42 @@
 
             <!-- Content when loaded -->
             <div id="modalHistoryContent" style="display: none;">
-               <!-- Thông tin Nhân viên & Bài thi (Thu gọn) -->
-               <div class="card border-0 shadow-sm rounded-2 mb-2" style="background: #ffffff; border: 1px solid #e2e8f0 !important;">
-                  <div class="card-body p-2 px-3">
-                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                        <div class="d-flex align-items-center gap-2">
-                           <div id="modalUserAvatar" class="user-avatar-circle" style="width: 36px; height: 36px; font-size: 14px; border-radius: 8px;"></div>
-                           <div>
-                              <div class="fw-bold text-dark fs-13" id="modalUserName"></div>
-                              <div class="text-muted fs-11 d-flex align-items-center flex-wrap gap-2">
-                                 <span id="modalUserEmail"></span>
-                                 <span class="badge bg-light text-secondary border px-1 py-0" id="modalUserCode" style="display: none; font-size: 10px;"></span>
-                                 <span class="badge bg-light text-primary border px-1 py-0" id="modalUserDept" style="display: none; font-size: 10px;"></span>
-                              </div>
+               <!-- Thông tin Nhân viên & Đề thi / Bài giảng (Được thiết kế thẻ thông tin chuẩn SaaS cao cấp, thoáng mắt & chuyên nghiệp) -->
+               <div class="modal-profile-card">
+                  <!-- 1. Hàng thông tin Nhân viên & Kết quả tổng quan -->
+                  <div class="d-flex align-items-center justify-content-between gap-3" style="min-width: 0;">
+                     <div class="d-flex align-items-center gap-3 min-width-0">
+                        <div id="modalUserAvatar" class="user-avatar-modal flex-shrink-0"></div>
+                        <div class="min-width-0">
+                           <div class="d-flex align-items-center gap-2 flex-wrap">
+                              <span class="fw-bold text-dark fs-15" id="modalUserName"></span>
+                              <span class="badge bg-light text-secondary border px-2 py-0.5" id="modalUserCode" style="display: none; font-size: 11px;"></span>
+                              <span class="badge bg-light text-primary border px-2 py-0.5" id="modalUserDept" style="display: none; font-size: 11px;"></span>
                            </div>
-                        </div>
-                        <div>
-                           <div class="badge rounded-pill fw-bold" id="modalOverallBadge" style="font-size: 11.5px; padding: 4px 10px;"></div>
+                           <div class="text-muted fs-12 mt-1 d-flex align-items-center" id="modalUserEmail"></div>
                         </div>
                      </div>
-                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 text-muted fs-12 mt-1 pt-1 border-top">
-                        <div class="text-truncate flex-grow-1 pe-2" style="max-width: 520px;">
-                           <i class="fa-solid fa-clipboard-list me-1 text-primary"></i>
-                           <strong class="text-dark" id="modalTestTitle"></strong>
+                     <div class="flex-shrink-0 text-end">
+                        <div id="modalOverallBadge"></div>
+                        <div id="modalBestScoreSub" class="text-muted fs-11 mt-1"></div>
+                     </div>
+                  </div>
+
+                  <!-- 2. Hộp thông tin Bài thi & Bài giảng liên kết (2 dòng riêng biệt, thẻ badge căn chỉnh chuẩn tuyệt đối) -->
+                  <div class="modal-meta-box">
+                     <!-- Dòng 1: Bài thi & Yêu cầu đạt -->
+                     <div class="d-flex align-items-center justify-content-between gap-3 mb-2" style="min-width: 0;">
+                        <div class="d-flex align-items-center gap-2.5 min-width-0 flex-grow-1">
+                           <span class="modal-meta-tag tag-test">BÀI THI</span>
+                           <span class="fw-bold text-dark fs-13.5 text-truncate" id="modalTestTitle" title=""></span>
                         </div>
                         <div id="modalTestRequirement" class="flex-shrink-0 text-nowrap"></div>
+                     </div>
+
+                     <!-- Dòng 2: Bài giảng liên quan -->
+                     <div id="modalCourseRow" class="d-flex align-items-center gap-2.5 min-width-0" style="display: none;">
+                        <span class="modal-meta-tag tag-course">BÀI GIẢNG</span>
+                        <span class="text-secondary fs-12.5 text-truncate fw-medium" id="modalTestCourse" title=""></span>
                      </div>
                   </div>
                </div>
@@ -856,25 +929,32 @@
                      $('#modalUserDept').hide();
                   }
 
-                  // Huy hiệu tổng kết trạng thái (Đạt / Chưa đạt)
+                  // Huy hiệu tổng kết trạng thái (Đạt / Chưa đạt) & Điểm cao nhất chuẩn SaaS
+                  var bestPct = test.total_questions > 0 ? Math.round((stats.max_score / test.total_questions) * 100) : 0;
                   if (stats.has_passed) {
                      $('#modalOverallBadge')
-                        .attr('class', 'badge bg-success-subtle text-success border border-success-subtle rounded-pill fw-bold')
-                        .html('<i class="fa-solid fa-circle-check me-1"></i> ĐÃ ĐẠT (Điểm cao nhất: ' + stats.max_score + '/' + test.total_questions + ')');
+                        .html('<span class="badge" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; font-size: 11.5px; font-weight: 700; padding: 5px 12px; border-radius: 999px; letter-spacing: 0.3px;"><i class="fa-solid fa-circle-check me-1"></i> ĐÃ ĐẠT</span>');
+                     $('#modalBestScoreSub')
+                        .html('Điểm cao nhất: <strong class="text-success">' + stats.max_score + '/' + test.total_questions + '</strong> câu (' + bestPct + '%)');
                   } else {
                      $('#modalOverallBadge')
-                        .attr('class', 'badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill fw-bold')
-                        .html('<i class="fa-solid fa-circle-xmark me-1"></i> CHƯA ĐẠT (Điểm cao nhất: ' + stats.max_score + '/' + test.total_questions + ')');
+                        .html('<span class="badge" style="background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; font-size: 11.5px; font-weight: 700; padding: 5px 12px; border-radius: 999px; letter-spacing: 0.3px;"><i class="fa-solid fa-circle-xmark me-1"></i> CHƯA ĐẠT</span>');
+                     $('#modalBestScoreSub')
+                        .html('Điểm cao nhất: <strong class="text-danger">' + stats.max_score + '/' + test.total_questions + '</strong> câu (' + bestPct + '%)');
                   }
 
-                  // Thông tin bài thi & yêu cầu
-                  $('#modalTestTitle').text(test.title || ('Bài thi #' + test.id));
+                  // Thông tin bài thi, bài giảng & yêu cầu
+                  $('#modalTestTitle').text(test.title || ('Bài thi #' + test.id)).attr('title', test.title || '');
+                  if (test.course_title) {
+                     $('#modalTestCourse').text(test.course_title).attr('title', test.course_title);
+                     $('#modalCourseRow').show();
+                  } else {
+                     $('#modalCourseRow').hide();
+                  }
+
                   var reqHtml = '';
                   if (test.pass_score) {
-                     reqHtml += 'Yêu cầu: <strong>' + test.pass_score + '/' + test.total_questions + ' câu</strong>';
-                  }
-                  if (test.course_title) {
-                     reqHtml += (reqHtml ? ' • ' : '') + '<span class="text-primary">' + test.course_title + '</span>';
+                     reqHtml = '<span class="badge" style="background: #ffffff; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; font-size: 11.5px; padding: 4px 10px; border-radius: 6px;"><i class="fa-solid fa-bullseye text-primary me-1"></i> Yêu cầu đạt: <strong class="text-dark">' + test.pass_score + '/' + test.total_questions + '</strong> câu</span>';
                   }
                   $('#modalTestRequirement').html(reqHtml);
 
