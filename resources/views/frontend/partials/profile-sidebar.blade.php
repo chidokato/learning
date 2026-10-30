@@ -262,6 +262,19 @@
       <ul class="profile-nav-list">
          @if(Auth::check() && $currentUser->isAdmin())
             <li class="nav-item">
+               <a class="profile-nav-link {{ request()->routeIs('frontend.admin.reports.*') ? 'active' : '' }}" href="{{ route('frontend.admin.reports.tests') }}">
+                  <span class="profile-nav-link-content">
+                     <i class="far fa-chart-line profile-nav-icon"></i>
+                     <span>Báo cáo bài thi</span>
+                  </span>
+                  <span class="d-flex align-items-center gap-1">
+                     <span class="badge" style="background: rgba(3, 89, 78, 0.1); color: #03594e; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px;">Admin</span>
+                     <i class="far fa-angle-right profile-nav-arrow"></i>
+                  </span>
+               </a>
+            </li>
+
+            <li class="nav-item">
                <a class="profile-nav-link" href="{{ route('backend.admin.dashboard') }}">
                   <span class="profile-nav-link-content">
                      <i class="far fa-user-cog profile-nav-icon"></i>
