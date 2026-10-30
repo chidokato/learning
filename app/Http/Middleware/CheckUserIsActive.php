@@ -39,9 +39,12 @@ class CheckUserIsActive
                 }
 
                 $loginRoute = $request->is('admin*') ? 'backend.admin.login' : 'frontend.login';
+                $notice = 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.';
 
                 return redirect()->route($loginRoute)
-                    ->with('error', 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.');
+                    ->with('account_notice', $notice)
+                    ->with('account_notice_type', 'warning')
+                    ->with('error', $notice);
             }
         }
 

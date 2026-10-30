@@ -191,5 +191,29 @@
     <script src="{{ asset('admin-assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
     <script src="{{ asset('admin-assets/js/plugins.js') }}"></script>
     <script src="{{ asset('admin-assets/js/pages/password-addon.init.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @php
+        $backendNotice = session('account_notice');
+        if (!$backendNotice && isset($errors) && $errors->has('email') && (str_contains($errors->first('email'), 'lưu hành nội bộ') || str_contains($errors->first('email'), 'liên hệ admin'))) {
+            $backendNotice = $errors->first('email');
+        } elseif (!$backendNotice && session('error') && (str_contains(session('error'), 'lưu hành nội bộ') || str_contains(session('error'), 'liên hệ admin'))) {
+            $backendNotice = session('error');
+        }
+    @endphp
+    @if($backendNotice)
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Thông báo',
+                html: '<div style="font-size: 15.5px; line-height: 1.6; color: #374151; font-weight: 500; padding: 4px 0;">{!! addslashes($backendNotice) !!}</div>',
+                confirmButtonColor: '#0ab39c',
+                confirmButtonText: 'Đã hiểu',
+                allowOutsideClick: false
+            });
+        });
+    </script>
+    @endif
 </body>
 </html>

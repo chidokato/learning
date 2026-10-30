@@ -37,9 +37,12 @@ class AuthController extends Controller
 
         $user = User::where('email', $credentials['email'])->first();
         if ($user && ! $user->is_active) {
-            return back()->withErrors([
-                'email' => 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.',
-            ])->onlyInput('email');
+            $notice = 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.';
+            return back()
+                ->with('account_notice', $notice)
+                ->with('account_notice_type', 'warning')
+                ->withErrors(['email' => $notice])
+                ->onlyInput('email');
         }
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
@@ -95,8 +98,11 @@ class AuthController extends Controller
             'is_active' => false,
         ]);
 
+        $notice = 'Đăng ký tài khoản thành công! Website lưu hành nội bộ, cần liên hệ admin để được cấp tài khoản.';
         return redirect()->route('frontend.login')
-            ->with('warning', 'Đăng ký tài khoản thành công! Website lưu hành nội bộ, cần liên hệ admin để được cấp tài khoản.');
+            ->with('account_notice', $notice)
+            ->with('account_notice_type', 'warning')
+            ->with('warning', $notice);
     }
 
     /**

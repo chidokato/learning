@@ -266,5 +266,25 @@
          }
       });
    </script>
+
+   @if(isset($errors) && $errors->has('email') && (str_contains($errors->first('email'), 'lưu hành nội bộ') || str_contains($errors->first('email'), 'liên hệ admin')))
+   <script>
+      document.addEventListener('DOMContentLoaded', function () {
+         if (typeof Swal !== 'undefined') {
+            Swal.fire({
+               icon: 'warning',
+               title: 'Thông báo',
+               html: '<div style="font-size: 15.5px; line-height: 1.6; color: #374151; font-weight: 500; padding: 4px 0;">{!! addslashes($errors->first('email')) !!}</div>',
+               confirmButtonColor: '#03594E',
+               confirmButtonText: 'Đã hiểu',
+               allowOutsideClick: false,
+               customClass: {
+                  popup: 'swal2-center-notice-modal'
+               }
+            });
+         }
+      });
+   </script>
+   @endif
 </body>
 </html>

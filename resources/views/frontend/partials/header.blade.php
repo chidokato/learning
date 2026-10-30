@@ -121,9 +121,44 @@
 </header>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-@if(session('info') || session('success') || session('warning') || session('error') || session('login_notice'))
+@php
+   $modalNotice = session('account_notice');
+   $modalNoticeType = session('account_notice_type', 'warning');
+   if (!$modalNotice) {
+      if (session('warning') && (str_contains(session('warning'), 'lưu hành nội bộ') || str_contains(session('warning'), 'liên hệ admin'))) {
+         $modalNotice = session('warning');
+         $modalNoticeType = 'warning';
+      } elseif (session('error') && (str_contains(session('error'), 'lưu hành nội bộ') || str_contains(session('error'), 'liên hệ admin'))) {
+         $modalNotice = session('error');
+         $modalNoticeType = 'error';
+      }
+   }
+@endphp
+@if(session('info') || session('success') || session('warning') || session('error') || session('login_notice') || $modalNotice)
 <script>
    document.addEventListener('DOMContentLoaded', function () {
+      @if($modalNotice)
+      Swal.fire({
+         icon: '{{ $modalNoticeType }}',
+         title: 'Thông báo',
+         html: '<div style="font-size: 15.5px; line-height: 1.6; color: #374151; font-weight: 500; padding: 4px 0;">{!! addslashes($modalNotice) !!}</div>',
+         confirmButtonColor: '#03594E',
+         confirmButtonText: 'Đã hiểu',
+         allowOutsideClick: false,
+         customClass: {
+            popup: 'swal2-center-notice-modal'
+         }
+      });
+      @elseif(session('login_notice'))
+      Swal.fire({
+         icon: 'info',
+         title: 'Thông báo',
+         text: "{{ session('login_notice') }}",
+         confirmButtonColor: '#03594E',
+         confirmButtonText: 'Đã hiểu'
+      });
+      @endif
+
       const Toast = Swal.mixin({
          toast: true,
          position: 'bottom-start',
@@ -139,16 +174,6 @@
          }
       });
 
-      @if(session('login_notice'))
-      Swal.fire({
-         icon: 'info',
-         title: 'Thông báo',
-         text: "{{ session('login_notice') }}",
-         confirmButtonColor: '#03594E',
-         confirmButtonText: 'Đã hiểu'
-      });
-      @endif
-
       @if(session('info'))
       Toast.fire({
          icon: 'info',
@@ -163,14 +188,14 @@
       });
       @endif
 
-      @if(session('warning'))
+      @if(!$modalNotice && session('warning'))
       Toast.fire({
          icon: 'warning',
          title: "{{ session('warning') }}"
       });
       @endif
 
-      @if(session('error'))
+      @if(!$modalNotice && session('error'))
       Toast.fire({
          icon: 'error',
          title: "{{ session('error') }}"
@@ -179,6 +204,27 @@
    });
 </script>
 <style>
+   /* Centered Notice Modal */
+   .swal2-center-notice-modal {
+      border-radius: 16px !important;
+      padding: 24px !important;
+      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.25) !important;
+   }
+   .swal2-center-notice-modal .swal2-title {
+      font-size: 20px !important;
+      font-weight: 700 !important;
+      color: #1e293b !important;
+      margin-bottom: 8px !important;
+   }
+   .swal2-center-notice-modal .swal2-confirm {
+      background-color: #03594E !important;
+      border-radius: 8px !important;
+      padding: 10px 28px !important;
+      font-weight: 600 !important;
+      font-size: 14.5px !important;
+      box-shadow: 0 4px 6px -1px rgba(3, 89, 78, 0.3) !important;
+   }
+
    /* Toast notifications */
    .colored-toast {
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08) !important;

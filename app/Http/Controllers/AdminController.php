@@ -40,8 +40,11 @@ class AdminController extends Controller
         }
 
         if (! $admin->is_active) {
+            $notice = 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.';
             return back()
-                ->withErrors(['email' => 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.'])
+                ->with('account_notice', $notice)
+                ->with('account_notice_type', 'warning')
+                ->withErrors(['email' => $notice])
                 ->onlyInput('email');
         }
 

@@ -179,7 +179,11 @@ class GoogleAuthController extends Controller
 
         if ($user) {
             if (! $user->is_active) {
-                return redirect()->route('frontend.login')->with('error', 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.');
+                $notice = 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.';
+                return redirect()->route('frontend.login')
+                    ->with('account_notice', $notice)
+                    ->with('account_notice_type', 'warning')
+                    ->with('error', $notice);
             }
 
             $avatar = $googleUser->getAvatar();
@@ -200,7 +204,11 @@ class GoogleAuthController extends Controller
 
         if ($existingUser) {
             if (! $existingUser->is_active) {
-                return redirect()->route('frontend.login')->with('error', 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.');
+                $notice = 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.';
+                return redirect()->route('frontend.login')
+                    ->with('account_notice', $notice)
+                    ->with('account_notice_type', 'warning')
+                    ->with('error', $notice);
             }
 
             if ($hasGoogleId) {
@@ -239,7 +247,11 @@ class GoogleAuthController extends Controller
 
         $newUser = User::create($userData);
 
-        return redirect()->route('frontend.login')->with('warning', 'Tài khoản Google (' . $googleUser->getEmail() . ') đã được tạo! Website lưu hành nội bộ, cần liên hệ admin để được cấp tài khoản.');
+        $notice = 'Tài khoản Google (' . $googleUser->getEmail() . ') đã được tạo! Website lưu hành nội bộ, cần liên hệ admin để được cấp tài khoản.';
+        return redirect()->route('frontend.login')
+            ->with('account_notice', $notice)
+            ->with('account_notice_type', 'warning')
+            ->with('warning', $notice);
     }
 
     /**
