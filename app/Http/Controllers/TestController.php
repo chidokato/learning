@@ -59,29 +59,49 @@ class TestController extends Controller
      */
     public function submitTest(Request $request, $test_id)
     {
-        $test = Test::find($test_id);
+        $test = Test::with(['questions.answers'])->find($test_id);
         if (!$test) {
             return response()->json(['error' => 'Bài test không tồn tại'], 404);
         }
 
-        // Format body:
-        // 'answers' => [
-        //     [ 'question_id' => 1, 'answer_ids' => [1] ], // 1 đáp án
-        //     [ 'question_id' => 2, 'answer_ids' => [3, 4] ], // Nhiều đáp án
-        // ]
+        // 1. Lấy danh sách đáp án người dùng đã chọn
         $userAnswers = $request->input('answers', []);
-        
-        $totalCorrect = 0;
-        $totalQuestions = $test->questions()->count();
 
+        // Hỗ trợ cả trường hợp submit từ form serialize với name dạng q_{question_id}
+        if (empty($userAnswers)) {
+            foreach ($request->all() as $key => $val) {
+                if (str_starts_with($key, 'q_')) {
+                    $cleanKey = str_replace('[]', '', $key);
+                    $qId = (int)str_replace('q_', '', $cleanKey);
+                    if ($qId > 0) {
+                        $ansIds = is_array($val) ? array_map('intval', $val) : [(int)$val];
+                        $userAnswers[] = [
+                            'question_id' => $qId,
+                            'answer_ids'  => $ansIds,
+                        ];
+                    }
+                }
+            }
+        }
+
+        // Tạo map phương án chọn theo question_id để lưu vào database
+        $savedAnswersMap = [];
         foreach ($userAnswers as $ua) {
-            $question = Question::with('answers')->find($ua['question_id']);
-            if (!$question || $question->test_id != $test_id) continue;
+            $qId = (int)($ua['question_id'] ?? 0);
+            $ansIds = array_values(array_filter(array_map('intval', (array)($ua['answer_ids'] ?? []))));
+            if ($qId > 0 && !empty($ansIds)) {
+                $savedAnswersMap[$qId] = $ansIds;
+            }
+        }
 
-            $correctAnswerIds = $question->answers->where('is_correct', true)->pluck('id')->map(fn($id) => (int)$id)->toArray();
-            $userAnswerIds = array_map('intval', (array)($ua['answer_ids'] ?? []));
+        // 2. Chấm điểm bài làm
+        $totalQuestions = $test->questions->count();
+        $totalCorrect = 0;
 
-            // Kiểm tra xem user có chọn đúng mảng đáp án không
+        foreach ($test->questions as $question) {
+            $correctAnswerIds = $question->answers->where('is_correct', true)->pluck('id')->map(fn($id) => (int)$id)->values()->toArray();
+            $userAnswerIds = $savedAnswersMap[$question->id] ?? [];
+
             sort($correctAnswerIds);
             sort($userAnswerIds);
 
@@ -90,30 +110,35 @@ class TestController extends Controller
             }
         }
 
-        $isCancelled = $request->boolean('is_cancelled');
+        $isCancelled = $request->boolean('is_cancelled') || $request->boolean('is_canceled');
         $isPassed = !$isCancelled && ($totalCorrect >= $test->pass_score);
 
         $user_id = auth()->id() ?? auth('sanctum')->id() ?? 1;
 
         $result = UserTestResult::create([
-            'user_id' => $user_id,
-            'test_id' => $test_id,
-            'score' => $totalCorrect,
-            'is_passed' => $isPassed,
+            'user_id'      => $user_id,
+            'test_id'      => $test_id,
+            'score'        => $totalCorrect,
+            'is_passed'    => $isPassed,
             'completed_at' => now(),
+            'user_answers' => $savedAnswersMap,
         ]);
 
         if ($isCancelled) {
             session()->flash('warning', 'Bạn đã hủy bài làm. Lượt làm bài này đã được ghi nhận vào hệ thống.');
         }
 
+        $resultUrl = route('frontend.tests.result', $result->id);
+
         return response()->json([
             'message' => $isCancelled ? 'Đã hủy bài làm và ghi nhận 1 lượt thi' : 'Nộp bài thành công',
             'result' => [
-                'total_correct' => $totalCorrect,
+                'id'              => $result->id,
+                'total_correct'   => $totalCorrect,
                 'total_questions' => $totalQuestions,
-                'is_passed' => $isPassed,
-                'is_cancelled' => $isCancelled,
+                'is_passed'       => $isPassed,
+                'is_cancelled'    => $isCancelled,
+                'result_url'      => $resultUrl,
             ]
         ]);
     }

@@ -52,4 +52,27 @@ class FrontendTestController extends Controller
         
         return view('frontend.tests.show', compact('test'));
     }
+
+    public function viewResult($result_id)
+    {
+        $userId = auth()->id() ?? 1;
+
+        $result = UserTestResult::with([
+            'test.questions.answers' => function($query) {
+                $query->orderBy('label');
+            },
+            'test.post:id,title,slug',
+            'test.topics:id,name,slug'
+        ])->findOrFail($result_id);
+
+        // Kiểm tra quyền truy cập (chỉ cho phép xem kết quả của chính mình hoặc admin)
+        if ($result->user_id != $userId && (!auth()->check() || !auth()->user()->isAdmin())) {
+            abort(403, 'Bạn không có quyền xem kết quả bài thi này.');
+        }
+
+        $test = $result->test;
+        $userAnswers = $result->user_answers ?? [];
+
+        return view('frontend.tests.result', compact('result', 'test', 'userAnswers'));
+    }
 }

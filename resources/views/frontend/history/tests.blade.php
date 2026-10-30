@@ -59,6 +59,9 @@
                      {{ $result->completed_at ? $result->completed_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') : $result->created_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
                   </td>
                   <td class="text-end">
+                     <a href="{{ route('frontend.tests.result', $result->id) }}" class="btn btn-sm text-white rounded-pill px-3 me-1" style="font-size: 12.5px; background: #03594e; border-color: #03594e;">
+                        <i class="far fa-eye me-1"></i> Xem kết quả
+                     </a>
                      <a href="{{ route('frontend.tests.show', $result->test_id) }}" class="btn btn-sm btn-outline-secondary rounded-pill px-3" style="font-size: 12.5px;">
                         <i class="far fa-redo me-1"></i> Làm lại
                      </a>

@@ -170,6 +170,7 @@ Route::get('products/{slug}', fn (string $slug) => $postDetailHandler($slug))->n
 Route::get('news/{slug}', fn () => view('frontend.home'))->name('frontend.news.show.legacy');
 
 Route::get('bai-kiem-tra', [\App\Http\Controllers\FrontendTestController::class, 'index'])->name('frontend.tests.index');
+Route::get('bai-kiem-tra/ket-qua/{result_id}', [\App\Http\Controllers\FrontendTestController::class, 'viewResult'])->name('frontend.tests.result');
 Route::get('bai-kiem-tra/{test_id}', [\App\Http\Controllers\FrontendTestController::class, 'show'])->name('frontend.tests.show');
 Route::post('bai-kiem-tra/{test_id}/submit', [\App\Http\Controllers\TestController::class, 'submitTest'])->name('frontend.tests.submit');
 

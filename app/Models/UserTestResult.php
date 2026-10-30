@@ -14,12 +14,14 @@ class UserTestResult extends Model
         'test_id',
         'score',
         'is_passed',
-        'completed_at'
+        'completed_at',
+        'user_answers',
     ];
 
     protected $casts = [
         'is_passed' => 'boolean',
         'completed_at' => 'datetime',
+        'user_answers' => 'array',
     ];
 
     public function test()

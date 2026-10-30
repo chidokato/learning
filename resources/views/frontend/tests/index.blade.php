@@ -368,6 +368,16 @@
       color: #ffffff !important;
       transform: translateY(-1px);
    }
+   .btn-test-action.btn-view-res {
+      background: #ffffff;
+      color: #03594e !important;
+      border: 1.5px solid rgba(3, 89, 78, 0.4);
+   }
+   .btn-test-action.btn-view-res:hover {
+      background: #f0fdf4;
+      border-color: #03594e;
+      transform: translateY(-1px);
+   }
    
    /* Empty State */
    .empty-test-card {
@@ -627,7 +637,13 @@
                </div>
             </div>
 
-            <div class="test-list-action">
+            <div class="test-list-action gap-2">
+               @if($itemResult && !empty($itemResult['latest']))
+                  <a href="{{ route('frontend.tests.result', $itemResult['latest']->id) }}" class="btn-test-action btn-view-res" title="Xem kết quả bài làm gần nhất">
+                     <span>Xem kết quả</span>
+                     <i class="fa-solid fa-eye"></i>
+                  </a>
+               @endif
                <a href="{{ route('frontend.tests.show', $test->id) }}" class="btn-test-action {{ $itemResult ? 'btn-retake' : 'btn-start' }}">
                   <span>{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
                   <i class="fa-solid {{ $itemResult ? 'fa-rotate-right' : 'fa-arrow-right-long' }}"></i>
