@@ -316,6 +316,7 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::get('users/{user}/edit', 'edit')->name('users.edit');
         Route::put('users/{user}', 'update')->name('users.update');
         Route::delete('users/{user}', 'destroy')->name('users.destroy');
+        Route::patch('users/{user}/toggle-status', 'toggleStatus')->name('users.toggle-status');
     });
 
     Route::controller(\App\Http\Controllers\Backend\TopicController::class)->group(function () {

@@ -39,6 +39,12 @@ class AdminController extends Controller
                 ->onlyInput('email');
         }
 
+        if (! $admin->is_active) {
+            return back()
+                ->withErrors(['email' => 'Tài khoản của bạn đã bị khóa hoặc tạm dừng hoạt động.'])
+                ->onlyInput('email');
+        }
+
         Auth::login($admin, $request->boolean('remember'));
         $request->session()->regenerate();
 

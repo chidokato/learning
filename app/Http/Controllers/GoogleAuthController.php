@@ -178,6 +178,10 @@ class GoogleAuthController extends Controller
         }
 
         if ($user) {
+            if (! $user->is_active) {
+                return redirect()->route('frontend.login')->with('error', 'Tài khoản của bạn đã bị khóa hoặc tạm dừng hoạt động. Vui lòng liên hệ quản trị viên.');
+            }
+
             $avatar = $googleUser->getAvatar();
             if ($avatar && (empty($user->avatar) || str_contains($user->avatar, 'googleusercontent.com'))) {
                 $user->avatar = Str::limit($avatar, 250, '');
@@ -195,6 +199,10 @@ class GoogleAuthController extends Controller
         $existingUser = User::where('email', $googleUser->getEmail())->first();
 
         if ($existingUser) {
+            if (! $existingUser->is_active) {
+                return redirect()->route('frontend.login')->with('error', 'Tài khoản của bạn đã bị khóa hoặc tạm dừng hoạt động. Vui lòng liên hệ quản trị viên.');
+            }
+
             if ($hasGoogleId) {
                 $existingUser->google_id = $googleUser->getId();
             }

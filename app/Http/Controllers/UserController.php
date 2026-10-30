@@ -7,6 +7,7 @@ use App\Imports\UserImport;
 use App\Models\Department;
 use App\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -41,6 +42,10 @@ class UserController extends Controller
 
         if ($request->filled('permission')) {
             $query->where('permission', $request->input('permission'));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->input('status') === 'active');
         }
 
         $perPage = (int) $request->input('per_page', 20);
@@ -102,6 +107,7 @@ class UserController extends Controller
             'permission' => $validated['permission'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'is_active' => $request->boolean('is_active', true),
         ]);
 
         return redirect()
@@ -167,6 +173,7 @@ class UserController extends Controller
             'avatar' => $avatarPath,
             'permission' => $validated['permission'],
             'email' => $validated['email'],
+            'is_active' => ($user->id === auth()->id()) ? true : $request->boolean('is_active', true),
         ];
 
         if (! empty($validated['password'])) {
@@ -174,6 +181,10 @@ class UserController extends Controller
         }
 
         $user->update($data);
+
+        if (! $user->is_active && method_exists($user, 'tokens')) {
+            $user->tokens()->delete();
+        }
 
         return redirect()
             ->route('backend.users.index')
@@ -326,5 +337,29 @@ class UserController extends Controller
                 ->back()
                 ->with('error', 'Có lỗi xảy ra khi xử lý file Excel: ' . $e->getMessage());
         }
+    }
+
+    public function toggleStatus(User $user): JsonResponse
+    {
+        if (auth()->id() === $user->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn không thể tự khóa tài khoản đang đăng nhập của chính mình.',
+            ], 422);
+        }
+
+        $user->update(['is_active' => ! $user->is_active]);
+
+        if (! $user->is_active && method_exists($user, 'tokens')) {
+            $user->tokens()->delete();
+        }
+
+        return response()->json([
+            'is_active' => $user->is_active,
+            'label' => $user->is_active ? 'Hoạt động' : 'Đã khóa',
+            'message' => $user->is_active
+                ? "Đã kích hoạt tài khoản của {$user->name}."
+                : "Đã khóa tài khoản {$user->name}. Người dùng này sẽ bị đăng xuất khỏi hệ thống ngay lập tức.",
+        ]);
     }
 }

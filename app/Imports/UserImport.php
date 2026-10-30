@@ -170,6 +170,7 @@ class UserImport implements ToCollection
                     'department_id' => $departmentId,
                     'password' => Hash::make($password),
                     'permission' => $this->defaultPermission,
+                    'is_active' => true,
                 ]);
 
                 $this->createdCount++;

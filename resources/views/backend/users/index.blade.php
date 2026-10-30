@@ -29,7 +29,7 @@
 
         <div class="card-body border-bottom bg-light bg-opacity-25">
             <form action="{{ route('backend.users.index') }}" method="GET" class="row g-2 align-items-center">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="input-group">
                         <span class="input-group-text"><i class="ri-search-line"></i></span>
                         <input
@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <select name="department_id" class="form-select">
                         <option value="">-- Tất cả phòng ban --</option>
                         @if (isset($departmentOptions))
@@ -67,12 +67,20 @@
                     </select>
                 </div>
 
+                <div class="col-md-2">
+                    <select name="status" class="form-select">
+                        <option value="">-- Tất cả trạng thái --</option>
+                        <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Đang hoạt động</option>
+                        <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Đã khóa / Tắt</option>
+                    </select>
+                </div>
+
                 <div class="col-md-1">
                     <select name="per_page" class="form-select" title="Số dòng mỗi trang">
                         <option value="10" {{ request('per_page', 20) == 10 ? 'selected' : '' }}>10 / trang</option>
                         <option value="20" {{ request('per_page', 20) == 20 ? 'selected' : '' }}>20 / trang</option>
-                        <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50 / trang</option>
-                        <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100 / trang</option>
+                        <option value="50" {{ request('per_page', 20) == 50 ? 'selected' : '' }}>50 / trang</option>
+                        <option value="100" {{ request('per_page', 20) == 100 ? 'selected' : '' }}>100 / trang</option>
                     </select>
                 </div>
 
@@ -80,7 +88,7 @@
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="ri-filter-line me-1"></i> Lọc
                     </button>
-                    @if (request()->hasAny(['search', 'department_id', 'permission', 'per_page']))
+                    @if (request()->hasAny(['search', 'department_id', 'permission', 'status', 'per_page']))
                         <a href="{{ route('backend.users.index') }}" class="btn btn-soft-danger" title="Xóa bộ lọc">
                             <i class="ri-close-line"></i>
                         </a>
@@ -136,6 +144,7 @@
                             <th>Số điện thoại</th>
                             <th>Email</th>
                             <th>Quyền</th>
+                            <th style="width: 140px;">Trạng thái</th>
                             <th>Ngày tạo</th>
                             <th class="text-end" style="width: 140px;">Thao tác</th>
                         </tr>
@@ -206,6 +215,21 @@
                                 <td>{{ $user->phone ?? '—' }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td><span class="badge bg-secondary">{{ $user->permission_label }}</span></td>
+                                <td>
+                                    <div class="d-inline-flex align-items-center gap-2">
+                                        <button
+                                            type="button"
+                                            class="status-toggle {{ $user->is_active ? 'is-active' : 'is-inactive' }}"
+                                            data-toggle-status
+                                            data-url="{{ route('backend.users.toggle-status', $user) }}"
+                                            aria-pressed="{{ $user->is_active ? 'true' : 'false' }}"
+                                            @if (auth()->id() === $user->id) disabled title="Không thể tự khóa tài khoản của chính mình" @endif
+                                        ></button>
+                                        <span class="status-toggle-label {{ $user->is_active ? 'text-success' : 'text-danger' }}" data-status-label>
+                                            {{ $user->is_active ? 'Hoạt động' : 'Đã khóa' }}
+                                        </span>
+                                    </div>
+                                </td>
                                 <td>{{ $user->created_at ? $user->created_at->format('d/m/Y H:i') : '' }}</td>
                                 <td class="text-end">
                                     <a href="{{ route('backend.users.edit', $user) }}" class="btn btn-sm btn-soft-warning">Sửa</a>
@@ -218,7 +242,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="10" class="text-center text-muted py-5">
+                                <td colspan="11" class="text-center text-muted py-5">
                                     <i class="ri-user-unfollow-line fs-2 mb-2 d-block text-secondary"></i>
                                     Không tìm thấy user nào phù hợp.
                                 </td>

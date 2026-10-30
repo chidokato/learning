@@ -33,6 +33,7 @@ class User extends Authenticatable
         'department_id',
         'employee_code',
         'username',
+        'is_active',
     ];
 
     /**
@@ -52,6 +53,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_active' => 'boolean',
     ];
 
     public function isAdmin(): bool

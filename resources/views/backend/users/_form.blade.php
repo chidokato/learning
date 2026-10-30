@@ -97,6 +97,25 @@
 
                     <div class="col-lg-6">
                         <div class="mb-3">
+                            <label class="form-label d-block">Trạng thái hoạt động</label>
+                            <div class="form-check form-switch mt-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="is_active"
+                                    name="is_active"
+                                    value="1"
+                                    {{ old('is_active', $user->is_active ?? true) ? 'checked' : '' }}
+                                    @if (isset($user) && $user->id && $user->id === auth()->id()) disabled title="Không thể tự khóa tài khoản của bạn" @endif
+                                >
+                                <label class="form-check-label" for="is_active">Kích hoạt tài khoản (Được phép đăng nhập)</label>
+                            </div>
+                            <div class="form-text text-muted">Nếu tắt, người dùng sẽ bị đăng xuất ngay và không thể đăng nhập vào hệ thống.</div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
                             <label class="form-label d-block">Avatar</label>
                             <input type="hidden" name="remove_avatar" id="remove_avatar" value="0">
                             <input type="hidden" name="existing_avatar" value="{{ $avatarImage }}">

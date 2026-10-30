@@ -35,6 +35,13 @@ class AuthController extends Controller
             'password' => ['required'],
         ], $messages);
 
+        $user = User::where('email', $credentials['email'])->first();
+        if ($user && ! $user->is_active) {
+            return back()->withErrors([
+                'email' => 'Tài khoản của bạn đã bị khóa hoặc tạm dừng hoạt động. Vui lòng liên hệ quản trị viên.',
+            ])->onlyInput('email');
+        }
+
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
             return redirect()->intended(route('frontend.home'))
