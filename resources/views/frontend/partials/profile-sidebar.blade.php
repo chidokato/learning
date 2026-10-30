@@ -1,24 +1,20 @@
 @php
-   $isProfilePage = request()->routeIs('frontend.profile');
-   $isTestsPage = request()->routeIs('frontend.tests.*');
    $currentUser = Auth::user();
 @endphp
 
 <style>
-   .profile-sidebar-card {
-      background: #ffffff;
-      border: 1px solid #eef2f6;
-      border-radius: 16px;
-      padding: 22px 16px;
-      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
-      margin-bottom: 30px;
+   .profile-sidebar-inner {
+      padding: 20px 14px 30px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
    }
-   .profile-user-info {
+   .profile-user-card {
       display: flex;
       align-items: center;
       gap: 12px;
       padding-bottom: 16px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       border-bottom: 1px solid #f1f4f8;
    }
    .profile-avatar-box {
@@ -70,21 +66,33 @@
       color: #1a2c5e;
    }
 
+   /* Section Title chuẩn phong cách Admin */
+   .profile-menu-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #94a3b8;
+      padding: 14px 10px 6px;
+      display: flex;
+      align-items: center;
+   }
+
    .profile-nav-list {
       list-style: none;
       padding: 0;
       margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
    }
    .profile-nav-link {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 14px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13.5px;
       font-weight: 500;
       color: #334155;
       text-decoration: none !important;
@@ -113,9 +121,8 @@
       opacity: 0.6;
    }
    .profile-nav-link:hover {
-      background: #f8fafc;
+      background: #f1f5f9;
       color: #03594e;
-      border-color: #f1f5f9;
    }
    .profile-nav-link:hover .profile-nav-icon {
       color: #03594e;
@@ -139,11 +146,6 @@
       color: #ffffff !important;
       opacity: 0.9;
    }
-   .profile-nav-divider {
-      height: 1px;
-      background: #f1f4f8;
-      margin: 8px 4px;
-   }
    .profile-nav-link.logout {
       color: #dc2626;
    }
@@ -156,7 +158,6 @@
    .profile-nav-link.logout:hover {
       background: #fef2f2;
       color: #b91c1c;
-      border-color: #fee2e2;
    }
    .profile-nav-link.logout:hover .profile-nav-icon,
    .profile-nav-link.logout:hover .profile-nav-arrow {
@@ -164,9 +165,9 @@
    }
 </style>
 
-<div class="profile-sidebar-card">
+<div class="profile-sidebar-inner">
    @if(Auth::check())
-      <div class="profile-user-info">
+      <div class="profile-user-card">
          <div class="profile-avatar-box">
             @if(!empty($currentUser->avatar))
                <img src="{{ Str::startsWith($currentUser->avatar, ['http://', 'https://']) ? $currentUser->avatar : asset($currentUser->avatar) }}" alt="{{ $currentUser->name }}" onerror="this.style.display='none';">
@@ -192,7 +193,7 @@
          </div>
       </div>
    @else
-      <div class="profile-user-info">
+      <div class="profile-user-card">
          <div class="profile-avatar-box">
             <i class="far fa-user"></i>
          </div>
@@ -203,9 +204,11 @@
       </div>
    @endif
 
-   <div class="profile-sidebar-nav-wrap">
-      <ul class="profile-nav-list">
-         <!-- 1. Thông tin cá nhân -->
+   <div class="profile-sidebar-nav-wrap flex-grow-1">
+      
+      <!-- Nhóm 1: Tài khoản cá nhân -->
+      <div class="profile-menu-section-title">Tài khoản cá nhân</div>
+      <ul class="profile-nav-list mb-2">
          <li class="nav-item">
             <a class="profile-nav-link {{ request()->routeIs('frontend.profile') ? 'active' : '' }}" href="{{ route('frontend.profile') }}">
                <span class="profile-nav-link-content">
@@ -215,8 +218,12 @@
                <i class="far fa-angle-right profile-nav-arrow"></i>
             </a>
          </li>
+      </ul>
 
-         <!-- 2. Lịch sử học tập -->
+      <!-- Nhóm 2: Học tập & Đào tạo -->
+      <div class="profile-menu-section-title">Học tập & Đào tạo</div>
+      <ul class="profile-nav-list mb-2">
+         <!-- Lịch sử học tập -->
          <li class="nav-item">
             <a class="profile-nav-link {{ request()->routeIs('frontend.history.learning') ? 'active' : '' }}" href="{{ route('frontend.history.learning') }}">
                <span class="profile-nav-link-content">
@@ -227,7 +234,7 @@
             </a>
          </li>
 
-         <!-- 3. Lịch sử làm bài -->
+         <!-- Lịch sử làm bài -->
          <li class="nav-item">
             <a class="profile-nav-link {{ request()->routeIs('frontend.history.tests') ? 'active' : '' }}" href="{{ route('frontend.history.tests') }}">
                <span class="profile-nav-link-content">
@@ -238,7 +245,7 @@
             </a>
          </li>
 
-         <!-- 4. Bài kiểm tra -->
+         <!-- Bài kiểm tra -->
          <li class="nav-item">
             <a class="profile-nav-link {{ request()->routeIs('frontend.tests.*') ? 'active' : '' }}" href="{{ route('frontend.tests.index') }}">
                <span class="profile-nav-link-content">
@@ -248,9 +255,12 @@
                <i class="far fa-angle-right profile-nav-arrow"></i>
             </a>
          </li>
+      </ul>
 
+      <!-- Nhóm 3: Hệ thống -->
+      <div class="profile-menu-section-title">Hệ thống</div>
+      <ul class="profile-nav-list">
          @if(Auth::check() && $currentUser->isAdmin())
-            <li class="profile-nav-divider"></li>
             <li class="nav-item">
                <a class="profile-nav-link" href="{{ route('backend.admin.dashboard') }}">
                   <span class="profile-nav-link-content">
@@ -258,7 +268,7 @@
                      <span>Quản trị hệ thống</span>
                   </span>
                   <span class="d-flex align-items-center gap-1">
-                     <span class="badge" style="background: rgba(26,44,94,0.08); color: #1a2c5e; font-size: 10px; font-weight: 600; padding: 2px 6px;">Admin</span>
+                     <span class="badge" style="background: rgba(26,44,94,0.08); color: #1a2c5e; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px;">Admin</span>
                      <i class="far fa-angle-right profile-nav-arrow"></i>
                   </span>
                </a>
@@ -266,7 +276,6 @@
          @endif
 
          @if(Auth::check())
-            <li class="profile-nav-divider"></li>
             <li class="nav-item">
                <a class="profile-nav-link logout" href="{{ route('frontend.logout.get') }}" onclick="event.preventDefault(); document.getElementById('profile-logout-form').submit();">
                   <span class="profile-nav-link-content">
