@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,24 +14,55 @@ use Illuminate\View\View;
 
 class UserController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $users = User::query()
-            ->latest()
-            ->paginate(10);
+        $query = User::query()->with('department');
 
-        return view('backend.users.index', compact('users'));
+        if ($request->filled('department_id')) {
+            $department = Department::find($request->input('department_id'));
+            if ($department) {
+                $deptIds = array_merge([$department->id], $department->getAllDescendantIds());
+                $query->whereIn('department_id', $deptIds);
+            }
+        }
+
+        if ($request->filled('search')) {
+            $keyword = trim($request->input('search'));
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', "%{$keyword}%")
+                    ->orWhere('email', 'like', "%{$keyword}%")
+                    ->orWhere('phone', 'like', "%{$keyword}%")
+                    ->orWhere('job_title', 'like', "%{$keyword}%");
+            });
+        }
+
+        if ($request->filled('permission')) {
+            $query->where('permission', $request->input('permission'));
+        }
+
+        $perPage = (int) $request->input('per_page', 20);
+        if ($perPage <= 0 || $perPage > 200) {
+            $perPage = 20;
+        }
+
+        $users = $query->latest()->paginate($perPage)->withQueryString();
+        $departmentOptions = Department::getTreeOptions();
+
+        return view('backend.users.index', compact('users', 'departmentOptions'));
     }
 
     public function create(): View
     {
-        return view('backend.users.create');
+        $departmentOptions = Department::getTreeOptions();
+
+        return view('backend.users.create', compact('departmentOptions'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'department_id' => ['nullable', 'exists:departments,id'],
             'job_title' => ['nullable', 'string', 'max:255'],
             'bio' => ['nullable', 'string'],
             'address' => ['nullable', 'string', 'max:255'],
@@ -52,6 +84,7 @@ class UserController extends Controller
 
         User::create([
             'name' => $validated['name'],
+            'department_id' => $validated['department_id'] ?? null,
             'job_title' => $validated['job_title'] ?? null,
             'bio' => $validated['bio'] ?? null,
             'address' => $validated['address'] ?? null,
@@ -71,13 +104,16 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
-        return view('backend.users.edit', compact('user'));
+        $departmentOptions = Department::getTreeOptions();
+
+        return view('backend.users.edit', compact('user', 'departmentOptions'));
     }
 
     public function update(Request $request, User $user): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'department_id' => ['nullable', 'exists:departments,id'],
             'job_title' => ['nullable', 'string', 'max:255'],
             'bio' => ['nullable', 'string'],
             'address' => ['nullable', 'string', 'max:255'],
@@ -110,6 +146,7 @@ class UserController extends Controller
 
         $data = [
             'name' => $validated['name'],
+            'department_id' => $validated['department_id'] ?? null,
             'job_title' => $validated['job_title'] ?? null,
             'bio' => $validated['bio'] ?? null,
             'address' => $validated['address'] ?? null,
@@ -195,5 +232,50 @@ class UserController extends Controller
                 'name' => $user->name,
             ]
         ]);
+    }
+
+    public function bulkUpdateDepartment(Request $request)
+    {
+        $validated = $request->validate([
+            'user_ids' => ['required', 'array', 'min:1'],
+            'user_ids.*' => ['integer', 'exists:users,id'],
+            'department_id' => ['nullable'],
+        ]);
+
+        $departmentId = $request->input('department_id');
+        if ($departmentId === 'none' || $departmentId === '' || $departmentId === 'null') {
+            $departmentId = null;
+        } else {
+            $departmentId = (int) $departmentId;
+            if (! Department::where('id', $departmentId)->exists()) {
+                if ($request->wantsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Phòng ban không tồn tại.'], 422);
+                }
+                return redirect()->back()->with('error', 'Phòng ban được chọn không tồn tại.');
+            }
+        }
+
+        $userIds = $validated['user_ids'];
+        $count = User::whereIn('id', $userIds)->update([
+            'department_id' => $departmentId,
+        ]);
+
+        $dept = $departmentId ? Department::find($departmentId) : null;
+        $deptName = $dept ? $dept->name : 'Không có phòng ban (Đã gỡ)';
+
+        $message = "Đã cập nhật phòng ban [{$deptName}] cho {$count} người dùng thành công.";
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'count' => $count,
+                'department_id' => $departmentId,
+                'department_name' => $deptName,
+                'department_breadcrumb' => $dept ? $dept->breadcrumb : '',
+            ]);
+        }
+
+        return redirect()->back()->with('success', $message);
     }
 }

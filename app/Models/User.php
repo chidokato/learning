@@ -30,6 +30,7 @@ class User extends Authenticatable
         'whatsapp_phone',
         'avatar',
         'permission',
+        'department_id',
     ];
 
     /**
@@ -72,5 +73,10 @@ class User extends Authenticatable
             6 => 'Guest',
         ];
         return $permissions[$this->permission] ?? 'Guest';
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
     }
 }

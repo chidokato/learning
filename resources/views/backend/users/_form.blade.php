@@ -31,6 +31,25 @@
 
                     <div class="col-lg-6">
                         <div class="mb-3">
+                            <label for="department_id" class="form-label">Phòng ban</label>
+                            <select class="form-select @error('department_id') is-invalid @enderror" id="department_id" name="department_id">
+                                <option value="">-- Chọn phòng ban --</option>
+                                @if (isset($departmentOptions))
+                                    @foreach ($departmentOptions as $deptId => $deptLabel)
+                                        <option value="{{ $deptId }}" {{ (string) old('department_id', $user->department_id ?? '') === (string) $deptId ? 'selected' : '' }}>
+                                            {{ $deptLabel }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            @error('department_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
                             <label for="job_title" class="form-label">Chuc danh</label>
                             <input type="text" class="form-control @error('job_title') is-invalid @enderror" id="job_title" name="job_title" value="{{ old('job_title', $user->job_title ?? '') }}">
                             @error('job_title')

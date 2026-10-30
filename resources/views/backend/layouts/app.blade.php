@@ -153,6 +153,7 @@
                                     ['label' => 'SEO', 'icon' => 'ri-search-eye-line', 'route' => 'backend.seo.edit', 'active' => request()->routeIs('backend.seo.*')],
                                     ['label' => 'Setting', 'icon' => 'ri-settings-3-line', 'route' => 'backend.settings.edit', 'active' => request()->routeIs('backend.settings.*')],
                                     ['label' => 'Cấu hình Google', 'icon' => 'ri-google-fill', 'route' => 'backend.google-auth.index', 'active' => request()->routeIs('backend.google-auth.*')],
+                                    ['label' => 'Phòng ban', 'icon' => 'ri-building-line', 'route' => 'backend.departments.index', 'active' => request()->routeIs('backend.departments.*')],
                                     ['label' => 'User', 'icon' => 'ri-user-3-line', 'route' => 'backend.users.index', 'active' => request()->routeIs('backend.users.*')],
                                 ]
                             ];

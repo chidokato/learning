@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SettingController;
@@ -293,11 +294,23 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::put('chatbot', 'update')->name('chatbot.update');
     });
 
+    Route::controller(DepartmentController::class)->group(function () {
+        Route::get('departments', 'index')->name('departments.index');
+        Route::get('departments/create', 'create')->name('departments.create');
+        Route::post('departments', 'store')->name('departments.store');
+        Route::get('departments/{department}/edit', 'edit')->name('departments.edit');
+        Route::put('departments/{department}', 'update')->name('departments.update');
+        Route::delete('departments/{department}', 'destroy')->name('departments.destroy');
+        Route::patch('departments/{department}/toggle-status', 'toggleStatus')->name('departments.toggle-status');
+        Route::patch('departments/{department}/sort-order', 'updateSortOrder')->name('departments.update-sort-order');
+    });
+
     Route::controller(UserController::class)->group(function () {
         Route::get('users', 'index')->name('users.index');
         Route::get('users/create', 'create')->name('users.create');
         Route::post('users', 'store')->name('users.store');
         Route::post('users/quick-add', 'quickAdd')->name('users.quick-add');
+        Route::post('users/bulk-department', 'bulkUpdateDepartment')->name('users.bulk-department');
         Route::get('users/{user}/edit', 'edit')->name('users.edit');
         Route::put('users/{user}', 'update')->name('users.update');
         Route::delete('users/{user}', 'destroy')->name('users.destroy');
