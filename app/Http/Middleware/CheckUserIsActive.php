@@ -34,14 +34,14 @@ class CheckUserIsActive
                 if ($request->expectsJson() || $request->ajax()) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.',
+                        'message' => 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.',
                     ], 403);
                 }
 
                 $loginRoute = $request->is('admin*') ? 'backend.admin.login' : 'frontend.login';
 
                 return redirect()->route($loginRoute)
-                    ->with('error', 'Tài khoản của bạn đã bị khóa hoặc tạm dừng hoạt động. Vui lòng liên hệ quản trị viên.');
+                    ->with('error', 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.');
             }
         }
 

@@ -55,6 +55,15 @@
                            <p class="auth-subtitle">Đăng ký thành viên để khám phá các khóa học nội bộ Indochine</p>
                         </div>
 
+                        <div class="auth-alert auth-alert-info mb-4">
+                           <div class="d-flex align-items-center gap-2">
+                              <i class="fas fa-info-circle flex-shrink-0"></i>
+                              <div>
+                                 <strong>Lưu ý:</strong> Website lưu hành nội bộ. Tài khoản đăng ký mới cần liên hệ admin để được kích hoạt và cấp quyền truy cập.
+                              </div>
+                           </div>
+                        </div>
+
                         @if (isset($errors) && $errors->any())
                            <div class="auth-alert auth-alert-danger">
                               <div class="d-flex align-items-start gap-2">

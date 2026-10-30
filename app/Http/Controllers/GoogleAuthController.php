@@ -179,7 +179,7 @@ class GoogleAuthController extends Controller
 
         if ($user) {
             if (! $user->is_active) {
-                return redirect()->route('frontend.login')->with('error', 'Tài khoản của bạn đã bị khóa hoặc tạm dừng hoạt động. Vui lòng liên hệ quản trị viên.');
+                return redirect()->route('frontend.login')->with('error', 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.');
             }
 
             $avatar = $googleUser->getAvatar();
@@ -200,7 +200,7 @@ class GoogleAuthController extends Controller
 
         if ($existingUser) {
             if (! $existingUser->is_active) {
-                return redirect()->route('frontend.login')->with('error', 'Tài khoản của bạn đã bị khóa hoặc tạm dừng hoạt động. Vui lòng liên hệ quản trị viên.');
+                return redirect()->route('frontend.login')->with('error', 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.');
             }
 
             if ($hasGoogleId) {
@@ -219,7 +219,7 @@ class GoogleAuthController extends Controller
             return redirect()->intended(route('frontend.home'))->with('success', 'Đăng nhập Google thành công! Tài khoản của bạn đã được liên kết.');
         }
 
-        // 4. Người dùng mới hoàn toàn -> Tự động tạo tài khoản học viên
+        // 4. Người dùng mới hoàn toàn -> Tự động tạo tài khoản học viên nhưng mặc định chưa kích hoạt
         $userName = $googleUser->getName() ?: ($googleUser->getNickname() ?: 'Học viên');
         $avatar = $googleUser->getAvatar();
 
@@ -230,6 +230,7 @@ class GoogleAuthController extends Controller
             'email_verified_at' => now(),
             'avatar' => $avatar ? Str::limit($avatar, 250, '') : null,
             'permission' => 5, // Quyền học viên (Student)
+            'is_active' => false,
         ];
 
         if ($hasGoogleId) {
@@ -238,9 +239,7 @@ class GoogleAuthController extends Controller
 
         $newUser = User::create($userData);
 
-        Auth::login($newUser, true);
-
-        return redirect()->intended(route('frontend.home'))->with('success', 'Chào mừng bạn! Đăng ký và đăng nhập thành công bằng tài khoản Google.');
+        return redirect()->route('frontend.login')->with('warning', 'Tài khoản Google (' . $googleUser->getEmail() . ') đã được tạo! Website lưu hành nội bộ, cần liên hệ admin để được cấp tài khoản.');
     }
 
     /**

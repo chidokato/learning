@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_active')->default(true)->after('permission');
+            $table->boolean('is_active')->default(false)->after('permission');
         });
     }
 

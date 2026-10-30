@@ -41,7 +41,7 @@ class AdminController extends Controller
 
         if (! $admin->is_active) {
             return back()
-                ->withErrors(['email' => 'Tài khoản của bạn đã bị khóa hoặc tạm dừng hoạt động.'])
+                ->withErrors(['email' => 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.'])
                 ->onlyInput('email');
         }
 

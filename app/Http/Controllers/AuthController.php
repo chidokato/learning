@@ -38,7 +38,7 @@ class AuthController extends Controller
         $user = User::where('email', $credentials['email'])->first();
         if ($user && ! $user->is_active) {
             return back()->withErrors([
-                'email' => 'Tài khoản của bạn đã bị khóa hoặc tạm dừng hoạt động. Vui lòng liên hệ quản trị viên.',
+                'email' => 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.',
             ])->onlyInput('email');
         }
 
@@ -92,12 +92,11 @@ class AuthController extends Controller
             'phone' => $validated['phone'] ?? null,
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'is_active' => false,
         ]);
 
-        Auth::login($user);
-
-        return redirect()->route('frontend.home')
-            ->with('success', 'Đăng ký tài khoản thành công.');
+        return redirect()->route('frontend.login')
+            ->with('warning', 'Đăng ký tài khoản thành công! Website lưu hành nội bộ, cần liên hệ admin để được cấp tài khoản.');
     }
 
     /**
