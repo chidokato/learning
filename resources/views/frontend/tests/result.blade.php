@@ -10,11 +10,11 @@
 
 @section('page_actions')
    @if($result->is_passed)
-      <span class="badge" style="background: rgba(22, 163, 74, 0.1); color: #16a34a; font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(22, 163, 74, 0.2);">
+      <span class="badge" style="background: rgba(22, 163, 74, 0.1); color: #16a34a !important; font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(22, 163, 74, 0.2);">
          <i class="fa-solid fa-trophy me-1"></i> ĐẠT ({{ $result->score }}/{{ $test->questions->count() }})
       </span>
    @else
-      <span class="badge" style="background: rgba(220, 38, 38, 0.1); color: #dc2626; font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(220, 38, 38, 0.2);">
+      <span class="badge" style="background: rgba(220, 38, 38, 0.1); color: #dc2626 !important; font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(220, 38, 38, 0.2);">
          <i class="fa-solid fa-circle-xmark me-1"></i> CHƯA ĐẠT ({{ $result->score }}/{{ $test->questions->count() }})
       </span>
    @endif
@@ -170,6 +170,23 @@
       border-radius: 3px;
       flex-shrink: 0;
    }
+   .badge-legacy-notice {
+      background: #fef3c7 !important;
+      color: #92400e !important;
+      border: 1px solid #fde68a !important;
+      font-size: 11.5px !important;
+      font-weight: 500 !important;
+      padding: 3px 10px !important;
+      border-radius: 6px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+      line-height: 1.4 !important;
+   }
+   .badge-legacy-notice i {
+      color: #d97706 !important;
+      font-size: 12px !important;
+   }
 
    /* Question Box compact */
    .review-question-card {
@@ -310,7 +327,7 @@
                <i class="fa-solid fa-clipboard-check text-primary me-1"></i> Chi tiết bài làm:
             </div>
             @if(empty($userAnswers))
-               <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle fw-normal fs-11 py-1 px-2 d-inline-flex align-items-center gap-1">
+               <span class="badge-legacy-notice">
                   <i class="fa-solid fa-circle-info"></i> Lượt thi này chưa lưu phương án đã chọn (hiển thị đáp án chuẩn)
                </span>
             @endif
