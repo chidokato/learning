@@ -149,83 +149,96 @@
    /* Topic Group Section */
    .topic-group-section {
       background: transparent;
-      margin-bottom: 30px;
+      margin-bottom: 34px;
       transition: all 0.3s ease;
    }
    .topic-group-header {
-      background: #ffffff;
-      border: 1px solid #e9ebec;
-      border-left: 4px solid #03594e;
-      border-radius: 12px;
-      padding: 12px 18px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #edf2f7;
+      border-radius: 0;
+      padding: 0 0 10px 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 14px;
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-      transition: all 0.2s ease;
+      margin-bottom: 18px;
+      box-shadow: none;
+      transition: border-color 0.2s ease;
    }
    .topic-group-header:hover {
-      border-color: #cbd5e1;
-      border-left-color: #03594e;
+      border-bottom-color: #cbd5e1;
    }
    .topic-header-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex: 1;
       min-width: 0;
    }
    .topic-header-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 9px;
-      background: rgba(3, 89, 78, 0.1);
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: rgba(3, 89, 78, 0.08);
       color: #03594e;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 13px;
       flex-shrink: 0;
    }
    .topic-header-text {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px 12px;
       flex: 1;
       min-width: 0;
    }
    .topic-group-title {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
       color: #0f172a;
       margin: 0;
-      line-height: 1.35;
-      letter-spacing: -0.1px;
+      line-height: 1.3;
+      letter-spacing: -0.2px;
    }
    .topic-count-badge {
       display: inline-flex;
       align-items: center;
       font-size: 11.5px;
       font-weight: 600;
-      color: #03594e;
-      background: rgba(3, 89, 78, 0.08);
-      border: 1px solid rgba(3, 89, 78, 0.18);
+      color: #475569;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
       padding: 1px 8px;
       border-radius: 999px;
       white-space: nowrap;
    }
    .topic-progress-info {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
-      margin-top: 3px;
+      gap: 8px;
+      margin: 0;
+      padding-left: 12px;
+      border-left: 1.5px solid #e2e8f0;
       font-size: 12px;
       color: #64748b;
-      flex-wrap: wrap;
+      white-space: nowrap;
+   }
+   @media (max-width: 767px) {
+      .topic-progress-info {
+         padding-left: 0;
+         border-left: none;
+         width: 100%;
+         margin-top: 4px;
+      }
    }
    .topic-progress-bar-wrap {
-      width: 110px;
-      height: 6px;
+      width: 90px;
+      height: 5px;
       background: #e2e8f0;
       border-radius: 999px;
       overflow: hidden;
@@ -243,23 +256,22 @@
       color: #03594e;
    }
    .btn-toggle-topic {
-      border: 1px solid #e2e8f0;
-      background: #f8fafc;
-      color: #475569;
+      border: none;
+      background: transparent;
+      color: #64748b;
       font-size: 12px;
       font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 7px;
+      padding: 4px 8px;
+      border-radius: 6px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       cursor: pointer;
       transition: all 0.2s ease;
    }
    .btn-toggle-topic:hover {
       background: #f1f5f9;
-      color: #0f172a;
-      border-color: #cbd5e1;
+      color: #03594e;
    }
    .btn-toggle-topic .toggle-icon {
       transition: transform 0.25s ease;
@@ -276,6 +288,60 @@
    .test-list-item {
       display: flex;
       visibility: visible !important;
+      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+   }
+
+   /* Load More Button in Topic Section */
+   .topic-load-more-wrap {
+      margin-top: 18px;
+      margin-bottom: 6px;
+      text-align: center;
+   }
+   .btn-load-more-tests {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 26px;
+      background: #ffffff;
+      color: #03594e;
+      border: 1.5px solid rgba(3, 89, 78, 0.28);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+      transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+   }
+   .btn-load-more-tests:hover {
+      background: #03594e;
+      color: #ffffff;
+      border-color: #03594e;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(3, 89, 78, 0.2);
+   }
+   .btn-load-more-tests i {
+      font-size: 11px;
+      transition: transform 0.25s ease;
+   }
+   .btn-load-more-tests:hover i {
+      transform: translateY(2px);
+   }
+   .btn-load-more-tests .load-more-remaining-count {
+      font-weight: 700;
+   }
+
+   /* Special Group Section Load More Button */
+   .special-group-section .btn-load-more-tests {
+      color: #92400e;
+      border-color: rgba(245, 158, 11, 0.4);
+      background: #ffffff;
+   }
+   .special-group-section .btn-load-more-tests:hover {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #ffffff;
+      border-color: #d97706;
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.28);
    }
 
    /* Career Item Box - Nhỏ gọn, tinh tế */
@@ -300,59 +366,66 @@
 
    /* Special / Featured Group Section & Card Highlight */
    .special-group-section {
-      margin-bottom: 30px;
+      margin-bottom: 34px;
    }
    .special-group-header {
-      background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%) !important;
-      border: 1.5px solid #fde68a !important;
-      border-left: 5px solid #f59e0b !important;
-      border-radius: 12px;
-      padding: 13px 18px;
+      background: transparent !important;
+      border: none !important;
+      border-bottom: 2px solid #fde68a !important;
+      border-radius: 0 !important;
+      padding: 0 0 10px 0 !important;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1) !important;
-      transition: all 0.25s ease;
+      margin-bottom: 18px !important;
+      box-shadow: none !important;
+      transition: border-color 0.25s ease;
    }
    .special-group-header:hover {
-      border-color: #f59e0b !important;
-      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.16) !important;
+      border-bottom-color: #f59e0b !important;
+      box-shadow: none !important;
    }
    .special-header-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-      color: #ffffff !important;
-      display: flex;
+      width: 28px !important;
+      height: 28px !important;
+      border-radius: 6px !important;
+      background: #fef3c7 !important;
+      color: #d97706 !important;
+      display: inline-flex !important;
       align-items: center;
       justify-content: center;
-      font-size: 17px;
+      font-size: 13px !important;
       flex-shrink: 0;
-      box-shadow: 0 3px 8px rgba(217, 119, 6, 0.3);
+      box-shadow: none !important;
    }
    .special-group-title {
       font-size: 16px !important;
       font-weight: 800 !important;
       color: #92400e !important;
       margin: 0;
-      line-height: 1.35;
+      line-height: 1.3;
       letter-spacing: -0.2px;
    }
    .special-count-badge {
       display: inline-flex;
       align-items: center;
-      font-size: 11.5px;
-      font-weight: 700;
+      font-size: 11.5px !important;
+      font-weight: 700 !important;
       color: #92400e !important;
       background: #fef3c7 !important;
       border: 1px solid #fde68a !important;
-      padding: 2px 9px;
-      border-radius: 999px;
+      padding: 1px 8px !important;
+      border-radius: 999px !important;
       white-space: nowrap;
+   }
+   .special-group-header .btn-toggle-topic {
+      color: #92400e !important;
+   }
+   .special-group-header .btn-toggle-topic:hover {
+      background: #fef3c7 !important;
+      color: #78350f !important;
    }
 
    /* Special Card Highlight */
@@ -761,17 +834,15 @@
                      <i class="fa-solid fa-star"></i>
                   </div>
                   <div class="topic-header-text">
-                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <h3 class="topic-group-title special-group-title">
-                           Bài kiểm tra đặc biệt
-                        </h3>
-                        <span class="topic-count-badge special-count-badge">
-                           <span class="topic-visible-count">{{ $specialTests->count() }}</span> bài thi
-                        </span>
-                     </div>
-                     <div class="text-muted small mt-1" style="font-size: 12px; color: #78350f !important;">
-                        <i class="fa-solid fa-sparkles text-warning me-1"></i> Các bài thi trọng tâm được đánh dấu đặc biệt
-                     </div>
+                     <h3 class="topic-group-title special-group-title">
+                        Bài kiểm tra đặc biệt
+                     </h3>
+                     <span class="topic-count-badge special-count-badge">
+                        <span class="topic-visible-count">{{ $specialTests->count() }}</span> bài thi
+                     </span>
+                     <span class="d-none d-sm-inline-flex align-items-center gap-1" style="font-size: 12px; color: #b45309; padding-left: 10px; border-left: 1.5px solid #fde68a;">
+                        <i class="fa-solid fa-sparkles text-warning"></i> Trọng tâm
+                     </span>
                   </div>
                </div>
 
@@ -819,6 +890,7 @@
                           data-status="{{ $statusKey }}"
                           data-topics="{{ $test->topics->pluck('id')->implode(',') }}"
                           data-questions="{{ $qCount }}"
+                          @if($loop->index >= 4) style="display: none;" @endif
                      >
                         <div class="it-career-item is-special-card">
                            <!-- Header: Category & Status -->
@@ -898,6 +970,13 @@
                      </div>
                   @endforeach
                </div>
+               @php $specialRemaining = $specialTests->count() - 4; @endphp
+               <div class="topic-load-more-wrap text-center mt-3 {{ $specialRemaining <= 0 ? 'd-none' : '' }}">
+                  <button type="button" class="btn-load-more-tests">
+                     <span>Xem thêm bài thi (còn <strong class="load-more-remaining-count">{{ max(0, $specialRemaining) }}</strong> bài)</span>
+                     <i class="fa-solid fa-chevron-down ms-1"></i>
+                  </button>
+               </div>
             </div>
          </div>
       @endif
@@ -921,12 +1000,10 @@
                      <i class="fa-solid fa-layer-group"></i>
                   </div>
                   <div class="topic-header-text">
-                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <h3 class="topic-group-title">{{ $group['topic']->name }}</h3>
-                        <span class="topic-count-badge">
-                           <span class="topic-visible-count">{{ $topicTotal }}</span> bài thi
-                        </span>
-                     </div>
+                     <h3 class="topic-group-title">{{ $group['topic']->name }}</h3>
+                     <span class="topic-count-badge">
+                        <span class="topic-visible-count">{{ $topicTotal }}</span> bài thi
+                     </span>
                      @if(Auth::check())
                      <div class="topic-progress-info">
                         <span class="topic-passed-stat">
@@ -985,6 +1062,7 @@
                           data-status="{{ $statusKey }}"
                           data-topics="{{ $tpId }}"
                           data-questions="{{ $qCount }}"
+                          @if($loop->index >= 4) style="display: none;" @endif
                      >
                         <div class="it-career-item {{ $test->is_special ? 'is-special-card' : '' }}">
                            <!-- Header: Category & Status -->
@@ -1066,6 +1144,13 @@
                      </div>
                   @endforeach
                </div>
+               @php $topicRemaining = $topicTotal - 4; @endphp
+               <div class="topic-load-more-wrap text-center mt-3 {{ $topicRemaining <= 0 ? 'd-none' : '' }}">
+                  <button type="button" class="btn-load-more-tests">
+                     <span>Xem thêm bài thi (còn <strong class="load-more-remaining-count">{{ max(0, $topicRemaining) }}</strong> bài)</span>
+                     <i class="fa-solid fa-chevron-down ms-1"></i>
+                  </button>
+               </div>
             </div>
          </div>
       @endforeach
@@ -1079,12 +1164,10 @@
                      <i class="fa-solid fa-shield-check"></i>
                   </div>
                   <div class="topic-header-text">
-                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <h3 class="topic-group-title">Đề thi chung & Chuyên đề khác</h3>
-                        <span class="topic-count-badge">
-                           <span class="topic-visible-count">{{ $untaggedTests->count() }}</span> bài thi
-                        </span>
-                     </div>
+                     <h3 class="topic-group-title">Đề thi chung & Chuyên đề khác</h3>
+                     <span class="topic-count-badge">
+                        <span class="topic-visible-count">{{ $untaggedTests->count() }}</span> bài thi
+                     </span>
                   </div>
                </div>
                <div class="topic-header-right">
@@ -1125,6 +1208,7 @@
                           data-status="{{ $statusKey }}"
                           data-topics="untagged"
                           data-questions="{{ $qCount }}"
+                          @if($loop->index >= 4) style="display: none;" @endif
                      >
                         <div class="it-career-item {{ $test->is_special ? 'is-special-card' : '' }}">
                            <div class="it-career-top d-flex align-items-center justify-content-between flex-wrap gap-1">
@@ -1188,6 +1272,13 @@
                         </div>
                      </div>
                   @endforeach
+               </div>
+               @php $untaggedRemaining = $untaggedTests->count() - 4; @endphp
+               <div class="topic-load-more-wrap text-center mt-3 {{ $untaggedRemaining <= 0 ? 'd-none' : '' }}">
+                  <button type="button" class="btn-load-more-tests">
+                     <span>Xem thêm bài thi (còn <strong class="load-more-remaining-count">{{ max(0, $untaggedRemaining) }}</strong> bài)</span>
+                     <i class="fa-solid fa-chevron-down ms-1"></i>
+                  </button>
                </div>
             </div>
          </div>
@@ -1280,7 +1371,13 @@
       }
 
       // Lọc danh sách bài thi theo Topic, Trạng thái & Từ khóa tìm kiếm
-      function filterTests() {
+      function filterTests(resetLimits = false) {
+         if (resetLimits) {
+            $sections.each(function() {
+               $(this).data('visible-limit', 4);
+            });
+         }
+
          const rawKeyword = $searchInput.val().trim();
          const keyword = removeVietnameseTones(rawKeyword);
 
@@ -1296,7 +1393,6 @@
             const $sec = $(this);
             const isSpecialSec = $sec.attr('id') === 'specialGroupSection';
             const secTopicId = String($sec.data('topic-id') || '');
-            let secVisibleCount = 0;
 
             // Nếu người dùng chọn lọc 1 topic cụ thể mà không phải nhóm đặc biệt thì kiểm tra topicId
             const matchesTopicFilter = (currentTopic === 'all') || (!isSpecialSec && secTopicId === currentTopic);
@@ -1307,6 +1403,7 @@
             }
 
             const $secItems = $sec.find('.test-list-item');
+            const matchingItems = [];
 
             $secItems.each(function() {
                const $item = $(this);
@@ -1321,8 +1418,7 @@
                const matchesStatus = (currentStatus === 'all') || (itemStatus === currentStatus);
 
                if (matchesSearch && matchesStatus) {
-                  $item.show().css('visibility', 'visible');
-                  secVisibleCount++;
+                  matchingItems.push($item);
                   if (!isSpecialSec) {
                      totalVisible++;
                   }
@@ -1331,13 +1427,40 @@
                }
             });
 
+            const totalMatched = matchingItems.length;
             // Cập nhật số lượng bài thi khớp trong header nhóm topic
-            $sec.find('.topic-visible-count').text(secVisibleCount);
+            $sec.find('.topic-visible-count').text(totalMatched);
 
-            if (secVisibleCount > 0) {
-               $sec.show();
-            } else {
+            if (totalMatched === 0) {
                $sec.hide();
+               return;
+            }
+
+            $sec.show();
+
+            // Áp dụng giới hạn hiển thị tối đa (mặc định 4 bài)
+            const currentLimit = parseInt($sec.data('visible-limit') || 4, 10);
+            const $loadMoreWrap = $sec.find('.topic-load-more-wrap');
+
+            matchingItems.forEach(function($item, idx) {
+               if (idx < currentLimit) {
+                  $item.css({
+                     'display': 'flex',
+                     'opacity': '1',
+                     'transform': 'translateY(0)'
+                  }).show();
+               } else {
+                  $item.hide();
+               }
+            });
+
+            // Hiển thị hoặc ẩn nút Xem thêm tùy theo số bài còn lại
+            if (totalMatched > currentLimit) {
+               const remaining = totalMatched - currentLimit;
+               $loadMoreWrap.find('.load-more-remaining-count').text(remaining);
+               $loadMoreWrap.removeClass('d-none').show();
+            } else {
+               $loadMoreWrap.addClass('d-none').hide();
             }
          });
 
@@ -1355,27 +1478,94 @@
          }
       }
 
+      // Xử lý sự kiện bấm "Xem thêm" (tải thêm 4 bài thi mượt mà)
+      $(document).on('click', '.btn-load-more-tests', function(e) {
+         e.preventDefault();
+         const $btn = $(this);
+         const $sec = $btn.closest('.topic-group-section');
+         const currentLimit = parseInt($sec.data('visible-limit') || 4, 10);
+         const newLimit = currentLimit + 4;
+         $sec.data('visible-limit', newLimit);
+
+         const rawKeyword = $searchInput.val().trim();
+         const keyword = removeVietnameseTones(rawKeyword);
+         const $secItems = $sec.find('.test-list-item');
+
+         const matchingItems = [];
+         $secItems.each(function() {
+            const $item = $(this);
+            const itemTitleRaw = $item.find('.test-list-title').text();
+            const itemTitle = removeVietnameseTones(itemTitleRaw);
+            const itemStatus = String($item.data('status') || '');
+
+            const matchesSearch = (keyword === '') || 
+                                  itemTitle.includes(keyword) || 
+                                  itemTitleRaw.toLowerCase().includes(rawKeyword.toLowerCase());
+
+            const matchesStatus = (currentStatus === 'all') || (itemStatus === currentStatus);
+
+            if (matchesSearch && matchesStatus) {
+               matchingItems.push($item);
+            }
+         });
+
+         const newlyShown = [];
+         matchingItems.forEach(function($item, idx) {
+            if (idx >= currentLimit && idx < newLimit) {
+               newlyShown.push($item);
+            }
+         });
+
+         // Hiệu ứng xuất hiện mượt mà (stagger animation)
+         newlyShown.forEach(function($item, i) {
+            $item.css({
+               'display': 'flex',
+               'opacity': '0',
+               'transform': 'translateY(16px)'
+            }).show();
+
+            setTimeout(function() {
+               $item.css({
+                  'opacity': '1',
+                  'transform': 'translateY(0)'
+               });
+            }, i * 65);
+         });
+
+         // Cập nhật số bài thi còn lại hoặc ẩn nút nếu đã hết
+         const totalMatched = matchingItems.length;
+         const $loadMoreWrap = $sec.find('.topic-load-more-wrap');
+         if (totalMatched > newLimit) {
+            const remaining = totalMatched - newLimit;
+            $loadMoreWrap.find('.load-more-remaining-count').text(remaining);
+         } else {
+            $loadMoreWrap.fadeOut(250, function() {
+               $(this).addClass('d-none');
+            });
+         }
+      });
+
       // Xử lý sự kiện đổi Topic từ Dropdown
       $topicSelect.on('change', function() {
          currentTopic = $(this).val();
-         filterTests();
+         filterTests(true);
       });
 
       // Xử lý sự kiện đổi Trạng thái từ Dropdown
       $statusSelect.on('change', function() {
          currentStatus = $(this).val();
-         filterTests();
+         filterTests(true);
       });
 
       // Tìm kiếm theo từ khóa
       $searchInput.on('input keyup', function() {
-         filterTests();
+         filterTests(true);
       });
 
       // Xóa ô tìm kiếm
       $clearBtn.on('click', function() {
          $searchInput.val('').focus();
-         filterTests();
+         filterTests(true);
       });
 
       // Thu gọn / Mở rộng nhóm bài thi
@@ -1394,11 +1584,11 @@
          currentTopic = 'all';
          $statusSelect.val('all');
          $topicSelect.val('all');
-         filterTests();
+         filterTests(true);
       });
 
       updateStatusCounts();
-      filterTests();
+      filterTests(true);
    });
 
    $(window).on('load', function() {
