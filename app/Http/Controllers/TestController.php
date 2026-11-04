@@ -43,6 +43,10 @@ class TestController extends Controller
      */
     public function getTestQuestions($test_id)
     {
+        if (!auth()->check() && !auth('sanctum')->check()) {
+            return response()->json(['error' => 'Vui lòng đăng nhập để xem bài kiểm tra.'], 401);
+        }
+
         $test = Test::with(['questions.answers' => function($query) {
             $query->select('id', 'question_id', 'label', 'content');
         }])->find($test_id);
@@ -59,6 +63,14 @@ class TestController extends Controller
      */
     public function submitTest(Request $request, $test_id)
     {
+        $user_id = auth()->id() ?? auth('sanctum')->id();
+        if (!$user_id) {
+            return response()->json([
+                'error' => 'Vui lòng đăng nhập để nộp bài kiểm tra.',
+                'redirect' => route('frontend.login')
+            ], 401);
+        }
+
         $test = Test::with(['questions.answers'])->find($test_id);
         if (!$test) {
             return response()->json(['error' => 'Bài test không tồn tại'], 404);
@@ -112,8 +124,6 @@ class TestController extends Controller
 
         $isCancelled = $request->boolean('is_cancelled') || $request->boolean('is_canceled');
         $isPassed = !$isCancelled && ($totalCorrect >= $test->pass_score);
-
-        $user_id = auth()->id() ?? auth('sanctum')->id() ?? 1;
 
         $result = UserTestResult::create([
             'user_id'      => $user_id,

@@ -566,9 +566,16 @@
             error: function(xhr, status, err) {
                console.error('Submit error:', xhr);
                hideModal('timeoutModal');
+               if (xhr.status === 401) {
+                  alert('Vui lòng đăng nhập để nộp bài kiểm tra.');
+                  window.location.href = "{{ route('frontend.login') }}";
+                  return;
+               }
                var errorMsg = 'Có lỗi xảy ra, vui lòng thử lại!';
                if (xhr.responseJSON && xhr.responseJSON.message) {
                   errorMsg = xhr.responseJSON.message;
+               } else if (xhr.responseJSON && xhr.responseJSON.error) {
+                  errorMsg = xhr.responseJSON.error;
                }
                alert(errorMsg);
                bottomBtn.prop('disabled', false).html('<i class="far fa-paper-plane me-2"></i> Nộp bài');

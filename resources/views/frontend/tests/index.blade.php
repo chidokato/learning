@@ -20,9 +20,9 @@
       background: #ffffff;
       border: 1px solid #e9ebec;
       border-radius: 12px;
-      padding: 20px 22px;
+      padding: 16px 20px;
       box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-      margin-bottom: 20px;
+      margin-bottom: 16px;
    }
    
    /* Search Bar */
@@ -45,9 +45,9 @@
    }
    .tests-search-input {
       width: 100%;
-      height: 42px;
+      height: 40px;
       padding: 0 38px 0 38px;
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 500;
       border-radius: 8px;
       border: 1.5px solid #e2e8f0;
@@ -112,10 +112,10 @@
    .tests-filter-select {
       display: block !important;
       width: 100% !important;
-      height: 42px !important;
-      line-height: 42px !important;
+      height: 40px !important;
+      line-height: 40px !important;
       padding: 0 34px 0 38px !important;
-      font-size: 13.5px !important;
+      font-size: 13px !important;
       font-weight: 600 !important;
       border-radius: 8px !important;
       border: 1.5px solid #e2e8f0 !important;
@@ -145,135 +145,188 @@
       box-shadow: 0 0 0 3px rgba(3, 89, 78, 0.12) !important;
    }
 
-   /* Test List Items */
-   .tests-list-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+
+   /* Topic Group Section */
+   .topic-group-section {
+      background: transparent;
+      margin-bottom: 30px;
+      transition: all 0.3s ease;
    }
-   .test-list-item {
+   .topic-group-header {
       background: #ffffff;
       border: 1px solid #e9ebec;
+      border-left: 4px solid #03594e;
       border-radius: 12px;
-      padding: 14px 20px;
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+      padding: 12px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
       transition: all 0.2s ease;
-      position: relative;
    }
-   .test-list-item:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px -2px rgba(3, 89, 78, 0.1);
-      border-color: rgba(3, 89, 78, 0.35);
+   .topic-group-header:hover {
+      border-color: #cbd5e1;
+      border-left-color: #03594e;
    }
-   .test-list-left {
+   .topic-header-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       flex: 1;
       min-width: 0;
    }
-   .test-list-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: #f0fdf4;
+   .topic-header-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      background: rgba(3, 89, 78, 0.1);
       color: #03594e;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 19px;
+      font-size: 15px;
       flex-shrink: 0;
-      border: 1px solid rgba(3, 89, 78, 0.15);
-      transition: all 0.2s ease;
    }
-   .test-list-item:hover .test-list-icon {
-      background: #03594e;
-      color: #ffffff;
-   }
-   .test-list-body {
+   .topic-header-text {
       flex: 1;
       min-width: 0;
    }
-   .test-line-1 {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 4px;
-      line-height: 1.35;
-   }
-   .test-list-title {
+   .topic-group-title {
       font-size: 15px;
       font-weight: 700;
       color: #0f172a;
       margin: 0;
+      line-height: 1.35;
+      letter-spacing: -0.1px;
    }
-   .test-list-title a {
-      color: #0f172a;
-      text-decoration: none;
-      transition: color 0.2s;
-   }
-   .test-list-title a:hover {
-      color: #03594e;
-   }
-   .badge-tag-general {
+   .topic-count-badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      color: #03594e;
-      background: rgba(3, 89, 78, 0.08);
-      padding: 2px 8px;
-      border-radius: 4px;
-   }
-   .badge-tag-topic {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
       color: #03594e;
       background: rgba(3, 89, 78, 0.08);
       border: 1px solid rgba(3, 89, 78, 0.18);
-      padding: 2px 8px;
-      border-radius: 4px;
-      max-width: 220px;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      padding: 1px 8px;
+      border-radius: 999px;
       white-space: nowrap;
    }
-   .badge-tag-course {
+   .topic-progress-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 3px;
+      font-size: 12px;
+      color: #64748b;
+      flex-wrap: wrap;
+   }
+   .topic-progress-bar-wrap {
+      width: 110px;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      flex-shrink: 0;
+   }
+   .topic-progress-bar {
+      height: 100%;
+      background: #03594e;
+      border-radius: 999px;
+      transition: width 0.4s ease;
+   }
+   .topic-progress-percent {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #03594e;
+   }
+   .btn-toggle-topic {
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 7px;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+   }
+   .btn-toggle-topic:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: #cbd5e1;
+   }
+   .btn-toggle-topic .toggle-icon {
+      transition: transform 0.25s ease;
+      font-size: 10px;
+   }
+   .topic-group-section.collapsed .btn-toggle-topic .toggle-icon {
+      transform: rotate(-90deg);
+   }
+   .topic-group-section.collapsed .topic-group-body {
+      display: none;
+   }
+
+   /* 4-Column Card Grid */
+   .test-list-item {
+      display: flex;
+      visibility: visible !important;
+   }
+
+   /* Career Item Box - Nhỏ gọn, tinh tế */
+   .it-career-item {
+      width: 100%;
+      background-color: #ffffff;
+      border: 1px solid #e9ebec;
+      border-radius: 12px;
+      padding: 15px 15px 13px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+      position: relative;
+   }
+   .it-career-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px -3px rgba(3, 89, 78, 0.12);
+      border-color: rgba(3, 89, 78, 0.35);
+   }
+
+   /* Category & Status Top */
+   .it-career-top {
+      margin-bottom: 8px;
+   }
+   .it-career-category {
+      display: inline-flex;
+      align-items: center;
       font-size: 11px;
       font-weight: 600;
-      color: #2563eb;
-      background: #eff6ff;
-      padding: 2px 8px;
-      border-radius: 4px;
-      max-width: 280px;
+      color: #03594e;
+      background: rgba(3, 89, 78, 0.08);
+      border: 1px solid rgba(3, 89, 78, 0.15);
+      padding: 2px 7px;
+      border-radius: 5px;
+      max-width: 135px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      line-height: 1.25;
    }
    .badge-status {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 11px;
+      gap: 3px;
+      font-size: 10.5px;
       font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 4px;
-   }
-   .badge-status.status-not_taken {
-      background: #f1f5f9;
-      color: #64748b;
+      padding: 2px 7px;
+      border-radius: 5px;
+      line-height: 1.25;
    }
    .badge-status.status-passed {
       background: #dcfce7;
@@ -283,102 +336,196 @@
       background: #fee2e2;
       color: #b91c1c;
    }
+   .badge-status.status-not_taken {
+      background: #f1f5f9;
+      color: #64748b;
+   }
+
+   /* Title */
+   .it-career-item .title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #0f172a;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 38px;
+      font-family: 'Montserrat', sans-serif !important;
+   }
+   .it-career-item .title a {
+      color: #0f172a;
+      text-decoration: none;
+      transition: color 0.2s;
+   }
+   .it-career-item .title a:hover {
+      color: #03594e;
+   }
+
+   /* Meta info */
+   .it-career-item .it-career-meta {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px 0;
+      font-size: 11.5px;
+      color: #64748b;
+   }
+   .it-career-item .it-career-meta span {
+      line-height: 1.2;
+      display: inline-flex;
+      align-items: center;
+   }
+   .it-career-item .it-career-meta span:not(:last-child) {
+      padding-right: 8px;
+      margin-right: 7px;
+      border-right: 1px solid rgba(108, 117, 125, 0.3);
+   }
+   .it-career-item .it-career-meta strong {
+      color: #1e293b;
+      margin-left: 2px;
+   }
+
+   /* Score / Attempt highlight */
+   .it-career-score-wrap {
+      margin-bottom: 12px;
+      min-height: 22px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+   }
    .badge-score-pill {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       background: #fefce8;
       color: #854d0e;
       border: 1px solid #fef08a;
-      padding: 1px 7px;
+      padding: 2px 6px;
       border-radius: 4px;
    }
    .badge-attempts-pill {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 500;
       background: #f8fafc;
       color: #64748b;
       border: 1px solid #e2e8f0;
-      padding: 1px 7px;
+      padding: 2px 6px;
       border-radius: 4px;
    }
-   .test-line-2 {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      font-size: 12.5px;
-      color: #64748b;
-      line-height: 1.35;
-   }
-   .test-line-2 .meta-item {
+   .badge-not-taken-pill {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      font-size: 10.5px;
+      font-weight: 500;
+      background: #f8fafc;
+      color: #94a3b8;
+      border: 1px dashed #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
    }
-   .test-line-2 .meta-item strong {
-      color: #334155;
+
+   /* Bottom Row */
+   .it-career-bottom {
+      border-top: 1px solid #f1f5f9;
+      padding-top: 10px;
+      margin-top: auto;
    }
-   .test-line-2 .meta-divider {
-      color: #cbd5e1;
-      font-size: 9px;
-   }
-   .test-list-action {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-   }
-   .btn-test-action {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 13px;
+   .it-career-price {
+      font-size: 11.5px;
       font-weight: 600;
-      padding: 7px 18px;
-      border-radius: 8px;
-      text-decoration: none !important;
-      transition: all 0.2s ease;
+      border-radius: 6px;
+      padding: 4px 9px;
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
+      color: #475569;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
       white-space: nowrap;
    }
-   .btn-test-action.btn-start {
-      background: #03594e;
-      color: #ffffff !important;
-      border: 1.5px solid #03594e;
-      box-shadow: 0 2px 6px rgba(3, 89, 78, 0.15);
+   .it-career-price.it-career-result-btn {
+      background-color: #ffffff;
+      color: #03594e;
+      border: 1.5px solid rgba(3, 89, 78, 0.35);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
    }
-   .btn-test-action.btn-start:hover {
-      background: #02433b;
-      border-color: #02433b;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(3, 89, 78, 0.25);
-   }
-   .btn-test-action.btn-retake {
-      background: #f0fdf4;
-      color: #03594e !important;
-      border: 1.5px solid #03594e;
-   }
-   .btn-test-action.btn-retake:hover {
-      background: #03594e;
-      color: #ffffff !important;
-      transform: translateY(-1px);
-   }
-   .btn-test-action.btn-view-res {
-      background: #ffffff;
-      color: #03594e !important;
-      border: 1.5px solid rgba(3, 89, 78, 0.4);
-   }
-   .btn-test-action.btn-view-res:hover {
-      background: #f0fdf4;
+   .it-career-price.it-career-result-btn:hover {
+      background-color: #f0fdf4;
       border-color: #03594e;
+      color: #03594e;
       transform: translateY(-1px);
    }
-   
+
+   /* it-btn-yellow - Nhỏ gọn */
+   .it-career-item .it-btn-yellow {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 12px !important;
+      height: auto !important;
+      border-radius: 6px;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background-color: #03594e !important;
+      color: #ffffff !important;
+      text-decoration: none !important;
+      border: 1.5px solid #03594e !important;
+      box-shadow: 0 1px 4px rgba(3, 89, 78, 0.15) !important;
+      transition: all 0.25s ease !important;
+      cursor: pointer !important;
+      white-space: nowrap;
+   }
+   .it-career-item .it-btn-yellow span span {
+      color: #ffffff !important;
+   }
+   .it-career-item .it-btn-yellow svg {
+      width: 12px;
+      height: 11px;
+      margin-left: 6px;
+   }
+   .it-career-item .it-btn-yellow svg path {
+      fill: #ffffff !important;
+   }
+   .it-career-item .it-btn-yellow:hover {
+      background-color: #02433b !important;
+      border-color: #02433b !important;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(3, 89, 78, 0.22) !important;
+   }
+   .it-career-item .it-btn-yellow.it-btn-retake {
+      background-color: #f0fdf4 !important;
+      border: 1.5px solid #03594e !important;
+      color: #03594e !important;
+      box-shadow: none !important;
+   }
+   .it-career-item .it-btn-yellow.it-btn-retake span span {
+      color: #03594e !important;
+   }
+   .it-career-item .it-btn-yellow.it-btn-retake svg path {
+      fill: #03594e !important;
+   }
+   .it-career-item .it-btn-yellow.it-btn-retake:hover {
+      background-color: #03594e !important;
+      color: #ffffff !important;
+      box-shadow: 0 3px 8px rgba(3, 89, 78, 0.22) !important;
+   }
+   .it-career-item .it-btn-yellow.it-btn-retake:hover span span {
+      color: #ffffff !important;
+   }
+   .it-career-item .it-btn-yellow.it-btn-retake:hover svg path {
+      fill: #ffffff !important;
+   }
+
    /* Empty State */
    .empty-test-card {
       background: #ffffff;
@@ -398,91 +545,6 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-   }
-
-   /* Tests Pagination */
-   .tests-pagination-wrapper {
-      border-top: 1px solid #e9ebec !important;
-   }
-   .pagination-info {
-      font-size: 13.5px;
-      color: #64748b;
-   }
-   .custom-tests-pagination {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      margin-bottom: 0;
-      padding-left: 0;
-      list-style: none;
-   }
-   .custom-tests-pagination .page-item {
-      margin: 0;
-   }
-   .custom-tests-pagination .page-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 36px;
-      height: 36px;
-      padding: 0 12px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #334155;
-      background: #ffffff;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 8px !important;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-   }
-   .custom-tests-pagination .page-link:hover {
-      background: #f0fdf4;
-      border-color: #03594e;
-      color: #03594e;
-   }
-   .custom-tests-pagination .page-item.active .page-link {
-      background: #03594e !important;
-      border-color: #03594e !important;
-      color: #ffffff !important;
-      box-shadow: 0 2px 6px rgba(3, 89, 78, 0.25);
-      cursor: default;
-   }
-   .custom-tests-pagination .page-item.disabled .page-link {
-      background: #f8fafc !important;
-      border-color: #e2e8f0 !important;
-      color: #cbd5e1 !important;
-      cursor: not-allowed;
-      pointer-events: none;
-      box-shadow: none;
-   }
-   .custom-tests-pagination .page-ellipsis {
-      min-width: 24px;
-      height: 36px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: #94a3b8;
-      font-weight: 700;
-   }
-
-   @media (max-width: 991.98px) {
-      .test-list-item {
-         flex-direction: column;
-         align-items: flex-start;
-         gap: 14px;
-         padding: 16px;
-      }
-      .test-list-left {
-         width: 100%;
-      }
-      .test-list-action {
-         width: 100%;
-      }
-      .btn-test-action {
-         width: 100%;
-      }
    }
 </style>
 @endpush
@@ -514,11 +576,13 @@
          <div class="tests-select-wrapper">
             <i class="fa-solid fa-layer-group select-icon"></i>
             <select id="topicFilterSelect" class="tests-filter-select">
-               <option value="all">Tất cả Topic / Mục</option>
+               <option value="all">Tất cả Topic / Mục ({{ $tests->count() }})</option>
                @foreach($topics as $tp)
-                  <option value="{{ $tp->id }}">
-                     {{ $tp->name }}@if(isset($tp->tests_count) && $tp->tests_count > 0) ({{ $tp->tests_count }})@endif
-                  </option>
+                  @if(isset($tp->tests_count) && $tp->tests_count > 0)
+                     <option value="{{ $tp->id }}">
+                        {{ $tp->name }} ({{ $tp->tests_count }})
+                     </option>
+                  @endif
                @endforeach
             </select>
          </div>
@@ -539,141 +603,346 @@
    </div>
 </div>
 
-<!-- Tests List Container -->
-@if($tests->count() > 0)
-   <div class="tests-list-wrap" id="testsListContainer">
-      @foreach($tests as $test)
-         @php
-            $itemResult = $userResults[$test->id] ?? null;
-            $qCount = $test->questions_count ?? $test->questions()->count();
-            $statusKey = 'not_taken';
-            $statusText = 'Chưa làm';
-            $statusIcon = 'fa-clock';
+@guest
+   <div class="alert alert-warning d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3 shadow-sm" style="border-radius: 10px; border-left: 4px solid #f59e0b; background: #fffbeb; padding: 12px 18px;">
+      <div class="d-flex align-items-center gap-2">
+         <i class="fa-solid fa-lock text-warning fs-5"></i>
+         <span style="font-size: 13.5px; color: #92400e;">
+            <strong>Yêu cầu đăng nhập:</strong> Bạn cần đăng nhập tài khoản để vào làm bài kiểm tra và lưu lịch sử kết quả thi.
+         </span>
+      </div>
+      <a href="{{ route('frontend.login') }}" class="btn btn-sm text-white fw-bold px-3 py-1" style="background: #03594e; border-radius: 6px; font-size: 13px;">
+         <i class="fa-solid fa-right-to-bracket me-1"></i> Đăng nhập ngay
+      </a>
+   </div>
+@endguest
 
-            if ($itemResult) {
-               if (!empty($itemResult['is_passed'])) {
-                  $statusKey = 'passed';
-                  $statusText = 'Đã đạt';
-                  $statusIcon = 'fa-circle-check';
-               } else {
-                  $statusKey = 'failed';
-                  $statusText = 'Chưa đạt';
-                  $statusIcon = 'fa-circle-xmark';
-               }
+@php
+   // Gom nhóm các bài test theo từng Topic có bài thi
+   $groupedByTopic = collect();
+
+   foreach ($topics as $tp) {
+       $topicTests = $tests->filter(function($t) use ($tp) {
+           return $t->topics->contains('id', $tp->id);
+       });
+       if ($topicTests->isNotEmpty()) {
+           $groupedByTopic->put($tp->id, [
+               'topic' => $tp,
+               'tests' => $topicTests
+           ]);
+       }
+   }
+
+   // Các bài test không thuộc topic nào (nếu có)
+   $untaggedTests = $tests->filter(function($t) {
+       return $t->topics->isEmpty();
+   });
+@endphp
+
+
+<!-- Vùng hiển thị các bài thi nhóm theo từng Topic -->
+@if($tests->count() > 0)
+   <div class="it-career-area" id="testsGroupedContainer">
+      @foreach($groupedByTopic as $tpId => $group)
+         @php
+            $topicTotal = $group['tests']->count();
+            $topicPassedCount = 0;
+            foreach ($group['tests'] as $t) {
+                if (!empty($userResults[$t->id]['is_passed'])) {
+                    $topicPassedCount++;
+                }
             }
+            $percentPassed = $topicTotal > 0 ? round(($topicPassedCount / $topicTotal) * 100) : 0;
          @endphp
 
-         <div class="test-list-item" 
-              data-title="{{ Str::lower($test->title) }}" 
-              data-status="{{ $statusKey }}"
-              data-topics="{{ $test->topics ? $test->topics->pluck('id')->implode(',') : '' }}"
-              data-questions="{{ $qCount }}"
-         >
-            <div class="test-list-left">
-               <div class="test-list-icon">
-                  <i class="fa-solid fa-file-signature"></i>
+         <div class="topic-group-section" data-topic-id="{{ $tpId }}">
+            <!-- Header Nhóm Topic -->
+            <div class="topic-group-header">
+               <div class="topic-header-left">
+                  <div class="topic-header-icon">
+                     <i class="fa-solid fa-layer-group"></i>
+                  </div>
+                  <div class="topic-header-text">
+                     <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <h3 class="topic-group-title">{{ $group['topic']->name }}</h3>
+                        <span class="topic-count-badge">
+                           <span class="topic-visible-count">{{ $topicTotal }}</span> bài thi
+                        </span>
+                     </div>
+                     @if(Auth::check())
+                     <div class="topic-progress-info">
+                        <span class="topic-passed-stat">
+                           <i class="fa-solid fa-circle-check text-success me-1"></i>
+                           Đã đạt: <strong>{{ $topicPassedCount }}</strong>/{{ $topicTotal }}
+                        </span>
+                        <div class="topic-progress-bar-wrap" title="Tiến độ hoàn thành: {{ $percentPassed }}%">
+                           <div class="topic-progress-bar" style="width: {{ $percentPassed }}%"></div>
+                        </div>
+                        <span class="topic-progress-percent">{{ $percentPassed }}%</span>
+                     </div>
+                     @endif
+                  </div>
                </div>
 
-               <div class="test-list-body">
-                  <!-- DÒNG 1: Tiêu đề + Trạng thái & Kết quả -->
-                  <div class="test-line-1">
-                     <h4 class="test-list-title">
-                        <a href="{{ route('frontend.tests.show', $test->id) }}">{{ $test->title }}</a>
-                     </h4>
-
-                     <!-- Status Badge -->
-                     <span class="badge-status status-{{ $statusKey }}">
-                        <i class="fa-solid {{ $statusIcon }}"></i> {{ $statusText }}
-                     </span>
-
-                     @if($itemResult)
-                        <span class="badge-score-pill" title="Điểm cao nhất">
-                           <i class="fa-solid fa-trophy text-warning me-1"></i> 
-                           <strong>{{ $itemResult['max_score'] }}</strong>/{{ $qCount }} câu
-                        </span>
-                        <span class="badge-attempts-pill" title="Số lần đã thi">
-                           <i class="fa-solid fa-rotate-right text-muted me-1"></i> {{ $itemResult['attempts'] }} lần
-                        </span>
-                     @endif
-                  </div>
-
-                  <!-- DÒNG 2: Khóa học + Thông số đề thi -->
-                  <div class="test-line-2">
-                     @if($test->topics && $test->topics->isNotEmpty())
-                        @foreach($test->topics as $tp)
-                           <span class="badge-tag-topic" title="{{ $tp->name }}">
-                              <i class="fa-solid fa-layer-group me-1"></i> {{ $tp->name }}
-                           </span>
-                        @endforeach
-                        <span class="meta-divider">•</span>
-                     @endif
-                     @if($test->post)
-                        <span class="badge-tag-course" title="{{ $test->post->title }}">
-                           <i class="fa-solid fa-book-bookmark me-1"></i> {{ $test->post->title }}
-                        </span>
-                        <span class="meta-divider">•</span>
-                     @else
-                        <span class="badge-tag-general">
-                           <i class="fa-solid fa-shield-check me-1"></i> Đề thi chung
-                        </span>
-                        <span class="meta-divider">•</span>
-                     @endif
-
-                     <span class="meta-item">
-                        <i class="fa-regular fa-clipboard-question text-primary"></i> 
-                        <strong>{{ $qCount }}</strong> câu hỏi
-                     </span>
-                     <span class="meta-divider">•</span>
-                     <span class="meta-item">
-                        <i class="fa-regular fa-bullseye-arrow text-success"></i> 
-                        Yêu cầu đạt: <strong>{{ $test->pass_score }}</strong>/{{ $qCount }} câu
-                     </span>
-                     <span class="meta-divider">•</span>
-                     <span class="meta-item">
-                        <i class="fa-regular fa-clock text-warning"></i> 
-                        Thời gian: <strong>{{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Tự do' }}</strong>
-                     </span>
-                  </div>
+               <!-- Nút Thu gọn / Mở rộng nhóm -->
+               <div class="topic-header-right">
+                  <button type="button" class="btn-toggle-topic">
+                     <span class="toggle-text">Thu gọn</span>
+                     <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                  </button>
                </div>
             </div>
 
-            <div class="test-list-action gap-2">
-               @if($itemResult && !empty($itemResult['latest']))
-                  <a href="{{ route('frontend.tests.result', $itemResult['latest']->id) }}" class="btn-test-action btn-view-res" title="Xem kết quả bài làm gần nhất">
-                     <span>Xem kết quả</span>
-                     <i class="fa-solid fa-eye"></i>
-                  </a>
-               @endif
-               <a href="{{ route('frontend.tests.show', $test->id) }}" class="btn-test-action {{ $itemResult ? 'btn-retake' : 'btn-start' }}">
-                  <span>{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
-                  <i class="fa-solid {{ $itemResult ? 'fa-rotate-right' : 'fa-arrow-right-long' }}"></i>
-               </a>
+            <!-- Danh sách bài thi dạng 4 cột -->
+            <div class="topic-group-body">
+               <div class="row g-3">
+                  @foreach($group['tests'] as $test)
+                     @php
+                        $itemResult = $userResults[$test->id] ?? null;
+                        $qCount = $test->questions_count ?? $test->questions()->count();
+                        $statusKey = 'not_taken';
+                        $statusText = 'Chưa làm';
+                        $statusIcon = 'fa-clock';
+
+                        if ($itemResult) {
+                           if (!empty($itemResult['is_passed'])) {
+                              $statusKey = 'passed';
+                              $statusText = 'Đã đạt';
+                              $statusIcon = 'fa-circle-check';
+                           } else {
+                              $statusKey = 'failed';
+                              $statusText = 'Chưa đạt';
+                              $statusIcon = 'fa-circle-xmark';
+                           }
+                        }
+
+                        $delay = 0.1 + (($loop->index % 4) * 0.1);
+                     @endphp
+
+                     <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 test-list-item wow itfadeUp" 
+                          data-wow-duration=".8s" 
+                          data-wow-delay="{{ $delay }}s"
+                          data-title="{{ Str::lower($test->title) }}" 
+                          data-status="{{ $statusKey }}"
+                          data-topics="{{ $tpId }}"
+                          data-questions="{{ $qCount }}"
+                     >
+                        <div class="it-career-item">
+                           <!-- Header: Category & Status -->
+                           <div class="it-career-top d-flex align-items-center justify-content-between flex-wrap gap-1">
+                              <span class="it-career-category" title="{{ $group['topic']->name }}">
+                                 <i class="fa-solid fa-layer-group me-1"></i> {{ $group['topic']->name }}
+                              </span>
+
+                              <span class="badge-status status-{{ $statusKey }}">
+                                 <i class="fa-solid {{ $statusIcon }}"></i> {{ $statusText }}
+                              </span>
+                           </div>
+
+                           <!-- Title -->
+                           <h4 class="title test-list-title">
+                              <a href="{{ route('frontend.tests.show', $test->id) }}" title="{{ $test->title }}">
+                                 {{ $test->title }}
+                              </a>
+                           </h4>
+
+                           <!-- Meta Information: Câu hỏi | Yêu cầu đạt | Thời gian -->
+                           <div class="it-career-meta">
+                              <span>
+                                 <i class="fa-regular fa-clipboard-question text-primary me-1"></i>
+                                 <strong>{{ $qCount }}</strong> câu
+                              </span>
+                              <span>
+                                 <i class="fa-regular fa-bullseye-arrow text-success me-1"></i>
+                                 Đạt: <strong>{{ $test->pass_score }}</strong>/{{ $qCount }}
+                              </span>
+                              <span>
+                                 <i class="fa-regular fa-clock text-warning me-1"></i>
+                                 <strong>{{ $test->duration && $test->duration > 0 ? $test->duration . 'p' : 'Tự do' }}</strong>
+                              </span>
+                           </div>
+
+                           <!-- Score / Attempts status -->
+                           <div class="it-career-score-wrap">
+                              @if($itemResult)
+                                 <span class="badge-score-pill" title="Điểm cao nhất">
+                                    <i class="fa-solid fa-trophy text-warning me-1"></i> <strong>{{ $itemResult['max_score'] }}</strong>/{{ $qCount }} câu
+                                 </span>
+                                 <span class="badge-attempts-pill" title="Số lần đã thi">
+                                    <i class="fa-solid fa-rotate-right text-muted me-1"></i> {{ $itemResult['attempts'] }} lần
+                                 </span>
+                              @else
+                                 <span class="badge-not-taken-pill">
+                                    <i class="fa-regular fa-circle-dot me-1 text-muted"></i> Chưa làm bài
+                                 </span>
+                              @endif
+                           </div>
+
+                           <!-- Bottom: Price / Result Button & Action Link -->
+                           <div class="it-career-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+                              @if($itemResult && !empty($itemResult['latest']))
+                                 <a href="{{ route('frontend.tests.result', $itemResult['latest']->id) }}" class="it-career-price it-career-result-btn" title="Xem kết quả bài làm gần nhất">
+                                    <i class="fa-solid fa-eye me-1"></i> Kết quả
+                                 </a>
+                              @else
+                                 <span class="it-career-price" title="Thời gian làm bài">
+                                    <i class="fa-regular fa-clock me-1"></i> {{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Tự do' }}
+                                 </span>
+                              @endif
+
+                              <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
+                                 <span>
+                                    <span class="text-1">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
+                                    <span class="text-2">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
+                                 </span>
+                                 <i>
+                                    <svg width="12" height="11" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                       <path d="M14.6364 7.26396C14.9879 6.91249 14.9879 6.34264 14.6364 5.99117L8.90883 0.263603C8.55736 -0.0878692 7.98751 -0.0878692 7.63604 0.263603C7.28457 0.615075 7.28457 1.18492 7.63604 1.53639L12.7272 6.62756L7.63604 11.7187C7.28457 12.0702 7.28457 12.6401 7.63604 12.9915C7.98751 13.343 8.55736 13.343 8.90883 12.9915L14.6364 7.26396ZM0 6.62756V7.52756H14V6.62756V5.72756H0V6.62756Z" fill="currentColor"></path>
+                                    </svg>
+                                 </i>
+                              </a>
+                           </div>
+                        </div>
+                     </div>
+                  @endforeach
+               </div>
             </div>
          </div>
       @endforeach
+
+      <!-- Nhóm bài thi Chưa gán topic (nếu có) -->
+      @if($untaggedTests->isNotEmpty())
+         <div class="topic-group-section" data-topic-id="untagged">
+            <div class="topic-group-header">
+               <div class="topic-header-left">
+                  <div class="topic-header-icon">
+                     <i class="fa-solid fa-shield-check"></i>
+                  </div>
+                  <div class="topic-header-text">
+                     <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <h3 class="topic-group-title">Đề thi chung & Chuyên đề khác</h3>
+                        <span class="topic-count-badge">
+                           <span class="topic-visible-count">{{ $untaggedTests->count() }}</span> bài thi
+                        </span>
+                     </div>
+                  </div>
+               </div>
+               <div class="topic-header-right">
+                  <button type="button" class="btn-toggle-topic">
+                     <span class="toggle-text">Thu gọn</span>
+                     <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                  </button>
+               </div>
+            </div>
+
+            <div class="topic-group-body">
+               <div class="row g-3">
+                  @foreach($untaggedTests as $test)
+                     @php
+                        $itemResult = $userResults[$test->id] ?? null;
+                        $qCount = $test->questions_count ?? $test->questions()->count();
+                        $statusKey = 'not_taken';
+                        $statusText = 'Chưa làm';
+                        $statusIcon = 'fa-clock';
+
+                        if ($itemResult) {
+                           if (!empty($itemResult['is_passed'])) {
+                              $statusKey = 'passed';
+                              $statusText = 'Đã đạt';
+                              $statusIcon = 'fa-circle-check';
+                           } else {
+                              $statusKey = 'failed';
+                              $statusText = 'Chưa đạt';
+                              $statusIcon = 'fa-circle-xmark';
+                           }
+                        }
+                     @endphp
+
+                     <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 test-list-item wow itfadeUp" 
+                          data-wow-duration=".8s" 
+                          data-title="{{ Str::lower($test->title) }}" 
+                          data-status="{{ $statusKey }}"
+                          data-topics="untagged"
+                          data-questions="{{ $qCount }}"
+                     >
+                        <div class="it-career-item">
+                           <div class="it-career-top d-flex align-items-center justify-content-between flex-wrap gap-1">
+                              <span class="it-career-category">
+                                 <i class="fa-solid fa-shield-check me-1"></i> Đề thi chung
+                              </span>
+                              <span class="badge-status status-{{ $statusKey }}">
+                                 <i class="fa-solid {{ $statusIcon }}"></i> {{ $statusText }}
+                              </span>
+                           </div>
+
+                           <h4 class="title test-list-title">
+                              <a href="{{ route('frontend.tests.show', $test->id) }}" title="{{ $test->title }}">
+                                 {{ $test->title }}
+                              </a>
+                           </h4>
+
+                           <div class="it-career-meta">
+                              <span><i class="fa-regular fa-clipboard-question text-primary me-1"></i><strong>{{ $qCount }}</strong> câu</span>
+                              <span><i class="fa-regular fa-bullseye-arrow text-success me-1"></i>Đạt: <strong>{{ $test->pass_score }}</strong>/{{ $qCount }}</span>
+                              <span><i class="fa-regular fa-clock text-warning me-1"></i><strong>{{ $test->duration && $test->duration > 0 ? $test->duration . 'p' : 'Tự do' }}</strong></span>
+                           </div>
+
+                           <div class="it-career-score-wrap">
+                              @if($itemResult)
+                                 <span class="badge-score-pill">
+                                    <i class="fa-solid fa-trophy text-warning me-1"></i> <strong>{{ $itemResult['max_score'] }}</strong>/{{ $qCount }} câu
+                                 </span>
+                                 <span class="badge-attempts-pill ms-2">
+                                    <i class="fa-solid fa-rotate-right text-muted me-1"></i> {{ $itemResult['attempts'] }} lần
+                                 </span>
+                              @else
+                                 <span class="badge-not-taken-pill">Chưa làm bài</span>
+                              @endif
+                           </div>
+
+                           <div class="it-career-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+                              @if($itemResult && !empty($itemResult['latest']))
+                                 <a href="{{ route('frontend.tests.result', $itemResult['latest']->id) }}" class="it-career-price it-career-result-btn">
+                                    <i class="fa-solid fa-eye me-1"></i> Kết quả
+                                 </a>
+                              @else
+                                 <span class="it-career-price">
+                                    <i class="fa-regular fa-clock me-1"></i> {{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Tự do' }}
+                                 </span>
+                              @endif
+
+                              <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
+                                 <span>
+                                    <span class="text-1">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
+                                    <span class="text-2">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
+                                 </span>
+                                 <i>
+                                    <svg width="12" height="11" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                       <path d="M14.6364 7.26396C14.9879 6.91249 14.9879 6.34264 14.6364 5.99117L8.90883 0.263603C8.55736 -0.0878692 7.98751 -0.0878692 7.63604 0.263603C7.28457 0.615075 7.28457 1.18492 7.63604 1.53639L12.7272 6.62756L7.63604 11.7187C7.28457 12.0702 7.28457 12.6401 7.63604 12.9915C7.98751 13.343 8.55736 13.343 8.90883 12.9915L14.6364 7.26396ZM0 6.62756V7.52756H14V6.62756V5.72756H0V6.62756Z" fill="currentColor"></path>
+                                    </svg>
+                                 </i>
+                              </a>
+                           </div>
+                        </div>
+                     </div>
+                  @endforeach
+               </div>
+            </div>
+         </div>
+      @endif
    </div>
 
-   <!-- Phân trang 15 items/trang -->
-   <div id="testsPaginationWrapper" class="tests-pagination-wrapper d-flex align-items-center justify-content-between flex-wrap gap-3 mt-4 pt-3 border-top">
-      <div class="pagination-info text-muted fs-13" id="paginationInfoText">
-         Hiển thị <span id="pageStartItem" class="fw-bold text-dark">1</span> - <span id="pageEndItem" class="fw-bold text-dark">15</span> trên tổng số <span id="pageTotalItems" class="fw-bold text-dark">{{ $tests->count() }}</span> bài thi
-      </div>
-      <nav aria-label="Phân trang bài kiểm tra" id="testsPaginationNav">
-         <ul class="pagination pagination-sm mb-0 custom-tests-pagination" id="testsPaginationList"></ul>
-      </nav>
-   </div>
-
-   <!-- Empty state khi tìm kiếm không có kết quả -->
+   <!-- Empty state khi tìm kiếm hoặc lọc không có kết quả -->
    <div id="noSearchMatches" class="empty-test-card d-none mt-3">
       <div class="empty-icon-circle mb-3">
          <i class="fa-solid fa-magnifying-glass"></i>
       </div>
       <h5 class="fw-bold mb-2 text-dark">Không tìm thấy bài kiểm tra nào</h5>
       <p class="text-muted mb-3 fs-14" id="noSearchDesc">
-         Không có bài kiểm tra nào phù hợp với từ khóa tìm kiếm của bạn.
+         Không có bài kiểm tra nào phù hợp với bộ lọc hiện tại của bạn.
       </p>
       <button type="button" class="btn btn-outline-primary btn-sm px-3 py-2 fw-semibold" id="btnResetSearch">
-         <i class="fa-solid fa-rotate-left me-1"></i> Xóa tìm kiếm & Xem tất cả
+         <i class="fa-solid fa-rotate-left me-1"></i> Xem tất cả bài thi
       </button>
    </div>
 @else
@@ -696,27 +965,17 @@
       }
       $('.tests-select-wrapper .nice-select').remove();
 
-      const ITEMS_PER_PAGE = 15;
       const $searchInput = $('#testSearchInput');
       const $clearBtn = $('#clearSearchBtn');
       const $topicSelect = $('#topicFilterSelect');
       const $statusSelect = $('#statusFilterSelect');
-      const $items = $('.test-list-item');
+      const $sections = $('.topic-group-section');
       const $noMatches = $('#noSearchMatches');
       const $visibleCount = $('#visibleTestCount');
       const $btnReset = $('#btnResetSearch');
-      const $paginationWrapper = $('#testsPaginationWrapper');
-      const $paginationNav = $('#testsPaginationNav');
-      const $paginationList = $('#testsPaginationList');
       
       let currentStatus = 'all';
       let currentTopic = 'all';
-      let matchedItems = [];
-
-      // Đọc số trang ban đầu từ query param ?page=X nếu có
-      const urlParams = new URLSearchParams(window.location.search);
-      let initialPage = parseInt(urlParams.get('page')) || 1;
-      let currentPage = Math.max(1, initialPage);
 
       // Chuẩn hóa tiếng Việt không dấu
       function removeVietnameseTones(str) {
@@ -739,12 +998,12 @@
 
       // Cập nhật số lượng đếm trên dropdown trạng thái
       function updateStatusCounts() {
-         let totalAll = $items.length;
+         let totalAll = $('.test-list-item').length;
          let totalNotTaken = 0;
          let totalPassed = 0;
          let totalFailed = 0;
 
-         $items.each(function() {
+         $('.test-list-item').each(function() {
             const status = $(this).data('status');
             if (status === 'passed') totalPassed++;
             else if (status === 'failed') totalFailed++;
@@ -757,141 +1016,8 @@
          $('#optStatusFailed').text(`Chưa đạt (${totalFailed})`);
       }
 
-      // Render danh sách nút phân trang
-      function renderPagination(totalPages) {
-         $paginationList.empty();
-
-         if (totalPages <= 1) {
-            $paginationNav.addClass('d-none');
-            return;
-         }
-         $paginationNav.removeClass('d-none');
-
-         // 1. Nút Trước (Prev)
-         const isPrevDisabled = (currentPage === 1);
-         $paginationList.append(`
-            <li class="page-item ${isPrevDisabled ? 'disabled' : ''}">
-               <a class="page-link" href="javascript:void(0)" data-page="${currentPage - 1}" title="Trang trước" aria-label="Trang trước">
-                  <i class="fa-solid fa-chevron-left"></i>
-               </a>
-            </li>
-         `);
-
-         // 2. Danh sách trang
-         const delta = 2;
-         const range = [];
-         for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
-            range.push(i);
-         }
-
-         if (currentPage - delta > 2) {
-            range.unshift('...');
-         }
-         if (currentPage + delta < totalPages - 1) {
-            range.push('...');
-         }
-
-         range.unshift(1);
-         if (totalPages > 1 && !range.includes(totalPages)) {
-            range.push(totalPages);
-         }
-
-         // Tạo nút bấm từ range
-         const finalPages = [];
-         range.forEach(p => {
-            if (p === '...' || !finalPages.includes(p)) {
-               finalPages.push(p);
-            }
-         });
-
-         finalPages.forEach(p => {
-            if (p === '...') {
-               $paginationList.append(`<li class="page-item disabled"><span class="page-ellipsis">…</span></li>`);
-            } else {
-               const isActive = (p === currentPage);
-               $paginationList.append(`
-                  <li class="page-item ${isActive ? 'active' : ''}">
-                     <a class="page-link" href="javascript:void(0)" data-page="${p}">${p}</a>
-                  </li>
-               `);
-            }
-         });
-
-         // 3. Nút Sau (Next)
-         const isNextDisabled = (currentPage === totalPages);
-         $paginationList.append(`
-            <li class="page-item ${isNextDisabled ? 'disabled' : ''}">
-               <a class="page-link" href="javascript:void(0)" data-page="${currentPage + 1}" title="Trang sau" aria-label="Trang sau">
-                  <i class="fa-solid fa-chevron-right"></i>
-               </a>
-            </li>
-         `);
-      }
-
-      // Hiển thị các bài thi của trang hiện tại
-      function renderPage(shouldScroll = false) {
-         const totalMatched = matchedItems.length;
-         const totalPages = Math.ceil(totalMatched / ITEMS_PER_PAGE) || 1;
-
-         if (currentPage > totalPages) currentPage = totalPages;
-         if (currentPage < 1) currentPage = 1;
-
-         // Ẩn toàn bộ bài thi
-         $items.hide();
-
-         if (totalMatched === 0) {
-            $noMatches.removeClass('d-none');
-            $paginationWrapper.addClass('d-none');
-            $visibleCount.text(0);
-            return;
-         }
-
-         $noMatches.addClass('d-none');
-         $paginationWrapper.removeClass('d-none');
-
-         const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-         const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalMatched);
-
-         // Hiển thị các item thuộc trang hiện tại
-         for (let i = startIndex; i < endIndex; i++) {
-            $(matchedItems[i]).show();
-         }
-
-         // Cập nhật thông số hiển thị
-         $('#pageStartItem').text(startIndex + 1);
-         $('#pageEndItem').text(endIndex);
-         $('#pageTotalItems').text(totalMatched);
-         $visibleCount.text(totalMatched);
-
-         // Render các nút phân trang
-         renderPagination(totalPages);
-
-         // Cập nhật query param ?page=X trên URL mà không load lại trang
-         const currentUrl = new URL(window.location.href);
-         if (currentPage > 1) {
-            currentUrl.searchParams.set('page', currentPage);
-         } else {
-            currentUrl.searchParams.delete('page');
-         }
-         window.history.replaceState({}, '', currentUrl.toString());
-
-         // Cuộn lên đầu danh sách bài thi khi chuyển trang
-         if (shouldScroll) {
-            const listOffset = $('#testsListContainer').offset();
-            if (listOffset) {
-               $('html, body').animate({
-                  scrollTop: Math.max(0, listOffset.top - 90)
-               }, 200);
-            }
-         }
-      }
-
-      // Lọc danh sách theo từ khóa + Topic + Trạng thái
-      function filterTests(resetToFirstPage = true) {
-         if (resetToFirstPage) {
-            currentPage = 1;
-         }
-
+      // Lọc danh sách bài thi theo Topic, Trạng thái & Từ khóa tìm kiếm
+      function filterTests() {
          const rawKeyword = $searchInput.val().trim();
          const keyword = removeVietnameseTones(rawKeyword);
 
@@ -901,84 +1027,112 @@
             $clearBtn.addClass('d-none');
          }
 
-         matchedItems = [];
+         let totalVisible = 0;
 
-         $items.each(function() {
-            const $item = $(this);
-            const itemTitleRaw = $item.find('.test-list-title').text();
-            const itemTitle = removeVietnameseTones(itemTitleRaw);
-            const itemStatus = String($item.data('status') || '');
-            const itemTopicsStr = String($item.data('topics') || '');
-            const itemTopics = itemTopicsStr ? itemTopicsStr.split(',').map(s => s.trim()) : [];
+         $sections.each(function() {
+            const $sec = $(this);
+            const secTopicId = String($sec.data('topic-id') || '');
+            let secVisibleCount = 0;
 
-            const matchesSearch = (keyword === '') || 
-                                  itemTitle.includes(keyword) || 
-                                  itemTitleRaw.toLowerCase().includes(rawKeyword.toLowerCase());
+            // Nếu người dùng chọn lọc 1 topic cụ thể mà topic này không khớp thì ẩn toàn bộ nhóm
+            const matchesTopicFilter = (currentTopic === 'all') || (secTopicId === currentTopic);
 
-            const matchesStatus = (currentStatus === 'all') || (itemStatus === currentStatus);
+            if (!matchesTopicFilter) {
+               $sec.hide();
+               return;
+            }
 
-            const matchesTopic = (currentTopic === 'all') || itemTopics.includes(String(currentTopic));
+            const $secItems = $sec.find('.test-list-item');
 
-            if (matchesSearch && matchesStatus && matchesTopic) {
-               matchedItems.push(this);
+            $secItems.each(function() {
+               const $item = $(this);
+               const itemTitleRaw = $item.find('.test-list-title').text();
+               const itemTitle = removeVietnameseTones(itemTitleRaw);
+               const itemStatus = String($item.data('status') || '');
+
+               const matchesSearch = (keyword === '') || 
+                                     itemTitle.includes(keyword) || 
+                                     itemTitleRaw.toLowerCase().includes(rawKeyword.toLowerCase());
+
+               const matchesStatus = (currentStatus === 'all') || (itemStatus === currentStatus);
+
+               if (matchesSearch && matchesStatus) {
+                  $item.show().css('visibility', 'visible');
+                  secVisibleCount++;
+                  totalVisible++;
+               } else {
+                  $item.hide();
+               }
+            });
+
+            // Cập nhật số lượng bài thi khớp trong header nhóm topic
+            $sec.find('.topic-visible-count').text(secVisibleCount);
+
+            if (secVisibleCount > 0) {
+               $sec.show();
+            } else {
+               $sec.hide();
             }
          });
 
-         if (matchedItems.length === 0 && $items.length > 0) {
+         $visibleCount.text(totalVisible);
+
+         if (totalVisible === 0) {
+            $noMatches.removeClass('d-none');
             if (rawKeyword) {
                $('#noSearchDesc').text(`Không có bài kiểm tra nào khớp với từ khóa "${rawKeyword}".`);
-            } else if (currentTopic !== 'all' || currentStatus !== 'all') {
-               $('#noSearchDesc').text(`Không có bài kiểm tra nào khớp với bộ lọc đã chọn.`);
             } else {
-               $('#noSearchDesc').text(`Không có bài kiểm tra nào.`);
+               $('#noSearchDesc').text(`Không có bài kiểm tra nào khớp với bộ lọc đã chọn.`);
             }
+         } else {
+            $noMatches.addClass('d-none');
          }
-
-         renderPage(false);
       }
 
-      // Event click chuyển trang
-      $(document).on('click', '#testsPaginationList .page-link', function(e) {
-         e.preventDefault();
-         const targetPage = parseInt($(this).data('page'));
-         if (targetPage && targetPage !== currentPage) {
-            currentPage = targetPage;
-            renderPage(true);
-         }
-      });
-
-      updateStatusCounts();
-
-      // Khởi tạo hiển thị trang đầu hoặc trang từ query param
-      filterTests(false);
-
-      $searchInput.on('input keyup', function() {
-         filterTests(true);
-      });
-
-      $clearBtn.on('click', function() {
-         $searchInput.val('').focus();
-         filterTests(true);
-      });
-
-      $statusSelect.on('change', function() {
-         currentStatus = $(this).val();
-         filterTests(true);
-      });
-
+      // Xử lý sự kiện đổi Topic từ Dropdown
       $topicSelect.on('change', function() {
          currentTopic = $(this).val();
-         filterTests(true);
+         filterTests();
       });
 
+      // Xử lý sự kiện đổi Trạng thái từ Dropdown
+      $statusSelect.on('change', function() {
+         currentStatus = $(this).val();
+         filterTests();
+      });
+
+      // Tìm kiếm theo từ khóa
+      $searchInput.on('input keyup', function() {
+         filterTests();
+      });
+
+      // Xóa ô tìm kiếm
+      $clearBtn.on('click', function() {
+         $searchInput.val('').focus();
+         filterTests();
+      });
+
+      // Thu gọn / Mở rộng nhóm bài thi
+      $(document).on('click', '.btn-toggle-topic', function(e) {
+         e.preventDefault();
+         const $sec = $(this).closest('.topic-group-section');
+         $sec.toggleClass('collapsed');
+         const isCollapsed = $sec.hasClass('collapsed');
+         $(this).find('.toggle-text').text(isCollapsed ? 'Mở rộng' : 'Thu gọn');
+      });
+
+      // Nút xem tất cả / reset bộ lọc
       $btnReset.on('click', function() {
          $searchInput.val('');
          currentStatus = 'all';
          currentTopic = 'all';
          $statusSelect.val('all');
          $topicSelect.val('all');
-         filterTests(true);
+         filterTests();
       });
+
+      updateStatusCounts();
+      filterTests();
    });
 
    $(window).on('load', function() {

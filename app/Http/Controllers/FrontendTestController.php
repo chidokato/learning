@@ -23,21 +23,23 @@ class FrontendTestController extends Controller
 
         $tests = $query->get();
         
-        $userId = auth()->id() ?? 1; // Fallback to 1 for testing if not logged in
-        
-        // Lấy thống kê làm bài của user theo từng bài test
-        $userResults = UserTestResult::where('user_id', $userId)
-            ->whereIn('test_id', $tests->pluck('id'))
-            ->get()
-            ->groupBy('test_id')
-            ->map(function ($items) {
-                return [
-                    'attempts'   => $items->count(),
-                    'max_score'  => $items->max('score'),
-                    'is_passed'  => $items->contains('is_passed', true),
-                    'latest'     => $items->sortByDesc('created_at')->first(),
-                ];
-            });
+        $userResults = collect();
+        if (auth()->check()) {
+            $userId = auth()->id();
+            // Lấy thống kê làm bài của user theo từng bài test
+            $userResults = UserTestResult::where('user_id', $userId)
+                ->whereIn('test_id', $tests->pluck('id'))
+                ->get()
+                ->groupBy('test_id')
+                ->map(function ($items) {
+                    return [
+                        'attempts'   => $items->count(),
+                        'max_score'  => $items->max('score'),
+                        'is_passed'  => $items->contains('is_passed', true),
+                        'latest'     => $items->sortByDesc('created_at')->first(),
+                    ];
+                });
+        }
 
         $topics = \App\Models\Topic::test()->withCount('tests')->orderBy('name')->get();
 
@@ -46,6 +48,11 @@ class FrontendTestController extends Controller
 
     public function show($id)
     {
+        if (!auth()->check()) {
+            session()->flash('warning', 'Vui lòng đăng nhập để vào làm bài kiểm tra.');
+            return redirect()->guest(route('frontend.login'));
+        }
+
         $test = Test::with(['questions.answers' => function($query) {
             $query->orderBy('label');
         }])->findOrFail($id);
@@ -55,7 +62,12 @@ class FrontendTestController extends Controller
 
     public function viewResult($result_id)
     {
-        $userId = auth()->id() ?? 1;
+        if (!auth()->check()) {
+            session()->flash('warning', 'Vui lòng đăng nhập để xem kết quả bài thi.');
+            return redirect()->guest(route('frontend.login'));
+        }
+
+        $userId = auth()->id();
 
         $result = UserTestResult::with([
             'test.questions.answers' => function($query) {
@@ -66,7 +78,7 @@ class FrontendTestController extends Controller
         ])->findOrFail($result_id);
 
         // Kiểm tra quyền truy cập (chỉ cho phép xem kết quả của chính mình hoặc admin)
-        if ($result->user_id != $userId && (!auth()->check() || !auth()->user()->isAdmin())) {
+        if ($result->user_id != $userId && (!auth()->user() || !auth()->user()->isAdmin())) {
             abort(403, 'Bạn không có quyền xem kết quả bài thi này.');
         }
 
