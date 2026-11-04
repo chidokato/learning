@@ -10,6 +10,15 @@ class Test extends Model
     use HasFactory;
     protected $guarded = [];
 
+    protected $casts = [
+        'is_special' => 'boolean',
+    ];
+
+    public function scopeSpecial($query)
+    {
+        return $query->where('is_special', true);
+    }
+
     public function questions()
     {
         return $this->hasMany(Question::class)->orderBy('order');

@@ -9,6 +9,7 @@ use App\Models\Topic;
 use App\Models\Question;
 use App\Models\Answer;
 use App\Imports\TestImport;
+use App\Exports\TestSampleExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -16,12 +17,50 @@ use Illuminate\Support\Facades\Schema;
 
 class AdminTestController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tests = Test::with(['questions', 'topics', 'post'])->latest()->paginate(10);
+        $query = Test::with(['questions', 'topics', 'post'])->latest();
+
+        if ($request->filled('keyword')) {
+            $keyword = trim($request->keyword);
+            $query->where('title', 'like', "%{$keyword}%");
+        }
+
+        if ($request->filled('post_id')) {
+            $query->where('post_id', $request->post_id);
+        }
+
+        if ($request->filled('topic_id')) {
+            $topicId = $request->topic_id;
+            $query->where(function ($q) use ($topicId) {
+                $q->whereHas('topics', function ($tq) use ($topicId) {
+                    $tq->where('topics.id', $topicId);
+                })->orWhere('topic_id', $topicId);
+            });
+        }
+
+        if ($request->filled('is_special')) {
+            $query->where('is_special', $request->boolean('is_special'));
+        }
+
+        $tests = $query->paginate(15)->withQueryString();
         $courses = Post::where('type', 'course')->get();
         $topics = Topic::test()->orderBy('name')->get();
+
         return view('backend.tests.index', compact('tests', 'courses', 'topics'));
+    }
+
+    public function create()
+    {
+        $courses = Post::where('type', 'course')->get();
+        $topics = Topic::test()->orderBy('name')->get();
+
+        return view('backend.tests.create', compact('courses', 'topics'));
+    }
+
+    public function downloadSampleExcel()
+    {
+        return Excel::download(new TestSampleExport(), 'mau_nhap_bai_kiem_tra.xlsx');
     }
 
     public function show(Test $test)
@@ -69,6 +108,7 @@ class AdminTestController extends Controller
                 'title' => $request->title,
                 'pass_score' => $request->pass_score,
                 'duration' => $request->duration ? (int)$request->duration : 0,
+                'is_special' => $request->boolean('is_special', false),
             ];
 
             if (Schema::hasColumn('tests', 'topic_id')) {
@@ -83,9 +123,9 @@ class AdminTestController extends Controller
 
             Excel::import(new TestImport($test->id), $request->file('file'));
             
-            return redirect()->back()->with('success', 'Tạo bài test và import câu hỏi thành công!');
+            return redirect()->route('backend.tests.index')->with('success', 'Tạo bài test và import câu hỏi thành công!');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Đã có lỗi xảy ra: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Đã có lỗi xảy ra: ' . $e->getMessage());
         }
     }
 
@@ -114,6 +154,7 @@ class AdminTestController extends Controller
                     'post_id' => $request->post_id ?: null,
                     'pass_score' => $request->pass_score,
                     'duration' => $request->duration ? (int)$request->duration : 0,
+                    'is_special' => $request->boolean('is_special', false),
                 ];
 
                 if (Schema::hasColumn('tests', 'topic_id')) {
@@ -245,6 +286,19 @@ class AdminTestController extends Controller
             }
             return redirect()->back()->with('error', 'Đã có lỗi xảy ra: ' . $e->getMessage());
         }
+    }
+
+    public function toggleSpecial(Test $test)
+    {
+        $newVal = ! $test->is_special;
+        $test->update(['is_special' => $newVal]);
+
+        return response()->json([
+            'is_special' => $newVal,
+            'is_active' => $newVal,
+            'label' => $newVal ? 'Bật' : 'Tắt',
+            'message' => 'Cập nhật trạng thái bài kiểm tra đặc biệt thành công.',
+        ]);
     }
 
     public function destroy(Test $test)

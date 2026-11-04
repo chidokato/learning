@@ -89,17 +89,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.json();
                 })
                 .then(function (data) {
-                    button.classList.toggle('is-active', data.is_active);
-                    button.classList.toggle('is-inactive', !data.is_active);
-                    button.setAttribute('aria-pressed', data.is_active ? 'true' : 'false');
+                    var isActive = typeof data.is_active !== 'undefined' ? data.is_active : (typeof data.is_special !== 'undefined' ? data.is_special : data.is_featured);
+                    button.classList.toggle('is-active', isActive);
+                    button.classList.toggle('is-inactive', !isActive);
+                    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
 
                     if (label) {
                         label.textContent = data.label;
-                        label.classList.toggle('text-success', data.is_active);
-                        label.classList.toggle('text-danger', !data.is_active);
+                        label.classList.toggle('text-success', isActive);
+                        label.classList.toggle('text-danger', !isActive);
                     }
 
-                    showToast('success', 'Da cap nhat', data.message);
+                    showToast('success', 'Đã cập nhật', data.message);
                 })
                 .catch(function () {
                     showToast('error', 'Khong cap nhat duoc', 'Vui long thu lai.');

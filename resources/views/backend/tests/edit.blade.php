@@ -241,6 +241,14 @@
                             </div>
                         </div>
 
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="is_special" name="is_special" value="1" {{ old('is_special', $test->is_special ?? false) ? 'checked' : '' }}>
+                            <label class="form-check-label fw-semibold text-primary" for="is_special">
+                                <i class="ri-star-fill text-warning me-1"></i> Đặc biệt (Bài kiểm tra đặc biệt)
+                            </label>
+                            <div class="text-muted small">Đánh dấu bài test này là bài kiểm tra đặc biệt.</div>
+                        </div>
+
                         <hr class="my-3">
 
                         <!-- Quick Stats -->

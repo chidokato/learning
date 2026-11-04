@@ -34,12 +34,14 @@ class Post extends Model
         'price',
         'is_active',
         'is_featured',
+        'is_special',
         'published_at',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
+        'is_special' => 'boolean',
         'allow_download_pdf' => 'boolean',
         'area' => 'decimal:2',
         'area_from' => 'decimal:2',
@@ -201,5 +203,10 @@ class Post extends Model
         }
 
         return $this->learningHistories()->count();
+    }
+
+    public function scopeSpecial($query)
+    {
+        return $query->where('is_special', true);
     }
 }

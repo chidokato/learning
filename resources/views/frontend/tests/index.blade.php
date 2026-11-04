@@ -298,6 +298,109 @@
       border-color: rgba(3, 89, 78, 0.35);
    }
 
+   /* Special / Featured Group Section & Card Highlight */
+   .special-group-section {
+      margin-bottom: 30px;
+   }
+   .special-group-header {
+      background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%) !important;
+      border: 1.5px solid #fde68a !important;
+      border-left: 5px solid #f59e0b !important;
+      border-radius: 12px;
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1) !important;
+      transition: all 0.25s ease;
+   }
+   .special-group-header:hover {
+      border-color: #f59e0b !important;
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.16) !important;
+   }
+   .special-header-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+      color: #ffffff !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+      box-shadow: 0 3px 8px rgba(217, 119, 6, 0.3);
+   }
+   .special-group-title {
+      font-size: 16px !important;
+      font-weight: 800 !important;
+      color: #92400e !important;
+      margin: 0;
+      line-height: 1.35;
+      letter-spacing: -0.2px;
+   }
+   .special-count-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #92400e !important;
+      background: #fef3c7 !important;
+      border: 1px solid #fde68a !important;
+      padding: 2px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+   }
+
+   /* Special Card Highlight */
+   .it-career-item.is-special-card {
+      border: 2px solid #f59e0b !important;
+      background: linear-gradient(180deg, #fffdf5 0%, #ffffff 45%) !important;
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.18) !important;
+      position: relative;
+      overflow: hidden;
+   }
+   .it-career-item.is-special-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #f59e0b, #d97706, #fbbf24);
+      z-index: 1;
+   }
+   .it-career-item.is-special-card:hover {
+      transform: translateY(-4px) !important;
+      box-shadow: 0 10px 24px rgba(245, 158, 11, 0.28) !important;
+      border-color: #d97706 !important;
+   }
+   .badge-special-highlight {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #ffffff;
+      padding: 2px 7px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(217, 119, 6, 0.35);
+      line-height: 1.25;
+   }
+   .it-career-item.is-special-card .title a {
+      color: #0f172a;
+      font-weight: 800;
+   }
+   .it-career-item.is-special-card .title a:hover {
+      color: #d97706;
+   }
+
    /* Category & Status Top */
    .it-career-top {
       margin-bottom: 8px;
@@ -618,13 +721,17 @@
 @endguest
 
 @php
-   // Gom nhóm các bài test theo từng Topic có bài thi
+   // Danh sách các bài test đặc biệt (hiển thị lên trên cùng)
+   $specialTests = $tests->filter(fn($t) => (bool)$t->is_special);
+
+   // Gom nhóm các bài test theo từng Topic có bài thi (ưu tiên bài đặc biệt lên đầu nhóm)
    $groupedByTopic = collect();
 
    foreach ($topics as $tp) {
        $topicTests = $tests->filter(function($t) use ($tp) {
            return $t->topics->contains('id', $tp->id);
-       });
+       })->sortByDesc('is_special');
+
        if ($topicTests->isNotEmpty()) {
            $groupedByTopic->put($tp->id, [
                'topic' => $tp,
@@ -636,13 +743,164 @@
    // Các bài test không thuộc topic nào (nếu có)
    $untaggedTests = $tests->filter(function($t) {
        return $t->topics->isEmpty();
-   });
+   })->sortByDesc('is_special');
 @endphp
 
 
 <!-- Vùng hiển thị các bài thi nhóm theo từng Topic -->
 @if($tests->count() > 0)
    <div class="it-career-area" id="testsGroupedContainer">
+
+      <!-- KHU VỰC BÀI THI ĐẶC BIỆT LÊN TRÊN CÙNG -->
+      @if($specialTests->isNotEmpty())
+         <div class="topic-group-section special-group-section" id="specialGroupSection" data-topic-id="special">
+            <!-- Header Nhóm Bài Thi Đặc Biệt -->
+            <div class="topic-group-header special-group-header">
+               <div class="topic-header-left">
+                  <div class="topic-header-icon special-header-icon">
+                     <i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="topic-header-text">
+                     <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <h3 class="topic-group-title special-group-title">
+                           Bài kiểm tra đặc biệt
+                        </h3>
+                        <span class="topic-count-badge special-count-badge">
+                           <span class="topic-visible-count">{{ $specialTests->count() }}</span> bài thi
+                        </span>
+                     </div>
+                     <div class="text-muted small mt-1" style="font-size: 12px; color: #78350f !important;">
+                        <i class="fa-solid fa-sparkles text-warning me-1"></i> Các bài thi trọng tâm được đánh dấu đặc biệt
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Nút Thu gọn / Mở rộng nhóm -->
+               <div class="topic-header-right">
+                  <button type="button" class="btn-toggle-topic">
+                     <span class="toggle-text">Thu gọn</span>
+                     <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                  </button>
+               </div>
+            </div>
+
+            <!-- Danh sách bài thi đặc biệt dạng 4 cột -->
+            <div class="topic-group-body">
+               <div class="row g-3">
+                  @foreach($specialTests as $test)
+                     @php
+                        $itemResult = $userResults[$test->id] ?? null;
+                        $qCount = $test->questions_count ?? $test->questions()->count();
+                        $statusKey = 'not_taken';
+                        $statusText = 'Chưa làm';
+                        $statusIcon = 'fa-clock';
+
+                        if ($itemResult) {
+                           if (!empty($itemResult['is_passed'])) {
+                              $statusKey = 'passed';
+                              $statusText = 'Đã đạt';
+                              $statusIcon = 'fa-circle-check';
+                           } else {
+                              $statusKey = 'failed';
+                              $statusText = 'Chưa đạt';
+                              $statusIcon = 'fa-circle-xmark';
+                           }
+                        }
+
+                        $topicName = $test->topics->first()?->name ?? 'Bài test chung';
+                        $delay = 0.1 + (($loop->index % 4) * 0.1);
+                     @endphp
+
+                     <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 test-list-item special-test-item wow itfadeUp" 
+                          data-wow-duration=".8s" 
+                          data-wow-delay="{{ $delay }}s"
+                          data-test-id="{{ $test->id }}"
+                          data-title="{{ Str::lower($test->title) }}" 
+                          data-status="{{ $statusKey }}"
+                          data-topics="{{ $test->topics->pluck('id')->implode(',') }}"
+                          data-questions="{{ $qCount }}"
+                     >
+                        <div class="it-career-item is-special-card">
+                           <!-- Header: Category & Status -->
+                           <div class="it-career-top d-flex align-items-center justify-content-between flex-wrap gap-1">
+                              <div class="d-flex align-items-center gap-1 flex-wrap">
+                                 <span class="badge-special-highlight" title="Bài kiểm tra đặc biệt">
+                                    <i class="fa-solid fa-star"></i> Đặc biệt
+                                 </span>
+                                 <span class="it-career-category" title="{{ $topicName }}">
+                                    <i class="fa-solid fa-layer-group me-1"></i> {{ $topicName }}
+                                 </span>
+                              </div>
+
+                              <span class="badge-status status-{{ $statusKey }}">
+                                 <i class="fa-solid {{ $statusIcon }}"></i> {{ $statusText }}
+                              </span>
+                           </div>
+
+                           <!-- Title -->
+                           <h4 class="title test-list-title">
+                              <a href="{{ route('frontend.tests.show', $test->id) }}" title="{{ $test->title }}">
+                                 {{ $test->title }}
+                              </a>
+                           </h4>
+
+                           <!-- Meta Information: Câu hỏi | Yêu cầu đạt | Thời gian -->
+                           <div class="it-career-meta">
+                              <span>
+                                 <i class="fa-regular fa-clipboard-question text-primary me-1"></i>
+                                 <strong>{{ $qCount }}</strong> câu
+                              </span>
+                              <span>
+                                 <i class="fa-regular fa-bullseye-arrow text-success me-1"></i>
+                                 Đạt: <strong>{{ $test->pass_score }}</strong>/{{ $qCount }}
+                              </span>
+                              <span>
+                                 <i class="fa-regular fa-clock text-warning me-1"></i>
+                                 <strong>{{ $test->duration && $test->duration > 0 ? $test->duration . 'p' : 'Tự do' }}</strong>
+                              </span>
+                           </div>
+
+                           <!-- Score / Attempts status -->
+                           <div class="it-career-score-wrap">
+                              @if($itemResult)
+                                 <span class="badge-score-pill" title="Điểm cao nhất">
+                                    <i class="fa-solid fa-trophy text-warning me-1"></i> <strong>{{ $itemResult['max_score'] }}</strong>/{{ $qCount }} câu
+                                 </span>
+                                 <span class="badge-attempts-pill" title="Số lần đã thi">
+                                    <i class="fa-solid fa-rotate-right text-muted me-1"></i> {{ $itemResult['attempts'] }} lần
+                                 </span>
+                              @else
+                                 <span class="badge-not-taken-pill">
+                                    <i class="fa-regular fa-circle-dot me-1 text-muted"></i> Chưa làm bài
+                                 </span>
+                              @endif
+                           </div>
+
+                           <!-- Bottom: Duration & Action Link -->
+                           <div class="it-career-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+                              <span class="it-career-price" title="Thời gian làm bài">
+                                 <i class="fa-regular fa-clock me-1"></i> {{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Tự do' }}
+                              </span>
+
+                              <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
+                                 <span>
+                                    <span class="text-1">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
+                                    <span class="text-2">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
+                                 </span>
+                                 <i>
+                                    <svg width="12" height="11" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                       <path d="M14.6364 7.26396C14.9879 6.91249 14.9879 6.34264 14.6364 5.99117L8.90883 0.263603C8.55736 -0.0878692 7.98751 -0.0878692 7.63604 0.263603C7.28457 0.615075 7.28457 1.18492 7.63604 1.53639L12.7272 6.62756L7.63604 11.7187C7.28457 12.0702 7.28457 12.6401 7.63604 12.9915C7.98751 13.343 8.55736 13.343 8.90883 12.9915L14.6364 7.26396ZM0 6.62756V7.52756H14V6.62756V5.72756H0V6.62756Z" fill="currentColor"></path>
+                                    </svg>
+                                 </i>
+                              </a>
+                           </div>
+                        </div>
+                     </div>
+                  @endforeach
+               </div>
+            </div>
+         </div>
+      @endif
       @foreach($groupedByTopic as $tpId => $group)
          @php
             $topicTotal = $group['tests']->count();
@@ -722,17 +980,25 @@
                      <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 test-list-item wow itfadeUp" 
                           data-wow-duration=".8s" 
                           data-wow-delay="{{ $delay }}s"
+                          data-test-id="{{ $test->id }}"
                           data-title="{{ Str::lower($test->title) }}" 
                           data-status="{{ $statusKey }}"
                           data-topics="{{ $tpId }}"
                           data-questions="{{ $qCount }}"
                      >
-                        <div class="it-career-item">
+                        <div class="it-career-item {{ $test->is_special ? 'is-special-card' : '' }}">
                            <!-- Header: Category & Status -->
                            <div class="it-career-top d-flex align-items-center justify-content-between flex-wrap gap-1">
-                              <span class="it-career-category" title="{{ $group['topic']->name }}">
-                                 <i class="fa-solid fa-layer-group me-1"></i> {{ $group['topic']->name }}
-                              </span>
+                              <div class="d-flex align-items-center gap-1 flex-wrap">
+                                 @if($test->is_special)
+                                    <span class="badge-special-highlight" title="Bài kiểm tra đặc biệt">
+                                       <i class="fa-solid fa-star"></i> Đặc biệt
+                                    </span>
+                                 @endif
+                                 <span class="it-career-category" title="{{ $group['topic']->name }}">
+                                    <i class="fa-solid fa-layer-group me-1"></i> {{ $group['topic']->name }}
+                                 </span>
+                              </div>
 
                               <span class="badge-status status-{{ $statusKey }}">
                                  <i class="fa-solid {{ $statusIcon }}"></i> {{ $statusText }}
@@ -854,16 +1120,24 @@
 
                      <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 test-list-item wow itfadeUp" 
                           data-wow-duration=".8s" 
+                          data-test-id="{{ $test->id }}"
                           data-title="{{ Str::lower($test->title) }}" 
                           data-status="{{ $statusKey }}"
                           data-topics="untagged"
                           data-questions="{{ $qCount }}"
                      >
-                        <div class="it-career-item">
+                        <div class="it-career-item {{ $test->is_special ? 'is-special-card' : '' }}">
                            <div class="it-career-top d-flex align-items-center justify-content-between flex-wrap gap-1">
-                              <span class="it-career-category">
-                                 <i class="fa-solid fa-shield-check me-1"></i> Đề thi chung
-                              </span>
+                              <div class="d-flex align-items-center gap-1 flex-wrap">
+                                 @if($test->is_special)
+                                    <span class="badge-special-highlight" title="Bài kiểm tra đặc biệt">
+                                       <i class="fa-solid fa-star"></i> Đặc biệt
+                                    </span>
+                                 @endif
+                                 <span class="it-career-category">
+                                    <i class="fa-solid fa-shield-check me-1"></i> Đề thi chung
+                                 </span>
+                              </div>
                               <span class="badge-status status-{{ $statusKey }}">
                                  <i class="fa-solid {{ $statusIcon }}"></i> {{ $statusText }}
                               </span>
@@ -986,17 +1260,18 @@
 
       // Cập nhật số lượng đếm trên dropdown trạng thái
       function updateStatusCounts() {
-         let totalAll = $('.test-list-item').length;
          let totalNotTaken = 0;
          let totalPassed = 0;
          let totalFailed = 0;
 
-         $('.test-list-item').each(function() {
+         $('.topic-group-section:not(#specialGroupSection) .test-list-item').each(function() {
             const status = $(this).data('status');
             if (status === 'passed') totalPassed++;
             else if (status === 'failed') totalFailed++;
             else totalNotTaken++;
          });
+
+         let totalAll = totalNotTaken + totalPassed + totalFailed;
 
          $('#optStatusAll').text(`Tất cả trạng thái (${totalAll})`);
          $('#optStatusNotTaken').text(`Chưa làm (${totalNotTaken})`);
@@ -1019,11 +1294,12 @@
 
          $sections.each(function() {
             const $sec = $(this);
+            const isSpecialSec = $sec.attr('id') === 'specialGroupSection';
             const secTopicId = String($sec.data('topic-id') || '');
             let secVisibleCount = 0;
 
-            // Nếu người dùng chọn lọc 1 topic cụ thể mà topic này không khớp thì ẩn toàn bộ nhóm
-            const matchesTopicFilter = (currentTopic === 'all') || (secTopicId === currentTopic);
+            // Nếu người dùng chọn lọc 1 topic cụ thể mà không phải nhóm đặc biệt thì kiểm tra topicId
+            const matchesTopicFilter = (currentTopic === 'all') || (!isSpecialSec && secTopicId === currentTopic);
 
             if (!matchesTopicFilter) {
                $sec.hide();
@@ -1047,7 +1323,9 @@
                if (matchesSearch && matchesStatus) {
                   $item.show().css('visibility', 'visible');
                   secVisibleCount++;
-                  totalVisible++;
+                  if (!isSpecialSec) {
+                     totalVisible++;
+                  }
                } else {
                   $item.hide();
                }

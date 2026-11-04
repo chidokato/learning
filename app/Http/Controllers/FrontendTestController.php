@@ -15,6 +15,7 @@ class FrontendTestController extends Controller
         $query = Test::query()
             ->withCount('questions')
             ->with(['post:id,title,slug', 'topics:id,name,slug'])
+            ->orderByDesc('is_special')
             ->latest();
 
         if ($search !== '') {

@@ -323,13 +323,16 @@
 
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $post->is_active ?? true) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="is_active">{{ $isCourse ? 'Active Course' : 'Hien thi ' . strtolower($typeLabel) }}</label>
+                    <label class="form-check-label" for="is_active">{{ $isCourse ? 'Kích hoạt khóa học' : 'Hiển thị ' . strtolower($typeLabel) }}</label>
                 </div>
 
                 @if ($isCourse)
                     <div class="form-check form-switch mt-3">
-                        <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" value="1" {{ old('is_featured', $post->is_featured ?? false) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="is_featured">Featured Course</label>
+                        <input class="form-check-input" type="checkbox" id="is_special" name="is_special" value="1" {{ old('is_special', $post->is_special ?? ($post->is_featured ?? false)) ? 'checked' : '' }}>
+                        <label class="form-check-label fw-semibold text-primary" for="is_special">
+                            <i class="ri-star-fill text-warning me-1"></i> Đặc biệt (Bài giảng đặc biệt)
+                        </label>
+                        <div class="text-muted small mt-1">Đánh dấu bài giảng này là bài giảng đặc biệt.</div>
                     </div>
                 @endif
             </div>

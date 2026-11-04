@@ -241,6 +241,7 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::delete('courses/{post}', 'destroy')->name('courses.destroy')->defaults('type', 'course');
         Route::patch('courses/{post}/toggle-status', 'toggleStatus')->name('courses.toggle-status')->defaults('type', 'course');
         Route::patch('courses/{post}/toggle-featured', 'toggleFeatured')->name('courses.toggle-featured')->defaults('type', 'course');
+        Route::patch('courses/{post}/toggle-special', 'toggleSpecial')->name('courses.toggle-special')->defaults('type', 'course');
 
         Route::get('products', fn () => redirect()->route('backend.courses.index'))->name('products.index');
         Route::get('products/create', fn () => redirect()->route('backend.courses.create'))->name('products.create');
@@ -248,10 +249,14 @@ Route::prefix('admin')->name('backend.')->group(function () {
 
     Route::controller(\App\Http\Controllers\AdminTestController::class)->group(function () {
         Route::get('tests', 'index')->name('tests.index');
+        Route::get('tests/create', 'create')->name('tests.create');
+        Route::get('tests/sample-excel', 'downloadSampleExcel')->name('tests.sample-excel');
         Route::get('tests/{test}', 'show')->name('tests.show');
         Route::get('tests/{test}/edit', 'edit')->name('tests.edit');
         Route::post('tests/import', 'import')->name('tests.import');
+        Route::post('tests', 'import')->name('tests.store');
         Route::put('tests/{test}', 'update')->name('tests.update');
+        Route::patch('tests/{test}/toggle-special', 'toggleSpecial')->name('tests.toggle-special');
         Route::delete('tests/{test}', 'destroy')->name('tests.destroy');
     });
 

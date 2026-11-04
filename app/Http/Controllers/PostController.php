@@ -151,7 +151,8 @@ class PostController extends Controller
             'allow_download_pdf' => $request->boolean('allow_download_pdf', false),
             'price' => $price,
             'is_active' => $request->boolean('is_active', true),
-            'is_featured' => ($type === Post::TYPE_PRODUCT) ? $request->boolean('is_featured', false) : false,
+            'is_featured' => $request->boolean('is_special', false) || $request->boolean('is_featured', false),
+            'is_special' => $request->boolean('is_special', false) || $request->boolean('is_featured', false),
             'published_at' => now(),
         ]);
 
@@ -315,7 +316,8 @@ class PostController extends Controller
             'allow_download_pdf' => $request->boolean('allow_download_pdf', false),
             'price' => $price,
             'is_active' => $request->boolean('is_active', true),
-            'is_featured' => ($type === Post::TYPE_PRODUCT) ? $request->boolean('is_featured', false) : false,
+            'is_featured' => $request->boolean('is_special', false) || $request->boolean('is_featured', false),
+            'is_special' => $request->boolean('is_special', false) || $request->boolean('is_featured', false),
         ]);
 
         if ($request->has('topic_ids')) {
@@ -384,19 +386,42 @@ class PostController extends Controller
 
         return response()->json([
             'is_active' => $post->is_active,
-            'label' => $post->is_active ? 'Hien thi' : 'An',
-            'message' => 'Cap nhat trang thai thanh cong.',
+            'label' => $post->is_active ? 'Bật' : 'Tắt',
+            'message' => 'Cập nhật trạng thái thành công.',
         ]);
     }
 
     public function toggleFeatured(Post $post): JsonResponse
     {
-        $post->update(['is_featured' => ! $post->is_featured]);
+        $newVal = ! $post->is_featured;
+        $post->update([
+            'is_featured' => $newVal,
+            'is_special' => $newVal,
+        ]);
 
         return response()->json([
-            'is_featured' => $post->is_featured,
-            'label' => $post->is_featured ? 'Bat' : 'Tat',
-            'message' => 'Cap nhat du an noi bat thanh cong.',
+            'is_featured' => $newVal,
+            'is_special' => $newVal,
+            'is_active' => $newVal,
+            'label' => $newVal ? 'Bật' : 'Tắt',
+            'message' => 'Cập nhật trạng thái bài giảng đặc biệt thành công.',
+        ]);
+    }
+
+    public function toggleSpecial(Post $post): JsonResponse
+    {
+        $newVal = ! $post->is_special;
+        $post->update([
+            'is_special' => $newVal,
+            'is_featured' => $newVal,
+        ]);
+
+        return response()->json([
+            'is_special' => $newVal,
+            'is_featured' => $newVal,
+            'is_active' => $newVal,
+            'label' => $newVal ? 'Bật' : 'Tắt',
+            'message' => 'Cập nhật trạng thái bài giảng đặc biệt thành công.',
         ]);
     }
 
