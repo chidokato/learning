@@ -168,6 +168,8 @@ class FrontendTestReportController extends Controller
                 'percentage' => $pct,
                 'is_passed' => (bool) $att->is_passed,
                 'is_best' => ($att->score == $maxScore),
+                'duration_seconds' => $att->duration_seconds,
+                'duration_formatted' => $att->formatted_duration,
                 'completed_at' => $att->completed_at 
                     ? $att->completed_at->timezone('Asia/Ho_Chi_Minh')->format('H:i d/m/Y')
                     : ($att->created_at ? $att->created_at->timezone('Asia/Ho_Chi_Minh')->format('H:i d/m/Y') : 'N/A'),

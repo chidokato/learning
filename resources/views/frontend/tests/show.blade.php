@@ -479,13 +479,25 @@
          updateTimer();
          timerInterval = setInterval(updateTimer, 1000);
       } else {
-         var countUpSeconds = 0;
-         timerInterval = setInterval(function() {
-            countUpSeconds++;
+         var startTime = localStorage.getItem(testStorageKey);
+         var now = Math.floor(Date.now() / 1000);
+         if (!startTime) {
+            startTime = now;
+            localStorage.setItem(testStorageKey, startTime);
+         } else {
+            startTime = parseInt(startTime);
+         }
+
+         function updateCountUpTimer() {
+            var currentNow = Math.floor(Date.now() / 1000);
+            var countUpSeconds = Math.max(0, currentNow - startTime);
             var m = Math.floor(countUpSeconds / 60);
             var s = countUpSeconds % 60;
             $('#test-timer').text((m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s);
-         }, 1000);
+         }
+
+         updateCountUpTimer();
+         timerInterval = setInterval(updateCountUpTimer, 1000);
       }
 
       $('#bottom-submit-btn').on('click', function() {
@@ -518,6 +530,14 @@
          if (isCanceled) {
             formData.push({ name: 'is_canceled', value: '1' });
          }
+
+         var currentNow = Math.floor(Date.now() / 1000);
+         var durationSeconds = 0;
+         var startTimeVal = localStorage.getItem(testStorageKey);
+         if (startTimeVal) {
+            durationSeconds = Math.max(0, currentNow - parseInt(startTimeVal));
+         }
+         formData.push({ name: 'duration_seconds', value: durationSeconds });
 
          $.ajax({
             url: "{{ route('frontend.tests.submit', $test->id) }}",

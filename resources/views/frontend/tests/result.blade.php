@@ -471,6 +471,15 @@
                </div>
                <div class="col-6">
                   <div class="stat-tile">
+                     <div class="stat-label">Thời gian làm bài</div>
+                     <div class="stat-value text-dark fs-13">
+                        <i class="fa-solid fa-stopwatch text-primary me-1"></i>
+                        {{ $result->formatted_duration ?? '--' }}
+                     </div>
+                  </div>
+               </div>
+               <div class="col-6">
+                  <div class="stat-tile">
                      <div class="stat-label">Thời gian nộp</div>
                      <div class="stat-value text-muted fs-12">
                         {{ $result->completed_at ? $result->completed_at->timezone('Asia/Ho_Chi_Minh')->format('H:i d/m/Y') : $result->created_at->timezone('Asia/Ho_Chi_Minh')->format('H:i d/m/Y') }}

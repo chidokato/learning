@@ -125,13 +125,16 @@ class TestController extends Controller
         $isCancelled = $request->boolean('is_cancelled') || $request->boolean('is_canceled');
         $isPassed = !$isCancelled && ($totalCorrect >= $test->pass_score);
 
+        $durationSeconds = $request->has('duration_seconds') ? max(0, (int)$request->input('duration_seconds')) : null;
+
         $result = UserTestResult::create([
-            'user_id'      => $user_id,
-            'test_id'      => $test_id,
-            'score'        => $totalCorrect,
-            'is_passed'    => $isPassed,
-            'completed_at' => now(),
-            'user_answers' => $savedAnswersMap,
+            'user_id'          => $user_id,
+            'test_id'          => $test_id,
+            'score'            => $totalCorrect,
+            'is_passed'        => $isPassed,
+            'duration_seconds' => $durationSeconds,
+            'completed_at'     => now(),
+            'user_answers'     => $savedAnswersMap,
         ]);
 
         if ($isCancelled) {

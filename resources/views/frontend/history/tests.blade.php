@@ -24,7 +24,7 @@
                   <th>Bài kiểm tra</th>
                   <th class="text-center">Số câu đúng</th>
                   <th class="text-center">Kết quả</th>
-                  <th>Thời gian hoàn thành</th>
+                  <th>Thời gian làm bài</th>
                   <th class="text-end">Hành động</th>
                </tr>
             </thead>
@@ -55,8 +55,15 @@
                      @endif
                   </td>
                   <td class="text-muted">
-                     <i class="far fa-calendar-alt me-1"></i>
-                     {{ $result->completed_at ? $result->completed_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') : $result->created_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
+                     @if($result->formatted_duration)
+                        <div class="fw-semibold text-dark fs-13 mb-1">
+                           <i class="fa-solid fa-stopwatch text-primary me-1"></i> {{ $result->formatted_duration }}
+                        </div>
+                     @endif
+                     <div class="small">
+                        <i class="far fa-calendar-alt me-1"></i>
+                        {{ $result->completed_at ? $result->completed_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') : $result->created_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
+                     </div>
                   </td>
                   <td class="text-end">
                      {{-- Tạm thời ẩn nút Xem kết quả: <a href="{{ route('frontend.tests.result', $result->id) }}" class="btn btn-sm text-white rounded-pill px-3 me-1" style="font-size: 12.5px; background: #03594e; border-color: #03594e;"><i class="far fa-eye me-1"></i> Xem kết quả</a> --}}

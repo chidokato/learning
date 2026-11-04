@@ -164,7 +164,7 @@
                   <th>Bài kiểm tra</th>
                   <th>Điểm cao nhất</th>
                   <th class="text-center">Kết quả</th>
-                  <th>Thời gian hoàn thành</th>
+                  <th>Thời gian làm bài</th>
                   <th class="text-end" style="width: 130px;">Hành động</th>
                </tr>
             </thead>
@@ -260,10 +260,21 @@
                         @endif
                      </td>
 
-                     <!-- 6. Thời gian hoàn thành -->
+                     <!-- 6. Thời gian làm bài & Hoàn thành -->
                      <td class="text-muted fs-13">
-                        <div>
-                           <i class="fa-regular fa-clock me-1"></i>
+                        @if(!empty($res->formatted_duration))
+                           <div class="fw-semibold text-dark fs-13 d-flex align-items-center">
+                              <i class="fa-solid fa-stopwatch text-primary me-1.5"></i>
+                              <span>{{ $res->formatted_duration }}</span>
+                           </div>
+                        @else
+                           <div class="text-muted fs-13 d-flex align-items-center">
+                              <i class="fa-regular fa-stopwatch text-muted me-1.5"></i>
+                              <span>--</span>
+                           </div>
+                        @endif
+                        <div class="text-muted fs-12 mt-1 d-flex align-items-center" title="Thời gian nộp bài">
+                           <i class="fa-regular fa-clock me-1 text-muted"></i>
                            {{ $res->completed_at ? $res->completed_at->timezone('Asia/Ho_Chi_Minh')->format('H:i d/m/Y') : $res->created_at->timezone('Asia/Ho_Chi_Minh')->format('H:i d/m/Y') }}
                         </div>
                      </td>
@@ -393,11 +404,12 @@
                      <table class="table history-table align-middle mb-0">
                         <thead class="sticky-top">
                            <tr>
-                              <th class="text-center" style="width: 70px;">Lần</th>
-                              <th style="width: 160px;">Thời gian nộp</th>
+                              <th class="text-center" style="width: 65px;">Lần</th>
+                              <th style="width: 140px;">Thời lượng làm</th>
+                              <th style="width: 140px;">Thời gian nộp</th>
                               <th>Điểm số</th>
-                              <th class="text-center" style="width: 110px;">Kết quả</th>
-                              <th class="text-end" style="width: 110px;">Hành động</th>
+                              <th class="text-center" style="width: 105px;">Kết quả</th>
+                              <th class="text-end" style="width: 100px;">Hành động</th>
                            </tr>
                         </thead>
                         <tbody id="modalAttemptsTableBody">
@@ -530,10 +542,17 @@
                            : '<span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1 rounded-pill fw-bold" style="font-size: 11px;"><i class="fa-solid fa-circle-xmark me-1"></i> CHƯA ĐẠT</span>';
                         var scoreColor = att.is_passed ? 'text-success' : 'text-danger';
 
+                        var durationHtml = att.duration_formatted 
+                           ? `<span class="fw-semibold text-dark fs-12 d-flex align-items-center"><i class="fa-solid fa-stopwatch text-primary me-1"></i>${att.duration_formatted}</span>`
+                           : `<span class="text-muted fs-12">--</span>`;
+
                         rowsHtml += `
                            <tr style="${att.is_best ? 'background-color: #fffdf5;' : ''}">
                               <td class="text-center fw-bold text-secondary fs-12">
                                  Lần ${att.attempt_number}
+                              </td>
+                              <td>
+                                 ${durationHtml}
                               </td>
                               <td class="text-muted fs-12">
                                  <i class="fa-regular fa-clock me-1 text-muted"></i>${att.completed_at}
@@ -555,7 +574,7 @@
                         `;
                      });
                   } else {
-                     rowsHtml = '<tr><td colspan="5" class="text-center text-muted py-4">Chưa có lượt làm bài nào.</td></tr>';
+                     rowsHtml = '<tr><td colspan="6" class="text-center text-muted py-4">Chưa có lượt làm bài nào.</td></tr>';
                   }
 
                   $('#modalAttemptsTableBody').html(rowsHtml);
