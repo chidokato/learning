@@ -355,6 +355,125 @@
          color: #fff;
       }
 
+      /* Slide 5s Reading Timer Badge & Notifications */
+      .slide-timer-badge {
+         display: inline-flex;
+         align-items: center;
+         gap: 5px;
+         font-size: 12px;
+         font-weight: 700;
+         padding: 4px 10px;
+         border-radius: 999px;
+         transition: all 0.25s ease;
+         user-select: none;
+         white-space: nowrap;
+      }
+      .slide-timer-badge.reading {
+         background: rgba(245, 158, 11, 0.2);
+         color: #fbbf24;
+         border: 1px solid rgba(245, 158, 11, 0.5);
+         box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+         animation: pulseReading 1.5s infinite;
+      }
+      .slide-timer-badge.completed {
+         background: rgba(16, 185, 129, 0.2);
+         color: #34d399;
+         border: 1px solid rgba(16, 185, 129, 0.5);
+      }
+      @keyframes pulseReading {
+         0%, 100% { opacity: 1; transform: scale(1); }
+         50% { opacity: 0.85; transform: scale(1.03); }
+      }
+      @keyframes shakeTimer {
+         0%, 100% { transform: translateX(0); }
+         20%, 60% { transform: translateX(-5px); }
+         40%, 80% { transform: translateX(5px); }
+      }
+      .slide-timer-badge.shake {
+         animation: shakeTimer 0.4s ease-in-out;
+      }
+
+      .btn-toolbar-icon.locked {
+         border-color: rgba(245, 158, 11, 0.5);
+         color: #f59e0b;
+         opacity: 0.85;
+      }
+      .flip-nav-btn.locked {
+         border-color: rgba(245, 158, 11, 0.7);
+         background: rgba(30, 20, 10, 0.75);
+      }
+      .floating-timer-badge {
+         position: absolute;
+         bottom: -6px;
+         right: -6px;
+         background: #f59e0b;
+         color: #111;
+         font-size: 10px;
+         font-weight: 800;
+         padding: 1px 6px;
+         border-radius: 999px;
+         box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+         display: inline-block;
+         line-height: 1.2;
+         transition: all 0.2s;
+      }
+      .floating-timer-badge.done {
+         background: #10b981;
+         color: #fff;
+      }
+
+      .slide-timer-toast {
+         position: absolute;
+         bottom: 30px;
+         left: 50%;
+         transform: translateX(-50%) translateY(20px);
+         opacity: 0;
+         pointer-events: none;
+         background: rgba(15, 23, 42, 0.94);
+         color: #ffffff;
+         padding: 10px 22px;
+         border-radius: 999px;
+         border: 1px solid rgba(245, 158, 11, 0.65);
+         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), 0 0 15px rgba(245, 158, 11, 0.25);
+         font-size: 13.5px;
+         font-weight: 600;
+         z-index: 100;
+         transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+         backdrop-filter: blur(8px);
+         display: flex;
+         align-items: center;
+         white-space: nowrap;
+      }
+      .slide-timer-toast.show {
+         transform: translateX(-50%) translateY(0);
+         opacity: 1;
+         pointer-events: auto;
+      }
+
+      .course-completed-toast {
+         position: absolute;
+         top: 25px;
+         left: 50%;
+         transform: translateX(-50%) translateY(-20px);
+         opacity: 0;
+         pointer-events: none;
+         background: linear-gradient(135deg, rgba(6, 78, 59, 0.96), rgba(15, 23, 42, 0.96));
+         color: #ffffff;
+         padding: 14px 24px;
+         border-radius: 12px;
+         border: 1px solid rgba(16, 185, 129, 0.8);
+         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(16, 185, 129, 0.35);
+         z-index: 101;
+         transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+         backdrop-filter: blur(8px);
+         max-width: 90%;
+      }
+      .course-completed-toast.show {
+         transform: translateX(-50%) translateY(0);
+         opacity: 1;
+         pointer-events: auto;
+      }
+
       /* Viewer Body Area (FULLSCREEN HEIGHT & WIDTH) */
       .player-viewer-area {
          flex: 1;
@@ -709,6 +828,10 @@
                   <button class="btn-toolbar-icon" id="btnNextPage" title="Trang tiếp theo (Mũi tên phải)">
                      <i class="fa-solid fa-chevron-right"></i>
                   </button>
+                  <div id="slideTimerBadge" class="slide-timer-badge reading" title="Yêu cầu đọc tối thiểu 5s mỗi slide">
+                     <i class="fa-regular fa-clock me-1"></i>
+                     <span id="slideTimerBadgeText">5s</span>
+                  </div>
                </div>
 
                <div class="toolbar-right">
@@ -761,11 +884,29 @@
 
                   <button id="floatingNextBtn" class="flip-nav-btn flip-next" title="Slide tiếp theo (→)">
                      <i class="fa-solid fa-chevron-right"></i>
+                     <span id="floatingTimerBadge" class="floating-timer-badge">5s</span>
                   </button>
 
                   <!-- Bottom Reading Progress Bar -->
                   <div class="slide-progress-container">
                      <div class="slide-progress-bar" id="slideProgressBar"></div>
+                  </div>
+
+                  <!-- Toast thong bao doc toi thieu 5s -->
+                  <div id="slideTimerToast" class="slide-timer-toast">
+                     <i class="fa-solid fa-hourglass-half text-warning me-2"></i>
+                     <span id="slideTimerToastText">Vui lòng đọc slide tối thiểu 5s (còn 5 giây)</span>
+                  </div>
+
+                  <!-- Toast chuc mung hoan thanh -->
+                  <div id="courseCompletedToast" class="course-completed-toast">
+                     <div class="d-flex align-items-center gap-3">
+                        <i class="fa-solid fa-circle-check text-success" style="font-size: 28px;"></i>
+                        <div>
+                           <div class="fw-bold" style="font-size: 15px;">Chúc mừng! Bạn đã hoàn thành bài học</div>
+                           <div class="text-white-50" style="font-size: 12.5px;">Đã đọc đầy đủ tất cả các slide và hoàn thành thời gian học quy định.</div>
+                        </div>
+                     </div>
                   </div>
                </div>
 
@@ -1046,8 +1187,13 @@
       // Dữ liệu tiến trình học
       const initialStudySeconds = {{ (int) ($userHistory->study_time_seconds ?? 0) }};
       const initialCurrentPage = {{ (int) ($userHistory->current_page ?? 1) }};
+      const initialCompletedSlides = @json($userHistory->completed_slides_array ?? []);
+      const completedSlides = new Set(Array.isArray(initialCompletedSlides) ? initialCompletedSlides.map(Number) : []);
+      const REQUIRED_SLIDE_SECONDS = 5; // Yêu cầu tối thiểu 5s cho mỗi slide
+      let slideActiveSeconds = 0;
+      let slideCountdown = REQUIRED_SLIDE_SECONDS;
+      let hasCelebratedCompletion = {{ ($userHistory->completed_at || ($userHistory->progress_percent ?? 0) >= 100) ? 'true' : 'false' }};
       let currentProgressPercent = {{ (int) ($userHistory->progress_percent ?? 0) }};
-      let maxPageVisited = Math.max(initialCurrentPage, 1);
 
       const pdfUrl = @json($post->pdf_url);
       const trackApiUrl = "{{ route('api.course.track-learning', $post->slug) }}";
@@ -1072,12 +1218,71 @@
       const btnZoomReset = document.getElementById('btnZoomReset');
       const btnFullscreen = document.getElementById('btnFullscreen');
 
-      // Tracker Elements
+      // Tracker & Timer Elements
       const trackerIndicator = document.getElementById('trackerIndicator');
       const trackerStatusText = document.getElementById('trackerStatusText');
       const studyTimeCounter = document.getElementById('studyTimeCounter');
       const progressCircle = document.getElementById('progressCircle');
       const progressSubtext = document.getElementById('progressSubtext');
+      const slideTimerBadge = document.getElementById('slideTimerBadge');
+      const slideTimerBadgeText = document.getElementById('slideTimerBadgeText');
+      const floatingTimerBadge = document.getElementById('floatingTimerBadge');
+      const slideTimerToast = document.getElementById('slideTimerToast');
+      const slideTimerToastText = document.getElementById('slideTimerToastText');
+      const courseCompletedToast = document.getElementById('courseCompletedToast');
+      let toastTimer = null;
+
+      function showSlideTimerNotice(customMsg) {
+         if (slideTimerBadge) {
+            slideTimerBadge.classList.remove('shake');
+            void slideTimerBadge.offsetWidth;
+            slideTimerBadge.classList.add('shake');
+         }
+         if (slideTimerToast && slideTimerToastText) {
+            slideTimerToastText.innerText = customMsg || `Vui lòng đọc slide tối thiểu 5s (còn ${slideCountdown} giây)`;
+            slideTimerToast.classList.add('show');
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+               slideTimerToast.classList.remove('show');
+            }, 2500);
+         }
+      }
+
+      function showCourseCompletedToast() {
+         if (courseCompletedToast) {
+            courseCompletedToast.classList.add('show');
+            setTimeout(() => {
+               courseCompletedToast.classList.remove('show');
+            }, 6000);
+         }
+      }
+
+      function updateSlideTimerUi() {
+         const isCompleted = completedSlides.has(currentPage);
+         if (isCompleted) {
+            if (slideTimerBadge) {
+               slideTimerBadge.className = 'slide-timer-badge completed';
+               if (slideTimerBadgeText) slideTimerBadgeText.innerText = '✓ Đã học (5s)';
+            }
+            if (floatingTimerBadge) {
+               floatingTimerBadge.className = 'floating-timer-badge done';
+               floatingTimerBadge.innerText = '✓';
+            }
+            if (btnNext) btnNext.classList.remove('locked');
+            if (floatNext) floatNext.classList.remove('locked');
+         } else {
+            if (slideTimerBadge) {
+               slideTimerBadge.className = 'slide-timer-badge reading';
+               if (slideTimerBadgeText) slideTimerBadgeText.innerText = `Đọc: ${slideCountdown}s`;
+            }
+            if (floatingTimerBadge) {
+               floatingTimerBadge.className = 'floating-timer-badge';
+               floatingTimerBadge.innerText = `${slideCountdown}s`;
+            }
+            if (btnNext) btnNext.classList.add('locked');
+            if (floatNext) floatNext.classList.add('locked');
+         }
+      }
 
       // ========================================================
       // 1. KIỂM TRA HIỆN DIỆN & TÍNH THỜI GIAN HỌC THỰC TẾ
@@ -1118,6 +1323,22 @@
 
             if (trackerIndicator) trackerIndicator.classList.remove('paused');
             if (trackerStatusText) trackerStatusText.innerText = 'Đang học';
+
+            // Đếm ngược 5 giây cho slide hiện tại nếu chưa đọc đủ 5s
+            if (!completedSlides.has(currentPage)) {
+               slideActiveSeconds++;
+               slideCountdown = Math.max(0, REQUIRED_SLIDE_SECONDS - slideActiveSeconds);
+               updateSlideTimerUi();
+
+               if (slideCountdown <= 0) {
+                  completedSlides.add(currentPage);
+                  updateSlideTimerUi();
+                  updateProgressUi(currentPage);
+                  syncLearningProgress();
+               }
+            } else {
+               updateProgressUi(currentPage);
+            }
          } else {
             isUserActive = false;
             if (trackerIndicator) trackerIndicator.classList.add('paused');
@@ -1139,12 +1360,13 @@
       // 2. ĐỒNG BỘ DỮ LIỆU TIẾN ĐỘ & THỜI GIAN VÀO DATABASE
       // ========================================================
       function syncLearningProgress(isBeacon = false) {
-         if (unsavedActiveSeconds <= 0 && !isBeacon) return;
+         if (unsavedActiveSeconds <= 0 && !isBeacon && completedSlides.size === 0) return;
 
          const payload = {
             active_seconds: unsavedActiveSeconds,
             current_page: currentPage,
             total_pages: totalPagesCount,
+            completed_slides: Array.from(completedSlides),
             progress_percent: currentProgressPercent,
             _token: csrfToken
          };
@@ -1152,7 +1374,11 @@
          if (isBeacon && navigator.sendBeacon) {
             const formData = new FormData();
             for (const key in payload) {
-               formData.append(key, payload[key]);
+               if (key === 'completed_slides') {
+                  formData.append(key, JSON.stringify(payload[key]));
+               } else {
+                  formData.append(key, payload[key]);
+               }
             }
             navigator.sendBeacon(trackApiUrl, formData);
             unsavedActiveSeconds = 0;
@@ -1197,20 +1423,43 @@
 
       // Cập nhật hiển thị tiến trình học
       function updateProgressUi(pageNum) {
-         maxPageVisited = Math.max(maxPageVisited, pageNum);
-         if (totalPagesCount > 0) {
-            const calculated = Math.round((maxPageVisited / totalPagesCount) * 100);
-            currentProgressPercent = Math.max(currentProgressPercent, calculated);
+         const readCount = completedSlides.size;
+         const minRequiredSeconds = totalPagesCount * REQUIRED_SLIDE_SECONDS;
+
+         // 2 điều kiện hoàn thành bài học:
+         // 1. Trải qua hết tất cả các slide (mỗi slide tối thiểu 5s)
+         const isAllSlidesRead = (totalPagesCount > 0 && readCount >= totalPagesCount);
+         // 2. Phải học đủ tổng thời gian
+         const isSufficientTime = (totalStudySeconds >= minRequiredSeconds);
+
+         if (isAllSlidesRead && isSufficientTime) {
+            currentProgressPercent = 100;
+            if (!hasCelebratedCompletion) {
+               hasCelebratedCompletion = true;
+               showCourseCompletedToast();
+            }
+         } else {
+            const calculated = totalPagesCount > 0 ? Math.round((readCount / totalPagesCount) * 100) : 0;
+            currentProgressPercent = Math.min(99, calculated);
          }
 
          if (progressCircle) {
             progressCircle.innerText = currentProgressPercent + '%';
             if (currentProgressPercent >= 100) {
                progressCircle.classList.add('completed');
+            } else {
+               progressCircle.classList.remove('completed');
             }
          }
          if (progressSubtext) {
-            progressSubtext.innerText = 'Trang ' + pageNum + ' / ' + totalPagesCount;
+            if (currentProgressPercent >= 100) {
+               progressSubtext.innerHTML = '<span class="text-success fw-bold"><i class="fa-solid fa-check me-1"></i>Đã hoàn thành</span>';
+            } else if (isAllSlidesRead && !isSufficientTime) {
+               const remainingSec = minRequiredSeconds - totalStudySeconds;
+               progressSubtext.innerHTML = `<span class="text-warning fw-semibold">Cần học thêm ${remainingSec}s</span>`;
+            } else {
+               progressSubtext.innerText = `Đã đọc ${readCount}/${totalPagesCount} slide`;
+            }
          }
       }
 
@@ -1275,8 +1524,10 @@
             if (loadingProgressFill) loadingProgressFill.style.width = '100%';
             if (loadingDetailText) loadingDetailText.innerText = 'Đã tải xong cấu trúc. Đang mở bài học...';
 
-            // Tự động nhảy đến slide học dở lần trước (nếu có)
+            // Tự động nhảy đến slide học dở lần trước (đảm bảo tuần tự, không nhảy cóc)
+            const maxUnlocked = completedSlides.size > 0 ? Math.max(...completedSlides) + 1 : 1;
             let startPage = initialCurrentPage;
+            if (startPage > maxUnlocked) startPage = maxUnlocked;
             if (startPage < 1 || startPage > totalPagesCount) startPage = 1;
 
             updateProgressUi(startPage);
@@ -1300,7 +1551,9 @@
                totalPagesCount = pdfDoc.numPages;
                if (totalPagesText) totalPagesText.innerText = totalPagesCount;
                if (pageNumInput) pageNumInput.max = totalPagesCount;
+               const maxUnlockedFallback = completedSlides.size > 0 ? Math.max(...completedSlides) + 1 : 1;
                let startPage = initialCurrentPage;
+               if (startPage > maxUnlockedFallback) startPage = maxUnlockedFallback;
                if (startPage < 1 || startPage > totalPagesCount) startPage = 1;
                updateProgressUi(startPage);
                await renderSlide(startPage);
@@ -1326,6 +1579,15 @@
 
          isRendering = true;
          currentPage = num;
+
+         // Thiết lập thời gian đọc slide: nếu chưa hoàn thành thì yêu cầu đủ 5s
+         if (completedSlides.has(num)) {
+            slideCountdown = 0;
+         } else {
+            slideActiveSeconds = 0;
+            slideCountdown = REQUIRED_SLIDE_SECONDS;
+         }
+         updateSlideTimerUi();
 
          // Cập nhật UI
          if (pageNumInput) pageNumInput.value = num;
@@ -1485,11 +1747,20 @@
          }
       }
 
+      function canAdvanceSlide() {
+         return completedSlides.has(currentPage) || slideCountdown <= 0;
+      }
+
       function nextSlide() {
-         if (currentPage < totalPagesCount) {
-            slideStage.style.opacity = '0.7';
-            renderSlide(currentPage + 1);
+         if (currentPage >= totalPagesCount) return;
+
+         if (!canAdvanceSlide()) {
+            showSlideTimerNotice(`Vui lòng đọc slide này tối thiểu 5s (còn ${slideCountdown} giây)`);
+            return;
          }
+
+         slideStage.style.opacity = '0.7';
+         renderSlide(currentPage + 1);
       }
 
       btnPrev?.addEventListener('click', prevSlide);
@@ -1511,6 +1782,14 @@
          let target = parseInt(e.target.value) || 1;
          if (target < 1) target = 1;
          if (target > totalPagesCount) target = totalPagesCount;
+
+         const maxUnlocked = completedSlides.size > 0 ? Math.max(...completedSlides) + 1 : 1;
+         if (target > maxUnlocked && target > currentPage) {
+            showSlideTimerNotice(`Vui lòng học tuần tự từng slide (bạn có thể xem tối đa đến slide ${maxUnlocked}).`);
+            e.target.value = currentPage;
+            return;
+         }
+
          renderSlide(target);
       });
 
@@ -1527,7 +1806,12 @@
             renderSlide(1);
          } else if (e.key === 'End') {
             e.preventDefault();
-            renderSlide(totalPagesCount);
+            const maxUnlocked = completedSlides.size > 0 ? Math.max(...completedSlides) + 1 : 1;
+            if (totalPagesCount <= maxUnlocked) {
+               renderSlide(totalPagesCount);
+            } else {
+               showSlideTimerNotice(`Cần đọc xong các slide trước mới có thể xem slide cuối.`);
+            }
          } else if (e.key === 'f' || e.key === 'F') {
             btnFullscreen?.click();
          }

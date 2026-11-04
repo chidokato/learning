@@ -80,8 +80,10 @@ $courseLearnHandler = function (string $slug) {
             'study_time_seconds' => 0,
             'current_page' => 1,
             'total_pages' => 0,
+            'completed_slides' => [],
             'progress_percent' => 0,
         ]);
+        $guestData['completed_slides_array'] = $guestData['completed_slides'] ?? [];
         $userHistory = (object) $guestData;
     }
 

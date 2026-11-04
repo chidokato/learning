@@ -40,7 +40,7 @@
                            <span class="badge bg-white text-danger border">
                               <i class="far fa-stopwatch me-1"></i> Thời gian học: <strong>{{ $item->formatted_study_time }}</strong>
                            </span>
-                           @if($item->completed_at || ($item->progress_percent ?? 0) >= 100)
+                           @if($item->completed_at && ($item->progress_percent ?? 0) >= 100)
                               <span class="badge bg-success text-white">
                                  <i class="far fa-check-circle me-1"></i> Đã hoàn thành
                               </span>

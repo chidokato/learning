@@ -16,6 +16,7 @@ class UserCourseHistory extends Model
         'study_time_seconds',
         'current_page',
         'total_pages',
+        'completed_slides',
         'progress_percent',
         'completed_at',
     ];
@@ -26,6 +27,7 @@ class UserCourseHistory extends Model
         'study_time_seconds' => 'integer',
         'current_page' => 'integer',
         'total_pages' => 'integer',
+        'completed_slides' => 'array',
         'progress_percent' => 'integer',
     ];
 
@@ -60,5 +62,23 @@ class UserCourseHistory extends Model
         $remMinutes = $minutes % 60;
 
         return $remMinutes > 0 ? "{$hours} giờ {$remMinutes} phút" : "{$hours} giờ";
+    }
+
+    /**
+     * Danh sách slide đã đọc xong (mảng số nguyên các trang)
+     */
+    public function getCompletedSlidesArrayAttribute(): array
+    {
+        $slides = $this->completed_slides;
+        if (is_array($slides)) {
+            return array_values(array_unique(array_filter(array_map('intval', $slides))));
+        }
+        if (is_string($slides) && ! empty($slides)) {
+            $decoded = json_decode($slides, true);
+            if (is_array($decoded)) {
+                return array_values(array_unique(array_filter(array_map('intval', $decoded))));
+            }
+        }
+        return [];
     }
 }
