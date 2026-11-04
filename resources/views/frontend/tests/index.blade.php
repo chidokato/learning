@@ -890,7 +890,7 @@
                           data-status="{{ $statusKey }}"
                           data-topics="{{ $test->topics->pluck('id')->implode(',') }}"
                           data-questions="{{ $qCount }}"
-                          @if($loop->index >= 4) style="display: none;" @endif
+                          @if($loop->index >= 8) style="display: none;" @endif
                      >
                         <div class="it-career-item is-special-card">
                            <!-- Header: Category & Status -->
@@ -970,7 +970,7 @@
                      </div>
                   @endforeach
                </div>
-               @php $specialRemaining = $specialTests->count() - 4; @endphp
+               @php $specialRemaining = $specialTests->count() - 8; @endphp
                <div class="topic-load-more-wrap text-center mt-3 {{ $specialRemaining <= 0 ? 'd-none' : '' }}">
                   <button type="button" class="btn-load-more-tests">
                      <span>Xem thêm bài thi (còn <strong class="load-more-remaining-count">{{ max(0, $specialRemaining) }}</strong> bài)</span>
@@ -1062,7 +1062,7 @@
                           data-status="{{ $statusKey }}"
                           data-topics="{{ $tpId }}"
                           data-questions="{{ $qCount }}"
-                          @if($loop->index >= 4) style="display: none;" @endif
+                          @if($loop->index >= 8) style="display: none;" @endif
                      >
                         <div class="it-career-item {{ $test->is_special ? 'is-special-card' : '' }}">
                            <!-- Header: Category & Status -->
@@ -1144,7 +1144,7 @@
                      </div>
                   @endforeach
                </div>
-               @php $topicRemaining = $topicTotal - 4; @endphp
+               @php $topicRemaining = $topicTotal - 8; @endphp
                <div class="topic-load-more-wrap text-center mt-3 {{ $topicRemaining <= 0 ? 'd-none' : '' }}">
                   <button type="button" class="btn-load-more-tests">
                      <span>Xem thêm bài thi (còn <strong class="load-more-remaining-count">{{ max(0, $topicRemaining) }}</strong> bài)</span>
@@ -1208,7 +1208,7 @@
                           data-status="{{ $statusKey }}"
                           data-topics="untagged"
                           data-questions="{{ $qCount }}"
-                          @if($loop->index >= 4) style="display: none;" @endif
+                          @if($loop->index >= 8) style="display: none;" @endif
                      >
                         <div class="it-career-item {{ $test->is_special ? 'is-special-card' : '' }}">
                            <div class="it-career-top d-flex align-items-center justify-content-between flex-wrap gap-1">
@@ -1273,7 +1273,7 @@
                      </div>
                   @endforeach
                </div>
-               @php $untaggedRemaining = $untaggedTests->count() - 4; @endphp
+               @php $untaggedRemaining = $untaggedTests->count() - 8; @endphp
                <div class="topic-load-more-wrap text-center mt-3 {{ $untaggedRemaining <= 0 ? 'd-none' : '' }}">
                   <button type="button" class="btn-load-more-tests">
                      <span>Xem thêm bài thi (còn <strong class="load-more-remaining-count">{{ max(0, $untaggedRemaining) }}</strong> bài)</span>
@@ -1374,7 +1374,7 @@
       function filterTests(resetLimits = false) {
          if (resetLimits) {
             $sections.each(function() {
-               $(this).data('visible-limit', 4);
+               $(this).data('visible-limit', 8);
             });
          }
 
@@ -1438,8 +1438,8 @@
 
             $sec.show();
 
-            // Áp dụng giới hạn hiển thị tối đa (mặc định 4 bài)
-            const currentLimit = parseInt($sec.data('visible-limit') || 4, 10);
+            // Áp dụng giới hạn hiển thị tối đa (mặc định 8 bài)
+            const currentLimit = parseInt($sec.data('visible-limit') || 8, 10);
             const $loadMoreWrap = $sec.find('.topic-load-more-wrap');
 
             matchingItems.forEach(function($item, idx) {
@@ -1483,7 +1483,7 @@
          e.preventDefault();
          const $btn = $(this);
          const $sec = $btn.closest('.topic-group-section');
-         const currentLimit = parseInt($sec.data('visible-limit') || 4, 10);
+         const currentLimit = parseInt($sec.data('visible-limit') || 8, 10);
          const newLimit = currentLimit + 4;
          $sec.data('visible-limit', newLimit);
 
