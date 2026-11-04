@@ -778,17 +778,11 @@
                               @endif
                            </div>
 
-                           <!-- Bottom: Price / Result Button & Action Link -->
+                           <!-- Bottom: Duration & Action Link -->
                            <div class="it-career-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
-                              @if($itemResult && !empty($itemResult['latest']))
-                                 <a href="{{ route('frontend.tests.result', $itemResult['latest']->id) }}" class="it-career-price it-career-result-btn" title="Xem kết quả bài làm gần nhất">
-                                    <i class="fa-solid fa-eye me-1"></i> Kết quả
-                                 </a>
-                              @else
-                                 <span class="it-career-price" title="Thời gian làm bài">
-                                    <i class="fa-regular fa-clock me-1"></i> {{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Tự do' }}
-                                 </span>
-                              @endif
+                              <span class="it-career-price" title="Thời gian làm bài">
+                                 <i class="fa-regular fa-clock me-1"></i> {{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Tự do' }}
+                              </span>
 
                               <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
                                  <span>
@@ -901,15 +895,9 @@
                            </div>
 
                            <div class="it-career-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
-                              @if($itemResult && !empty($itemResult['latest']))
-                                 <a href="{{ route('frontend.tests.result', $itemResult['latest']->id) }}" class="it-career-price it-career-result-btn">
-                                    <i class="fa-solid fa-eye me-1"></i> Kết quả
-                                 </a>
-                              @else
-                                 <span class="it-career-price">
-                                    <i class="fa-regular fa-clock me-1"></i> {{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Tự do' }}
-                                 </span>
-                              @endif
+                              <span class="it-career-price">
+                                 <i class="fa-regular fa-clock me-1"></i> {{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Tự do' }}
+                              </span>
 
                               <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
                                  <span>

@@ -67,6 +67,12 @@ class FrontendTestController extends Controller
             return redirect()->guest(route('frontend.login'));
         }
 
+        // Tạm thời đóng trang xem chi tiết đáp án kết quả đối với học viên thường
+        if (!auth()->user()->isAdmin()) {
+            return redirect()->route('frontend.history.tests')
+                ->with('warning', 'Chức năng xem chi tiết đáp án bài kiểm tra đang tạm thời đóng.');
+        }
+
         $userId = auth()->id();
 
         $result = UserTestResult::with([
@@ -76,11 +82,6 @@ class FrontendTestController extends Controller
             'test.post:id,title,slug',
             'test.topics:id,name,slug'
         ])->findOrFail($result_id);
-
-        // Kiểm tra quyền truy cập (chỉ cho phép xem kết quả của chính mình hoặc admin)
-        if ($result->user_id != $userId && (!auth()->user() || !auth()->user()->isAdmin())) {
-            abort(403, 'Bạn không có quyền xem kết quả bài thi này.');
-        }
 
         $test = $result->test;
         $userAnswers = $result->user_answers ?? [];

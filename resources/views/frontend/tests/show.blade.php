@@ -259,9 +259,7 @@
    <div id="result-text" class="fs-18 mb-2"></div>
    <p id="result-subtext" class="text-muted mb-4" style="font-size: 14.5px;"></p>
    <div class="d-flex justify-content-center gap-3 flex-wrap">
-      <a id="btn-view-result" href="#" class="btn px-4 py-2" style="font-weight: 700; border-radius: 8px; background: #03594e; color: #ffffff;">
-         <i class="fa-solid fa-eye me-2"></i> Xem kết quả
-      </a>
+      {{-- Tạm thời ẩn nút Xem kết quả: <a id="btn-view-result" href="#" class="btn px-4 py-2" style="font-weight: 700; border-radius: 8px; background: #03594e; color: #ffffff;"><i class="fa-solid fa-eye me-2"></i> Xem kết quả</a> --}}
       <button type="button" class="btn btn-warning px-4 py-2" onclick="location.reload();" style="font-weight: 700; border-radius: 8px;">
          <i class="far fa-redo me-2"></i> Làm lại bài
       </button>
