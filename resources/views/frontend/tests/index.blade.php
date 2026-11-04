@@ -702,6 +702,36 @@
       fill: #ffffff !important;
    }
 
+   /* it-btn-learn - Nút vào học bài giảng */
+   .it-career-item .it-btn-learn {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 12px !important;
+      height: auto !important;
+      border-radius: 6px;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background-color: #f0fdf4 !important;
+      color: #03594e !important;
+      text-decoration: none !important;
+      border: 1.5px solid rgba(3, 89, 78, 0.4) !important;
+      transition: all 0.25s ease !important;
+      cursor: pointer !important;
+      white-space: nowrap;
+      gap: 5px;
+   }
+   .it-career-item .it-btn-learn:hover {
+      background-color: #03594e !important;
+      border-color: #03594e !important;
+      color: #ffffff !important;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(3, 89, 78, 0.22) !important;
+   }
+   .it-career-item .it-btn-learn i {
+      font-size: 12px;
+   }
+
    /* Empty State */
    .empty-test-card {
       background: #ffffff;
@@ -948,11 +978,13 @@
                               @endif
                            </div>
 
-                           <!-- Bottom: Duration & Action Link -->
-                           <div class="it-career-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
-                              <span class="it-career-price" title="Thời gian làm bài">
-                                 <i class="fa-regular fa-clock me-1"></i> {{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Tự do' }}
-                              </span>
+                                                      <div class="it-career-bottom d-flex align-items-center justify-content-end gap-2 flex-wrap">
+                              @if($test->post)
+                                 <a href="{{ route('frontend.course.learn', $test->post->slug) }}" class="it-btn-learn" title="Vào học bài giảng {{ $test->post->title }}">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                    <span>Vào học</span>
+                                 </a>
+                              @endif
 
                               <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
                                  <span>
@@ -1122,11 +1154,13 @@
                               @endif
                            </div>
 
-                           <!-- Bottom: Duration & Action Link -->
-                           <div class="it-career-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
-                              <span class="it-career-price" title="Thời gian làm bài">
-                                 <i class="fa-regular fa-clock me-1"></i> {{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Tự do' }}
-                              </span>
+                                                      <div class="it-career-bottom d-flex align-items-center justify-content-end gap-2 flex-wrap">
+                              @if($test->post)
+                                 <a href="{{ route('frontend.course.learn', $test->post->slug) }}" class="it-btn-learn" title="Vào học bài giảng {{ $test->post->title }}">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                    <span>Vào học</span>
+                                 </a>
+                              @endif
 
                               <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
                                  <span>
@@ -1252,10 +1286,13 @@
                               @endif
                            </div>
 
-                           <div class="it-career-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
-                              <span class="it-career-price">
-                                 <i class="fa-regular fa-clock me-1"></i> {{ $test->duration && $test->duration > 0 ? $test->duration . ' phút' : 'Tự do' }}
-                              </span>
+                                                      <div class="it-career-bottom d-flex align-items-center justify-content-end gap-2 flex-wrap">
+                              @if($test->post)
+                                 <a href="{{ route('frontend.course.learn', $test->post->slug) }}" class="it-btn-learn" title="Vào học bài giảng {{ $test->post->title }}">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                    <span>Vào học</span>
+                                 </a>
+                              @endif
 
                               <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
                                  <span>
