@@ -140,6 +140,19 @@ class FrontendLearningReportController extends Controller
             return '-';
         };
 
+        // Hàm helper lấy Unix timestamp an toàn để sắp xếp
+        $getTimestamp = function ($date) {
+            if (!$date) return 0;
+            if ($date instanceof \Carbon\Carbon || $date instanceof \DateTimeInterface) {
+                return $date->getTimestamp();
+            }
+            if (is_numeric($date)) {
+                return (int) $date;
+            }
+            $ts = strtotime((string) $date);
+            return ($ts !== false) ? $ts : 0;
+        };
+
         // 1. Truy vấn lịch sử học tập
         $allDepartments = Department::all()->keyBy('id');
 
@@ -268,6 +281,7 @@ class FrontendLearningReportController extends Controller
             $studyTime = $h->formatted_study_time;
             $isCourseCompleted = ($h->completed_at || $h->progress_percent >= 100 || ($h->total_pages > 0 && $h->current_page >= $h->total_pages));
             $learningStatusText = $isCourseCompleted ? 'Hoàn thành' : 'Chưa hoàn thành';
+            $historyActivityTime = $getTimestamp($h->last_learned_at ?: ($h->updated_at ?: $h->created_at));
 
             $tests = $post->tests;
 
@@ -312,6 +326,8 @@ class FrontendLearningReportController extends Controller
                             'score' => '-',
                             'result' => 'Chưa thi',
                             'completed_at' => null,
+                            'test_timestamp' => 0,
+                            'activity_timestamp' => $historyActivityTime,
                             'is_passed' => null,
                             'is_completed' => $isCourseCompleted,
                         ];
@@ -350,6 +366,8 @@ class FrontendLearningReportController extends Controller
                                 'score' => $formatScore($bestAtt->score, $totalQuestions),
                                 'result' => $bestAtt->is_passed ? 'Đạt' : 'Không đạt',
                                 'completed_at' => $bestAtt->completed_at ?: $bestAtt->created_at,
+                                'test_timestamp' => $getTimestamp($bestAtt->completed_at ?: $bestAtt->created_at),
+                                'activity_timestamp' => $historyActivityTime,
                                 'is_passed' => (bool) $bestAtt->is_passed,
                                 'is_completed' => $isCourseCompleted,
                             ];
@@ -378,6 +396,8 @@ class FrontendLearningReportController extends Controller
                                 'score' => $formatScore($latestAtt->score, $totalQuestions),
                                 'result' => $latestAtt->is_passed ? 'Đạt' : 'Không đạt',
                                 'completed_at' => $latestAtt->completed_at ?: $latestAtt->created_at,
+                                'test_timestamp' => $getTimestamp($latestAtt->completed_at ?: $latestAtt->created_at),
+                                'activity_timestamp' => $historyActivityTime,
                                 'is_passed' => (bool) $latestAtt->is_passed,
                                 'is_completed' => $isCourseCompleted,
                             ];
@@ -405,6 +425,8 @@ class FrontendLearningReportController extends Controller
                                     'score' => $formatScore($att->score, $totalQuestions),
                                     'result' => $att->is_passed ? 'Đạt' : 'Không đạt',
                                     'completed_at' => $att->completed_at ?: $att->created_at,
+                                    'test_timestamp' => $getTimestamp($att->completed_at ?: $att->created_at),
+                                    'activity_timestamp' => $historyActivityTime,
                                     'is_passed' => (bool) $att->is_passed,
                                     'is_completed' => $isCourseCompleted,
                                 ];
@@ -437,6 +459,8 @@ class FrontendLearningReportController extends Controller
                     'score' => '-',
                     'result' => '-',
                     'completed_at' => null,
+                    'test_timestamp' => 0,
+                    'activity_timestamp' => $historyActivityTime,
                     'is_passed' => null,
                     'is_completed' => $isCourseCompleted,
                 ];
