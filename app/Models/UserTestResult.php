@@ -27,6 +27,28 @@ class UserTestResult extends Model
     ];
 
     /**
+     * Tự động đánh giá trạng thái ĐẠT:
+     * - Nếu cột is_passed là true => ĐẠT
+     * - Hoặc nếu điểm số >= pass_score của bài test => ĐẠT
+     */
+    public function getIsPassedAttribute($value): bool
+    {
+        if ((bool) $value) {
+            return true;
+        }
+
+        $passScore = $this->relationLoaded('test')
+            ? ($this->test->pass_score ?? null)
+            : ($this->test ? $this->test->pass_score : null);
+
+        if ($passScore !== null && $this->score !== null && (int)$this->score >= (int)$passScore) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Định dạng thời lượng làm bài (Ví dụ: 12 phút 35 giây, 45 giây, 1 giờ 15 phút)
      */
     public function getFormattedDurationAttribute(): ?string

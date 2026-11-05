@@ -641,7 +641,12 @@
 
                   // Huy hiệu tổng kết trạng thái (Đạt / Chưa đạt) & Điểm cao nhất chuẩn SaaS
                   var bestPct = test.total_questions > 0 ? Math.round((stats.max_score / test.total_questions) * 100) : 0;
-                  if (stats.has_passed) {
+                  var anyPassed = stats.has_passed || (attempts && attempts.some(function(a) {
+                     return (a.is_passed === true || a.is_passed === 1 || a.is_passed === '1') ||
+                            (test.pass_score !== null && test.pass_score !== undefined && a.score !== null && Number(a.score) >= Number(test.pass_score));
+                  }));
+
+                  if (anyPassed) {
                      $('#modalOverallBadge')
                         .html('<span class="badge" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; font-size: 11.5px; font-weight: 700; padding: 5px 12px; border-radius: 999px; letter-spacing: 0.3px;"><i class="fa-solid fa-circle-check me-1"></i> ĐÃ ĐẠT</span>');
                      $('#modalBestScoreSub')
@@ -675,10 +680,15 @@
                         var bestBadge = att.is_best 
                            ? '<span class="badge ms-2" style="background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 10px; padding: 2px 7px; font-weight: 700; vertical-align: middle;"><i class="fa-solid fa-crown me-1 text-warning"></i> Điểm cao nhất</span>' 
                            : '';
-                        var resultBadge = att.is_passed 
+
+                        // Tự động đánh giá ĐẠT nếu điểm thi >= điểm yêu cầu đạt
+                        var isPassed = (att.is_passed === true || att.is_passed === 1 || att.is_passed === '1') || 
+                                       (test.pass_score !== null && test.pass_score !== undefined && att.score !== null && Number(att.score) >= Number(test.pass_score));
+
+                        var resultBadge = isPassed 
                            ? '<span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 rounded-pill fw-bold" style="font-size: 11px;"><i class="fa-solid fa-circle-check me-1"></i> ĐẠT</span>'
                            : '<span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1 rounded-pill fw-bold" style="font-size: 11px;"><i class="fa-solid fa-circle-xmark me-1"></i> CHƯA ĐẠT</span>';
-                        var scoreColor = att.is_passed ? 'text-success' : 'text-danger';
+                        var scoreColor = isPassed ? 'text-success' : 'text-danger';
 
                         var durationHtml = att.duration_formatted 
                            ? `<span class="fw-semibold text-dark fs-12 d-flex align-items-center"><i class="fa-solid fa-stopwatch text-primary me-1"></i>${att.duration_formatted}</span>`

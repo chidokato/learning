@@ -32,7 +32,15 @@ class FrontendTestReportController extends Controller
         // 3. Tính toán KPI tổng quan
         $totalAttempts = UserTestResult::count();
         $uniqueUsers = UserTestResult::distinct('user_id')->count('user_id');
-        $passedAttempts = UserTestResult::where('is_passed', true)->count();
+        $passedAttempts = UserTestResult::where(function($q) {
+            $q->where('user_test_results.is_passed', true)
+              ->orWhere(function($sub) {
+                  $sub->whereHas('test', function($tq) {
+                      $tq->whereNotNull('pass_score')
+                         ->whereRaw('user_test_results.score >= tests.pass_score');
+                  });
+              });
+        })->count();
         $failedAttempts = $totalAttempts - $passedAttempts;
         $passRate = $totalAttempts > 0 ? round(($passedAttempts / $totalAttempts) * 100) : 0;
 
@@ -96,9 +104,21 @@ class FrontendTestReportController extends Controller
 
         // Lọc theo Kết quả (Đạt / Chưa đạt)
         if ($status === 'passed') {
-            $query->where('user_test_results.is_passed', true);
+            $query->where(function($q) {
+                $q->where('user_test_results.is_passed', true)
+                  ->orWhere(function($sub) {
+                      $sub->whereHas('test', function($tq) {
+                          $tq->whereNotNull('pass_score')
+                             ->whereRaw('user_test_results.score >= tests.pass_score');
+                      });
+                  });
+            });
         } elseif ($status === 'failed') {
-            $query->where('user_test_results.is_passed', false);
+            $query->where('user_test_results.is_passed', false)
+                  ->whereDoesntHave('test', function($tq) {
+                      $tq->whereNotNull('pass_score')
+                         ->whereRaw('user_test_results.score >= tests.pass_score');
+                  });
         }
 
         // Phân trang 15 kết quả / trang kèm giữ nguyên query params
@@ -158,15 +178,21 @@ class FrontendTestReportController extends Controller
         $totalQuestions = $test->questions_count ?? $test->questions()->count();
 
         // Đánh số thứ tự Lần 1..N theo thời gian, sau đó đảo ngược để hiển thị lần mới nhất lên đầu
-        $attemptList = $attempts->values()->map(function ($att, $index) use ($totalQuestions, $maxScore) {
+        $attemptList = $attempts->values()->map(function ($att, $index) use ($totalQuestions, $maxScore, $test) {
             $pct = $totalQuestions > 0 ? round(($att->score / $totalQuestions) * 100) : 0;
+            // Đánh giá đạt nếu cột is_passed là true HOẶC điểm thi >= điểm yêu cầu đạt của bài test
+            $isPassed = (bool) $att->is_passed;
+            if ($test && $test->pass_score !== null && (int)$att->score >= (int)$test->pass_score) {
+                $isPassed = true;
+            }
+
             return [
                 'id' => $att->id,
                 'attempt_number' => $index + 1,
                 'score' => $att->score,
                 'total_questions' => $totalQuestions,
                 'percentage' => $pct,
-                'is_passed' => (bool) $att->is_passed,
+                'is_passed' => $isPassed,
                 'is_best' => ($att->score == $maxScore),
                 'duration_seconds' => $att->duration_seconds,
                 'duration_formatted' => $att->formatted_duration,
@@ -201,7 +227,7 @@ class FrontendTestReportController extends Controller
             'stats' => [
                 'total_attempts' => $attempts->count(),
                 'max_score' => $maxScore,
-                'has_passed' => $attempts->contains('is_passed', true),
+                'has_passed' => $attemptList->contains('is_passed', true),
             ],
             'attempts' => $attemptList,
         ]);

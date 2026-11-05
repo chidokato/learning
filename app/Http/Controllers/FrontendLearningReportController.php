@@ -171,6 +171,9 @@ class FrontendLearningReportController extends Controller
                         ->where('test_id', $test->id)
                         ->orderBy('id', 'asc')
                         ->get();
+                    $attempts->each(function($att) use ($test) {
+                        $att->setRelation('test', $test);
+                    });
 
                     $totalAttempts = $attempts->count();
                     $totalQuestions = (int) ($test->questions_count ?? ($test->relationLoaded('questions') ? $test->questions->count() : ($test ? $test->questions()->count() : 0)));
@@ -353,6 +356,9 @@ class FrontendLearningReportController extends Controller
                 ->where('test_id', $test->id)
                 ->orderBy('id', 'asc')
                 ->get();
+            $attempts->each(function($att) use ($test) {
+                $att->setRelation('test', $test);
+            });
 
             $totalAttempts = $attempts->count();
             $totalQuestions = (int) ($test->questions_count ?? ($test->relationLoaded('questions') ? $test->questions->count() : ($test ? $test->questions()->count() : 0)));

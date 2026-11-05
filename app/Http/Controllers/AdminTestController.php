@@ -163,6 +163,16 @@ class AdminTestController extends Controller
 
                 $test->update($updateData);
 
+                // Đồng bộ lại trạng thái is_passed cho các lượt làm bài trước đó theo điểm đạt mới
+                if ($request->filled('pass_score')) {
+                    $newPassScore = (int) $request->pass_score;
+                    if ($newPassScore > 0) {
+                        \App\Models\UserTestResult::where('test_id', $test->id)
+                            ->where('score', '>=', $newPassScore)
+                            ->update(['is_passed' => true]);
+                    }
+                }
+
                 if (Schema::hasTable('test_topic')) {
                     $test->topics()->sync($topicIds);
                 }
