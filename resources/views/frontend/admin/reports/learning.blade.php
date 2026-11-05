@@ -202,6 +202,22 @@
          white-space: nowrap !important;
       }
 
+      /* Giới hạn độ rộng tên khóa học hiển thị 1 dòng gọn gàng, có dấu ... nếu dài */
+      .col-course-title {
+         max-width: 250px !important;
+         width: 250px !important;
+         white-space: nowrap !important;
+      }
+      .course-title-truncate {
+         max-width: 240px !important;
+         white-space: nowrap !important;
+         overflow: hidden !important;
+         text-overflow: ellipsis !important;
+         display: inline-block !important;
+         vertical-align: middle !important;
+         cursor: pointer;
+      }
+
       /* Tùy chỉnh màu header bảng giống hệt ảnh mẫu Excel của khách */
       .report-table thead tr th.th-user-info {
          background: #fff8e1 !important;
@@ -409,11 +425,10 @@
 
                   <!-- Cột H -> O: Nhóm thông tin khóa học & bài thi (Màu xanh lá nhạt) -->
                   <th class="th-course-info text-center">Mã KH</th>
-                  <th class="th-course-info">Tên khóa học</th>
+                  <th class="th-course-info col-course-title">Tên khóa học</th>
                   <th class="th-course-info text-center">TG học</th>
                   <th class="th-course-info text-center">TT học</th>
                   <th class="th-course-info text-center">Lần thi</th>
-                  <th class="th-course-info text-center">TT thi</th>
                   <th class="th-course-info text-center">Điểm</th>
                   <th class="th-course-info text-center">Kết quả</th>
                </tr>
@@ -465,8 +480,8 @@
                      </td>
 
                      <!-- 8. Tên khóa học -->
-                     <td>
-                        <span class="text-dark" title="{{ $item['course_title'] }}">{{ $item['course_title'] }}</span>
+                     <td class="col-course-title">
+                        <span class="text-dark course-title-truncate" title="{{ $item['course_title'] }}">{{ $item['course_title'] }}</span>
                      </td>
 
                      <!-- 9. TG học -->
@@ -494,18 +509,7 @@
                         <span class="text-dark">{{ $item['attempts_count'] ?: 0 }}</span>
                      </td>
 
-                     <!-- 12. TT thi -->
-                     <td class="text-center">
-                        @if(str_starts_with($item['attempt_status'], 'Lần'))
-                           <span class="text-attempt">{{ $item['attempt_status'] }}</span>
-                        @elseif($item['attempt_status'] === 'Chưa thi')
-                           <span class="text-muted">Chưa thi</span>
-                        @else
-                           <span class="text-muted">-</span>
-                        @endif
-                     </td>
-
-                     <!-- 13. Điểm -->
+                     <!-- 12. Điểm -->
                      <td class="text-center">
                         @if($item['score'] !== '-' && $item['score'] !== null && $item['score'] !== '')
                            <span class="fs-13 {{ $item['result'] === 'Đạt' ? 'text-success' : ($item['result'] === 'Không đạt' ? 'text-danger' : 'text-dark') }}">
@@ -516,7 +520,7 @@
                         @endif
                      </td>
 
-                     <!-- 14. Kết quả -->
+                     <!-- 13. Kết quả -->
                      <td class="text-center">
                         @if($item['result'] === 'Đạt')
                            <span class="text-passed">

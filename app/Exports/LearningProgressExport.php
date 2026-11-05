@@ -39,7 +39,6 @@ class LearningProgressExport implements FromArray, WithHeadings, WithStyles, Sho
             'Thời gian học',
             'Tình trạng học',
             'Số lần thi',
-            'Tình trạng thi',
             'Điểm thi',
             'Kết quả',
         ];
@@ -72,7 +71,6 @@ class LearningProgressExport implements FromArray, WithHeadings, WithStyles, Sho
                 $item['study_time'] ?? '',
                 $item['learning_status'] ?? '',
                 $attemptsVal,
-                $item['attempt_status'] ?? '',
                 $scoreVal,
                 $item['result'] ?? '',
             ];
@@ -111,8 +109,8 @@ class LearningProgressExport implements FromArray, WithHeadings, WithStyles, Sho
             ],
         ]);
 
-        // Header Cột F - M (Thông tin khóa học & thi: Xanh lá nhạt giống ảnh)
-        $sheet->getStyle('F1:M1')->applyFromArray([
+        // Header Cột F - L (Thông tin khóa học & thi: Xanh lá nhạt giống ảnh)
+        $sheet->getStyle('F1:L1')->applyFromArray([
             'font' => [
                 'name' => 'Segoe UI',
                 'bold' => true,
@@ -141,7 +139,7 @@ class LearningProgressExport implements FromArray, WithHeadings, WithStyles, Sho
             $lastRow = $rowCount + 1;
 
             // Kẻ viền và căn chỉnh chung cho toàn bộ vùng dữ liệu
-            $sheet->getStyle("A2:M{$lastRow}")->applyFromArray([
+            $sheet->getStyle("A2:L{$lastRow}")->applyFromArray([
                 'font' => [
                     'name' => 'Segoe UI',
                     'size' => 10.5,
@@ -178,13 +176,11 @@ class LearningProgressExport implements FromArray, WithHeadings, WithStyles, Sho
             $sheet->getStyle("I2:I{$lastRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             // Cột J (Số lần thi): Căn giữa
             $sheet->getStyle("J2:J{$lastRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            // Cột K (Tình trạng thi): Căn giữa
+            // Cột K (Điểm thi): Căn giữa và định dạng Text (tránh Excel tự nhận diện nhầm tỉ lệ phân số dạng 26/30 thành ngày tháng)
             $sheet->getStyle("K2:K{$lastRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            // Cột L (Điểm thi): Căn giữa và định dạng Text (tránh Excel tự nhận diện nhầm tỉ lệ phân số dạng 26/30 thành ngày tháng)
+            $sheet->getStyle("K2:K{$lastRow}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
+            // Cột L (Kết quả): Căn giữa
             $sheet->getStyle("L2:L{$lastRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle("L2:L{$lastRow}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
-            // Cột M (Kết quả): Căn giữa
-            $sheet->getStyle("M2:M{$lastRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
             // Duyệt từng dòng để định dạng chiều cao và màu chữ kết quả
             for ($r = 2; $r <= $lastRow; $r++) {
@@ -196,11 +192,11 @@ class LearningProgressExport implements FromArray, WithHeadings, WithStyles, Sho
                 // Tô màu theo kết quả thi
                 $resultVal = $rowItem['result'] ?? '';
                 if ($resultVal === 'Đạt') {
-                    $sheet->getStyle("M{$r}")->applyFromArray([
+                    $sheet->getStyle("L{$r}")->applyFromArray([
                         'font' => ['bold' => true, 'color' => ['rgb' => '0F5132']],
                     ]);
                 } elseif ($resultVal === 'Không đạt') {
-                    $sheet->getStyle("M{$r}")->applyFromArray([
+                    $sheet->getStyle("L{$r}")->applyFromArray([
                         'font' => ['bold' => true, 'color' => ['rgb' => '842029']],
                     ]);
                 }
