@@ -136,6 +136,53 @@
          font-weight: 700 !important;
       }
 
+      /* Nút dropdown bộ lọc khác */
+      .btn-filter-dropdown {
+         height: 42px !important;
+         background: #f8fafc !important;
+         border: 1.5px solid #e2e8f0 !important;
+         border-radius: 8px !important;
+         color: #334155 !important;
+         font-size: 13.5px !important;
+         font-weight: 500 !important;
+         display: inline-flex !important;
+         align-items: center !important;
+         justify-content: space-between !important;
+         padding: 0 14px !important;
+         width: 100% !important;
+         transition: all 0.2s ease !important;
+      }
+      .btn-filter-dropdown:hover,
+      .btn-filter-dropdown:focus,
+      .btn-filter-dropdown[aria-expanded="true"] {
+         border-color: #03594e !important;
+         background: #ffffff !important;
+         color: #03594e !important;
+         box-shadow: 0 0 0 2px rgba(3, 89, 78, 0.1) !important;
+      }
+      .btn-filter-dropdown.has-active {
+         border-color: #107c41 !important;
+         background: rgba(16, 124, 65, 0.06) !important;
+         color: #107c41 !important;
+         font-weight: 600 !important;
+      }
+      .more-filters-menu {
+         min-width: 320px !important;
+         border-radius: 12px !important;
+         margin-top: 8px !important;
+         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+      }
+      .filter-dropdown-select {
+         height: 38px !important;
+         border-radius: 6px !important;
+         border: 1.5px solid #e2e8f0 !important;
+         background-color: #f8fafc !important;
+      }
+      .filter-dropdown-select:focus {
+         border-color: #03594e !important;
+         box-shadow: 0 0 0 2px rgba(3, 89, 78, 0.1) !important;
+      }
+
       /* Bắt buộc toàn bộ các ô trong bảng không được xuống dòng */
       .report-table {
          white-space: nowrap !important;
@@ -167,36 +214,46 @@
          border-bottom: 2px solid #b7dfb9 !important;
       }
       
-      /* Màu chữ trạng thái gọn gàng, không dùng khung viền hay background */
+      /* Bỏ bold chữ bên trong bảng, viết bình thường */
+      .report-table tbody tr td {
+         font-weight: 400 !important;
+      }
+      .report-table tbody tr td span,
+      .report-table tbody tr td div,
+      .report-table tbody tr td a {
+         font-weight: 400 !important;
+      }
+
+      /* Màu chữ trạng thái gọn gàng, không dùng khung viền hay background, viết bình thường không bold */
       .text-completed {
          color: #16a34a !important;
-         font-weight: 700 !important;
+         font-weight: 400 !important;
          display: inline-flex;
          align-items: center;
          white-space: nowrap !important;
       }
       .text-in-progress {
          color: #d97706 !important;
-         font-weight: 700 !important;
+         font-weight: 400 !important;
          display: inline-flex;
          align-items: center;
          white-space: nowrap !important;
       }
       .text-attempt {
          color: #0284c7 !important;
-         font-weight: 700 !important;
+         font-weight: 400 !important;
          white-space: nowrap !important;
       }
       .text-passed {
          color: #16a34a !important;
-         font-weight: 700 !important;
+         font-weight: 400 !important;
          display: inline-flex;
          align-items: center;
          white-space: nowrap !important;
       }
       .text-failed {
          color: #dc2626 !important;
-         font-weight: 700 !important;
+         font-weight: 400 !important;
          display: inline-flex;
          align-items: center;
          white-space: nowrap !important;
@@ -205,71 +262,18 @@
 @endpush
 
 @section('content')
-<!-- ================= 1. THỐNG KÊ KPI ================= -->
-<div class="row g-3 mb-4">
-   <!-- KPI 1: Tổng lượt bản ghi -->
-   <div class="col-xl-3 col-md-6 col-12">
-      <div class="kpi-stat-card">
-         <div class="kpi-icon-box total">
-            <i class="fa-solid fa-list-check"></i>
-         </div>
-         <div class="flex-grow-1">
-            <div class="kpi-info-label">Tổng lượt theo dõi</div>
-            <div class="kpi-info-value">{{ number_format($kpi['totalRecords']) }}</div>
-            <div class="kpi-info-sub">Theo bộ lọc hiện tại</div>
-         </div>
-      </div>
-   </div>
-
-   <!-- KPI 2: Nhân viên tham gia -->
-   <div class="col-xl-3 col-md-6 col-12">
-      <div class="kpi-stat-card">
-         <div class="kpi-icon-box users">
-            <i class="fa-solid fa-user-graduate"></i>
-         </div>
-         <div class="flex-grow-1">
-            <div class="kpi-info-label">Nhân sự tham gia</div>
-            <div class="kpi-info-value text-primary">{{ number_format($kpi['uniqueUsers']) }}</div>
-            <div class="kpi-info-sub">Nhân viên có lịch sử học/thi</div>
-         </div>
-      </div>
-   </div>
-
-   <!-- KPI 3: Hoàn thành khóa học -->
-   <div class="col-xl-3 col-md-6 col-12">
-      <div class="kpi-stat-card">
-         <div class="kpi-icon-box pass">
-            <i class="fa-solid fa-graduation-cap"></i>
-         </div>
-         <div class="flex-grow-1">
-            <div class="kpi-info-label">Đã hoàn thành khóa</div>
-            <div class="kpi-info-value text-success">{{ number_format($kpi['completedCount']) }}</div>
-            <div class="kpi-info-sub">Tỉ lệ hoàn thành: <strong>{{ $kpi['completionRate'] }}%</strong></div>
-         </div>
-      </div>
-   </div>
-
-   <!-- KPI 4: Kết quả thi Đạt -->
-   <div class="col-xl-3 col-md-6 col-12">
-      <div class="kpi-stat-card">
-         <div class="kpi-icon-box pass">
-            <i class="fa-solid fa-circle-check"></i>
-         </div>
-         <div class="flex-grow-1">
-            <div class="kpi-info-label">Lượt thi Đạt</div>
-            <div class="kpi-info-value" style="color: #107c41;">{{ number_format($kpi['passedCount']) }}</div>
-            <div class="kpi-info-sub">Tỉ lệ thi đạt: <strong>{{ $kpi['passRate'] }}%</strong></div>
-         </div>
-      </div>
-   </div>
-</div>
-
-<!-- ================= 2. BỘ LỌC TÌM KIẾM & XUẤT EXCEL ================= -->
+<!-- ================= 2. BỘ LỌC TÌM KIẾM (1 DÒNG DUY NHẤT) ================= -->
+@php
+   $activeMoreCount = 0;
+   if ($filters['learning_status'] !== 'all') $activeMoreCount++;
+   if ($filters['test_result'] !== 'all') $activeMoreCount++;
+   if ($filters['view_mode'] !== 'best_attempt') $activeMoreCount++;
+@endphp
 <div class="report-filter-card">
    <form action="{{ route('frontend.admin.reports.learning') }}" method="GET" id="learningReportFilterForm">
       <div class="row g-2 align-items-center">
          <!-- 1. Ô tìm kiếm từ khóa -->
-         <div class="col-lg-3 col-md-6 col-12">
+         <div class="col-xl-3 col-lg-3 col-md-4 col-12">
             <div class="filter-input-wrap">
                <i class="fa-regular fa-magnifying-glass filter-icon"></i>
                <input 
@@ -283,7 +287,7 @@
          </div>
 
          <!-- 2. Chọn Khóa học -->
-         <div class="col-lg-3 col-md-6 col-12">
+         <div class="col-xl-4 col-lg-4 col-md-4 col-12">
             <div class="filter-input-wrap">
                <i class="fa-solid fa-book-open filter-icon"></i>
                <select name="course_id" class="filter-control select2-filter">
@@ -298,7 +302,7 @@
          </div>
 
          <!-- 3. Chọn Phòng ban -->
-         <div class="col-lg-2 col-md-4 col-6">
+         <div class="col-xl-3 col-lg-3 col-md-4 col-12">
             <div class="filter-input-wrap">
                <i class="fa-solid fa-building filter-icon"></i>
                <select name="department_id" class="filter-control select2-filter">
@@ -312,60 +316,77 @@
             </div>
          </div>
 
-         <!-- 4. Tình trạng học -->
-         <div class="col-lg-2 col-md-4 col-6">
-            <div class="filter-input-wrap">
-               <i class="fa-solid fa-book-reader filter-icon"></i>
-               <select name="learning_status" class="filter-control select2-filter">
-                  <option value="all" {{ $filters['learning_status'] == 'all' ? 'selected' : '' }}>Tất cả tình trạng học</option>
-                  <option value="completed" {{ $filters['learning_status'] == 'completed' ? 'selected' : '' }}>Hoàn thành</option>
-                  <option value="in_progress" {{ $filters['learning_status'] == 'in_progress' ? 'selected' : '' }}>Chưa hoàn thành</option>
-               </select>
+         <!-- 4. Dropdown Bộ lọc khác (Tình trạng học, Kết quả thi, Chế độ hiển thị) -->
+         <div class="col-xl-2 col-lg-2 col-md-12 col-12">
+            <div class="dropdown w-100">
+               <button 
+                  class="btn-filter-dropdown dropdown-toggle {{ $activeMoreCount > 0 ? 'has-active' : '' }}" 
+                  type="button" 
+                  id="moreFiltersDropdown" 
+                  data-bs-toggle="dropdown" 
+                  data-bs-auto-close="outside" 
+                  aria-expanded="false"
+                  title="Các tùy chọn lọc mở rộng"
+               >
+                  <span class="d-inline-flex align-items-center gap-2 text-truncate">
+                     <i class="fa-solid fa-sliders"></i>
+                     <span>Bộ lọc khác</span>
+                  </span>
+                  @if($activeMoreCount > 0)
+                     <span class="badge rounded-pill bg-success ms-1">{{ $activeMoreCount }}</span>
+                  @endif
+               </button>
+
+               <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg border-0 more-filters-menu" aria-labelledby="moreFiltersDropdown">
+                  <div class="d-flex align-items-center justify-content-between pb-2 mb-3 border-bottom">
+                     <span class="fw-bold fs-13 text-dark">
+                        <i class="fa-solid fa-sliders me-1 text-primary"></i> Bộ lọc mở rộng
+                     </span>
+                     @if($activeMoreCount > 0)
+                        <a href="javascript:void(0)" id="resetMoreFiltersBtn" class="text-danger fs-12 text-decoration-none fw-semibold">
+                           <i class="fa-solid fa-rotate-left me-1"></i>Đặt lại
+                        </a>
+                     @endif
+                  </div>
+
+                  <!-- Tình trạng học -->
+                  <div class="mb-3">
+                     <label class="form-label fs-12 fw-semibold text-secondary mb-1">
+                        <i class="fa-solid fa-book-reader me-1 text-muted"></i> Tình trạng học
+                     </label>
+                     <select name="learning_status" class="form-select fs-13 filter-dropdown-select">
+                        <option value="all" {{ $filters['learning_status'] == 'all' ? 'selected' : '' }}>Tất cả tình trạng học</option>
+                        <option value="completed" {{ $filters['learning_status'] == 'completed' ? 'selected' : '' }}>✓ Hoàn thành</option>
+                        <option value="in_progress" {{ $filters['learning_status'] == 'in_progress' ? 'selected' : '' }}>⏰ Chưa hoàn thành</option>
+                     </select>
+                  </div>
+
+                  <!-- Kết quả thi -->
+                  <div class="mb-3">
+                     <label class="form-label fs-12 fw-semibold text-secondary mb-1">
+                        <i class="fa-solid fa-square-poll-vertical me-1 text-muted"></i> Kết quả thi
+                     </label>
+                     <select name="test_result" class="form-select fs-13 filter-dropdown-select">
+                        <option value="all" {{ $filters['test_result'] == 'all' ? 'selected' : '' }}>Tất cả kết quả thi</option>
+                        <option value="passed" {{ $filters['test_result'] == 'passed' ? 'selected' : '' }}>✓ Đạt</option>
+                        <option value="failed" {{ $filters['test_result'] == 'failed' ? 'selected' : '' }}>✕ Không đạt</option>
+                        <option value="not_taken" {{ $filters['test_result'] == 'not_taken' ? 'selected' : '' }}>Chưa thi</option>
+                     </select>
+                  </div>
+
+                  <!-- Chế độ hiển thị -->
+                  <div>
+                     <label class="form-label fs-12 fw-semibold text-secondary mb-1">
+                        <i class="fa-solid fa-layer-group me-1 text-muted"></i> Chế độ hiển thị
+                     </label>
+                     <select name="view_mode" class="form-select fs-13 filter-dropdown-select">
+                        <option value="best_attempt" {{ $filters['view_mode'] == 'best_attempt' ? 'selected' : '' }}>Chỉ lấy lần điểm cao nhất</option>
+                        <option value="latest_attempt" {{ $filters['view_mode'] == 'latest_attempt' ? 'selected' : '' }}>Chỉ lấy lần thi mới nhất</option>
+                        <option value="all_attempts" {{ $filters['view_mode'] == 'all_attempts' ? 'selected' : '' }}>Hiển thị tất cả lần thi (Chi tiết)</option>
+                     </select>
+                  </div>
+               </div>
             </div>
-         </div>
-
-         <!-- 5. Kết quả thi -->
-         <div class="col-lg-2 col-md-4 col-6">
-            <div class="filter-input-wrap">
-               <i class="fa-solid fa-square-poll-vertical filter-icon"></i>
-               <select name="test_result" class="filter-control select2-filter">
-                  <option value="all" {{ $filters['test_result'] == 'all' ? 'selected' : '' }}>Tất cả kết quả thi</option>
-                  <option value="passed" {{ $filters['test_result'] == 'passed' ? 'selected' : '' }}>Đạt</option>
-                  <option value="failed" {{ $filters['test_result'] == 'failed' ? 'selected' : '' }}>Không đạt</option>
-                  <option value="not_taken" {{ $filters['test_result'] == 'not_taken' ? 'selected' : '' }}>Chưa thi</option>
-               </select>
-            </div>
-         </div>
-
-         <!-- 6. Chế độ hiển thị -->
-         <div class="col-lg-3 col-md-6 col-12 mt-2">
-            <div class="filter-input-wrap">
-               <i class="fa-solid fa-layer-group filter-icon"></i>
-               <select name="view_mode" class="filter-control select2-filter">
-                  <option value="all_attempts" {{ $filters['view_mode'] == 'all_attempts' ? 'selected' : '' }}>Hiển thị tất cả lần thi (Chi tiết)</option>
-                  <option value="best_attempt" {{ $filters['view_mode'] == 'best_attempt' ? 'selected' : '' }}>Chỉ lấy lần điểm cao nhất</option>
-                  <option value="latest_attempt" {{ $filters['view_mode'] == 'latest_attempt' ? 'selected' : '' }}>Chỉ lấy lần thi mới nhất</option>
-               </select>
-            </div>
-         </div>
-
-         <!-- 7. Nút thao tác Lọc / Reset / Xuất Excel -->
-         <div class="col-lg-9 col-md-6 col-12 mt-2 d-flex flex-wrap gap-2 justify-content-lg-end">
-            <button type="submit" class="btn text-white fw-semibold d-inline-flex align-items-center justify-content-center px-4" style="height: 42px; background: #03594e; border-radius: 8px; font-size: 13.5px;">
-               <i class="fa-solid fa-filter me-1"></i> Lọc
-            </button>
-
-            @if(!empty($filters['search']) || $filters['department_id'] !== 'all' || $filters['course_id'] !== 'all' || $filters['learning_status'] !== 'all' || $filters['test_result'] !== 'all' || $filters['view_mode'] !== 'all_attempts')
-               <a href="{{ route('frontend.admin.reports.learning') }}" class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center px-3" style="height: 42px; border-radius: 8px; font-size: 13.5px;" title="Xóa bộ lọc về mặc định">
-                  <i class="fa-solid fa-rotate-left me-1"></i> Làm mới
-               </a>
-            @endif
-
-            <a href="{{ route('frontend.admin.reports.learning.export', request()->all()) }}" 
-               class="btn text-white fw-semibold d-inline-flex align-items-center justify-content-center px-3" 
-               style="height: 42px; background: #107c41; border-color: #107c41; border-radius: 8px; font-size: 13.5px;">
-               <i class="fa-solid fa-file-excel me-1"></i> Xuất Excel
-            </a>
          </div>
       </div>
    </form>
@@ -401,14 +422,14 @@
                @foreach($paginatedResults as $item)
                   <tr>
                      <!-- 1. STT -->
-                     <td class="text-center text-muted fw-semibold">
+                     <td class="text-center text-muted">
                         {{ ($paginatedResults->currentPage() - 1) * $paginatedResults->perPage() + $loop->iteration }}
                      </td>
 
                      <!-- 2. Mã NV -->
                      <td class="text-center">
                         @if(!empty($item['employee_code']))
-                           <span class="font-monospace fw-semibold text-secondary">{{ $item['employee_code'] }}</span>
+                           <span class="font-monospace text-secondary">{{ $item['employee_code'] }}</span>
                         @else
                            <span class="text-muted">-</span>
                         @endif
@@ -416,7 +437,7 @@
 
                      <!-- 3. Họ tên -->
                      <td>
-                        <span class="fw-bold text-dark">{{ $item['name'] }}</span>
+                        <span class="text-dark">{{ $item['name'] }}</span>
                      </td>
 
                      <!-- 4. Chức danh -->
@@ -427,7 +448,7 @@
                      <!-- 5. Phòng ban -->
                      <td>
                         @if(!empty($item['department']))
-                           <span class="text-primary fw-medium"><i class="fa-solid fa-building me-1"></i>{{ $item['department'] }}</span>
+                           <span class="text-primary"><i class="fa-solid fa-building me-1"></i>{{ $item['department'] }}</span>
                         @else
                            <span class="text-muted">-</span>
                         @endif
@@ -440,17 +461,17 @@
 
                      <!-- 7. Mã KH -->
                      <td class="text-center">
-                        <span class="fw-bold text-primary font-monospace">{{ $item['course_code'] }}</span>
+                        <span class="text-primary font-monospace">{{ $item['course_code'] }}</span>
                      </td>
 
                      <!-- 8. Tên khóa học -->
                      <td>
-                        <span class="fw-semibold text-dark" title="{{ $item['course_title'] }}">{{ $item['course_title'] }}</span>
+                        <span class="text-dark" title="{{ $item['course_title'] }}">{{ $item['course_title'] }}</span>
                      </td>
 
                      <!-- 9. TG học -->
                      <td class="text-center">
-                        <span class="fw-semibold text-secondary">
+                        <span class="text-secondary">
                            <i class="fa-regular fa-clock me-1 text-muted"></i>{{ $item['study_time'] }}
                         </span>
                      </td>
@@ -470,7 +491,7 @@
 
                      <!-- 11. Lần thi -->
                      <td class="text-center">
-                        <span class="fw-bold text-dark">{{ $item['attempts_count'] ?: 0 }}</span>
+                        <span class="text-dark">{{ $item['attempts_count'] ?: 0 }}</span>
                      </td>
 
                      <!-- 12. TT thi -->
@@ -486,8 +507,8 @@
 
                      <!-- 13. Điểm -->
                      <td class="text-center">
-                        @if($item['score'] !== '-' && is_numeric($item['score']))
-                           <span class="fw-bold fs-14 {{ $item['result'] === 'Đạt' ? 'text-success' : 'text-danger' }}">
+                        @if($item['score'] !== '-' && $item['score'] !== null && $item['score'] !== '')
+                           <span class="fs-13 {{ $item['result'] === 'Đạt' ? 'text-success' : ($item['result'] === 'Không đạt' ? 'text-danger' : 'text-dark') }}">
                               {{ $item['score'] }}
                            </span>
                         @else
@@ -571,8 +592,24 @@
          });
       });
 
-      // 3. Khi người dùng chọn một mục trong Select2, tự động submit form để lọc
-      $('.select2-filter').on('change', function() {
+      // 3. Khi người dùng chọn một mục trong Select2 hoặc trong dropdown bộ lọc khác, tự động submit form để lọc
+      $('.select2-filter, .filter-dropdown-select').on('change', function() {
+         $('#learningReportFilterForm').submit();
+      });
+
+      // 4. Khi nhấn Enter trong ô tìm kiếm từ khóa, tự động lọc
+      $('input[name="search"]').on('keypress', function(e) {
+         if (e.which === 13) {
+            $('#learningReportFilterForm').submit();
+         }
+      });
+
+      // 5. Đặt lại các bộ lọc trong dropdown
+      $('#resetMoreFiltersBtn').on('click', function(e) {
+         e.preventDefault();
+         $('select[name="learning_status"]').val('all');
+         $('select[name="test_result"]').val('all');
+         $('select[name="view_mode"]').val('best_attempt');
          $('#learningReportFilterForm').submit();
       });
    });

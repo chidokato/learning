@@ -58,7 +58,7 @@ class FrontendLearningReportController extends Controller
             'course_id' => $request->input('course_id', 'all'),
             'learning_status' => $request->input('learning_status', 'all'),
             'test_result' => $request->input('test_result', 'all'),
-            'view_mode' => $request->input('view_mode', 'all_attempts'),
+            'view_mode' => $request->input('view_mode', 'best_attempt'),
             'per_page' => $perPage,
         ];
 
@@ -105,7 +105,15 @@ class FrontendLearningReportController extends Controller
         $courseId = $request->input('course_id', 'all');
         $learningStatus = $request->input('learning_status', 'all');
         $testResult = $request->input('test_result', 'all');
-        $viewMode = $request->input('view_mode', 'all_attempts'); // 'all_attempts', 'best_attempt', 'latest_attempt'
+        $viewMode = $request->input('view_mode', 'best_attempt'); // 'best_attempt' (mặc định), 'latest_attempt', 'all_attempts'
+
+        // Hàm helper định dạng điểm thi (ví dụ: 26/30 hoặc -)
+        $formatScore = function ($score, $totalQ) {
+            if ($score === '-' || $score === null || $score === '') {
+                return '-';
+            }
+            return ($totalQ > 0) ? ($score . '/' . $totalQ) : (string) $score;
+        };
 
         // 1. Truy vấn lịch sử học tập
         $historyQuery = UserCourseHistory::with([
@@ -165,6 +173,7 @@ class FrontendLearningReportController extends Controller
                         ->get();
 
                     $totalAttempts = $attempts->count();
+                    $totalQuestions = (int) ($test->questions_count ?? ($test->relationLoaded('questions') ? $test->questions->count() : ($test ? $test->questions()->count() : 0)));
 
                     if ($totalAttempts === 0) {
                         $rawRows[] = [
@@ -194,7 +203,10 @@ class FrontendLearningReportController extends Controller
                             $bestIndex = 0;
                             $bestAtt = $attempts[0];
                             foreach ($attempts as $idx => $att) {
-                                if ($att->score > $bestAtt->score) {
+                                if (
+                                    $att->score > $bestAtt->score ||
+                                    ($att->score == $bestAtt->score && $att->is_passed && !$bestAtt->is_passed)
+                                ) {
                                     $bestAtt = $att;
                                     $bestIndex = $idx;
                                 }
@@ -215,7 +227,7 @@ class FrontendLearningReportController extends Controller
                                 'learning_status' => $learningStatusText,
                                 'attempts_count' => $totalAttempts,
                                 'attempt_status' => 'Lần ' . ($bestIndex + 1),
-                                'score' => $bestAtt->score,
+                                'score' => $formatScore($bestAtt->score, $totalQuestions),
                                 'result' => $bestAtt->is_passed ? 'Đạt' : 'Không đạt',
                                 'completed_at' => $bestAtt->completed_at ?: $bestAtt->created_at,
                                 'is_passed' => (bool) $bestAtt->is_passed,
@@ -240,7 +252,7 @@ class FrontendLearningReportController extends Controller
                                 'learning_status' => $learningStatusText,
                                 'attempts_count' => $totalAttempts,
                                 'attempt_status' => 'Lần ' . ($lastIndex + 1),
-                                'score' => $latestAtt->score,
+                                'score' => $formatScore($latestAtt->score, $totalQuestions),
                                 'result' => $latestAtt->is_passed ? 'Đạt' : 'Không đạt',
                                 'completed_at' => $latestAtt->completed_at ?: $latestAtt->created_at,
                                 'is_passed' => (bool) $latestAtt->is_passed,
@@ -264,7 +276,7 @@ class FrontendLearningReportController extends Controller
                                     'learning_status' => $learningStatusText,
                                     'attempts_count' => $totalAttempts,
                                     'attempt_status' => 'Lần ' . ($idx + 1),
-                                    'score' => $att->score,
+                                    'score' => $formatScore($att->score, $totalQuestions),
                                     'result' => $att->is_passed ? 'Đạt' : 'Không đạt',
                                     'completed_at' => $att->completed_at ?: $att->created_at,
                                     'is_passed' => (bool) $att->is_passed,
@@ -302,7 +314,13 @@ class FrontendLearningReportController extends Controller
         }
 
         // 2. Bổ sung các bài thi người dùng đã làm trực tiếp
-        $testResultsQuery = UserTestResult::with(['user.department', 'test.post'])->orderBy('id', 'asc');
+        $testResultsQuery = UserTestResult::with([
+            'user.department',
+            'test' => function ($tq) {
+                $tq->withCount('questions');
+            },
+            'test.post'
+        ])->orderBy('id', 'asc');
         if ($departmentId !== 'all' && !empty($departmentId)) {
             $testResultsQuery->whereHas('user', function ($uq) use ($departmentId) {
                 $uq->where('department_id', (int) $departmentId);
@@ -337,13 +355,17 @@ class FrontendLearningReportController extends Controller
                 ->get();
 
             $totalAttempts = $attempts->count();
+            $totalQuestions = (int) ($test->questions_count ?? ($test->relationLoaded('questions') ? $test->questions->count() : ($test ? $test->questions()->count() : 0)));
             $processedUserTests[$key] = true;
 
             if ($viewMode === 'best_attempt') {
                 $bestIndex = 0;
                 $bestAtt = $attempts[0];
                 foreach ($attempts as $idx => $att) {
-                    if ($att->score > $bestAtt->score) {
+                    if (
+                        $att->score > $bestAtt->score ||
+                        ($att->score == $bestAtt->score && $att->is_passed && !$bestAtt->is_passed)
+                    ) {
                         $bestAtt = $att;
                         $bestIndex = $idx;
                     }
@@ -364,7 +386,7 @@ class FrontendLearningReportController extends Controller
                     'learning_status' => 'Chưa hoàn thành',
                     'attempts_count' => $totalAttempts,
                     'attempt_status' => 'Lần ' . ($bestIndex + 1),
-                    'score' => $bestAtt->score,
+                    'score' => $formatScore($bestAtt->score, $totalQuestions),
                     'result' => $bestAtt->is_passed ? 'Đạt' : 'Không đạt',
                     'completed_at' => $bestAtt->completed_at ?: $bestAtt->created_at,
                     'is_passed' => (bool) $bestAtt->is_passed,
@@ -389,7 +411,7 @@ class FrontendLearningReportController extends Controller
                     'learning_status' => 'Chưa hoàn thành',
                     'attempts_count' => $totalAttempts,
                     'attempt_status' => 'Lần ' . ($lastIndex + 1),
-                    'score' => $latestAtt->score,
+                    'score' => $formatScore($latestAtt->score, $totalQuestions),
                     'result' => $latestAtt->is_passed ? 'Đạt' : 'Không đạt',
                     'completed_at' => $latestAtt->completed_at ?: $latestAtt->created_at,
                     'is_passed' => (bool) $latestAtt->is_passed,
@@ -413,7 +435,7 @@ class FrontendLearningReportController extends Controller
                         'learning_status' => 'Chưa hoàn thành',
                         'attempts_count' => $totalAttempts,
                         'attempt_status' => 'Lần ' . ($idx + 1),
-                        'score' => $att->score,
+                        'score' => $formatScore($att->score, $totalQuestions),
                         'result' => $att->is_passed ? 'Đạt' : 'Không đạt',
                         'completed_at' => $att->completed_at ?: $att->created_at,
                         'is_passed' => (bool) $att->is_passed,

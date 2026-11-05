@@ -50,10 +50,10 @@ class LearningProgressExport implements FromArray, WithHeadings, WithStyles, Sho
         $rows = [];
         foreach ($this->data as $item) {
             $score = $item['score'] ?? '';
-            if (is_numeric($score)) {
+            if ($score === '-' || $score === null || $score === '') {
+                $scoreVal = '-';
+            } elseif (is_numeric($score)) {
                 $scoreVal = (int) $score;
-            } elseif ($score === '-' || empty($score)) {
-                $scoreVal = '';
             } else {
                 $scoreVal = (string) $score;
             }
@@ -180,8 +180,9 @@ class LearningProgressExport implements FromArray, WithHeadings, WithStyles, Sho
             $sheet->getStyle("J2:J{$lastRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             // Cột K (Tình trạng thi): Căn giữa
             $sheet->getStyle("K2:K{$lastRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            // Cột L (Điểm thi): Căn giữa
+            // Cột L (Điểm thi): Căn giữa và định dạng Text (tránh Excel tự nhận diện nhầm tỉ lệ phân số dạng 26/30 thành ngày tháng)
             $sheet->getStyle("L2:L{$lastRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle("L2:L{$lastRow}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
             // Cột M (Kết quả): Căn giữa
             $sheet->getStyle("M2:M{$lastRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
