@@ -177,6 +177,8 @@ Route::get('bai-kiem-tra/{test_id}', [\App\Http\Controllers\FrontendTestControll
 Route::post('bai-kiem-tra/{test_id}/submit', [\App\Http\Controllers\TestController::class, 'submitTest'])->name('frontend.tests.submit');
 Route::get('bao-cao-bai-thi', [\App\Http\Controllers\FrontendTestReportController::class, 'index'])->name('frontend.admin.reports.tests');
 Route::get('bao-cao-bai-thi/lich-su-nhan-vien', [\App\Http\Controllers\FrontendTestReportController::class, 'userTestHistory'])->name('frontend.admin.reports.user-test-history');
+Route::get('bao-cao-tien-do-hoc-tap', [\App\Http\Controllers\FrontendLearningReportController::class, 'index'])->name('frontend.admin.reports.learning');
+Route::get('bao-cao-tien-do-hoc-tap/xuat-excel', [\App\Http\Controllers\FrontendLearningReportController::class, 'exportExcel'])->name('frontend.admin.reports.learning.export');
 
 // Frontend Authentication Routes
 Route::controller(AuthController::class)->group(function () {
@@ -260,6 +262,11 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::put('tests/{test}', 'update')->name('tests.update');
         Route::patch('tests/{test}/toggle-special', 'toggleSpecial')->name('tests.toggle-special');
         Route::delete('tests/{test}', 'destroy')->name('tests.destroy');
+    });
+
+    Route::controller(\App\Http\Controllers\FrontendLearningReportController::class)->group(function () {
+        Route::get('reports/learning-progress', 'index')->name('reports.learning');
+        Route::get('reports/learning-progress/export', 'exportExcel')->name('reports.learning.export');
     });
 
 

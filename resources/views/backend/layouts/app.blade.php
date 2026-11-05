@@ -143,6 +143,7 @@
                                     ['label' => 'Topic', 'icon' => 'ri-price-tag-3-line', 'route' => 'backend.topics.index', 'active' => request()->routeIs('backend.topics.*')],
                                     ['label' => 'Course', 'icon' => 'ri-book-open-line', 'route' => 'backend.courses.index', 'active' => request()->routeIs('backend.courses.*') || request()->routeIs('backend.products.*')],
                                     ['label' => 'Bài kiểm tra', 'icon' => 'ri-file-list-3-line', 'route' => 'backend.tests.index', 'active' => request()->routeIs('backend.tests.*')],
+                                    ['label' => 'Báo cáo đào tạo & thi', 'icon' => 'ri-file-excel-2-line', 'route' => 'frontend.admin.reports.learning', 'active' => request()->routeIs('frontend.admin.reports.learning*') || request()->routeIs('backend.reports.learning*')],
                                     ['label' => 'News', 'icon' => 'ri-newspaper-line', 'route' => 'backend.news.index', 'active' => request()->routeIs('backend.news.*')],
                                 ],
                                 'Chăm sóc khách hàng' => [
