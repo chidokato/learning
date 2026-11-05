@@ -48,7 +48,7 @@ class FrontendLearningReportController extends Controller
         $paginatedResults->withQueryString();
 
         // 4. Lấy danh sách dropdown bộ lọc
-        $departments = Department::orderBy('name')->get(['id', 'name']);
+        $departments = Department::getTreeOptions();
         $courses = Post::where('type', 'course')->orderBy('title')->get(['id', 'title']);
 
         // 5. Tham số lọc đang chọn
@@ -115,7 +115,106 @@ class FrontendLearningReportController extends Controller
             return ($totalQ > 0) ? ($score . '/' . $totalQ) : (string) $score;
         };
 
+        // Hàm helper định dạng ngày thi (ví dụ: 05/11/2026 10:13 hoặc -)
+        $formatTestDate = function ($date) {
+            if (!$date) return '-';
+            if (is_string($date)) {
+                try {
+                    $date = \Carbon\Carbon::parse($date);
+                } catch (\Exception $e) {
+                    return $date;
+                }
+            }
+            return $date->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i');
+        };
+
+        // Hàm helper định dạng thời gian hoàn thành bài thi (ví dụ: 1 phút 53 giây hoặc -)
+        $formatTestDuration = function ($att) {
+            if (!$att) return '-';
+            if (!empty($att->formatted_duration)) {
+                return $att->formatted_duration;
+            }
+            if (!empty($att->duration_seconds) && $att->duration_seconds > 0) {
+                return $att->duration_seconds . ' giây';
+            }
+            return '-';
+        };
+
         // 1. Truy vấn lịch sử học tập
+        $allDepartments = Department::all()->keyBy('id');
+
+        // Hàm helper phân giải Công ty và Phòng ban từ cây phòng ban
+        $resolveDeptInfo = function ($user) use ($allDepartments) {
+            $deptId = $user->department_id ?? null;
+            if (!$deptId || !$allDepartments->has($deptId)) {
+                return [
+                    'company' => '-',
+                    'department' => '-',
+                ];
+            }
+
+            $dept = $allDepartments->get($deptId);
+
+            // Tìm node gốc (Công ty)
+            $current = $dept;
+            $visited = [];
+            while ($current->parent_id && $allDepartments->has($current->parent_id) && !isset($visited[$current->id])) {
+                $visited[$current->id] = true;
+                $current = $allDepartments->get($current->parent_id);
+            }
+
+            $root = $current;
+
+            if ($dept->id !== $root->id) {
+                // Thuộc cấp con: root là Công ty, dept hiện tại là Phòng ban
+                return [
+                    'company' => $root->name,
+                    'department' => $dept->name,
+                ];
+            }
+
+            // Đơn vị gốc (Level 0)
+            // Kiểm tra xem đơn vị gốc này có đơn vị con trực thuộc hay không (như INDOCHINE trong hình)
+            $hasChildren = $allDepartments->contains('parent_id', $dept->id);
+            if ($hasChildren) {
+                return [
+                    'company' => $dept->name,
+                    'department' => '-',
+                ];
+            }
+
+            // Đơn vị độc lập (không cha, không con)
+            $nameLower = mb_strtolower($dept->name, 'UTF-8');
+            if (
+                str_contains($nameLower, 'công ty') || 
+                str_contains($nameLower, 'cty') || 
+                str_contains($nameLower, 'tập đoàn') || 
+                str_contains($nameLower, 'chi nhánh') ||
+                str_contains($nameLower, 'indochine')
+            ) {
+                return [
+                    'company' => $dept->name,
+                    'department' => '-',
+                ];
+            }
+
+            return [
+                'company' => '-',
+                'department' => $dept->name,
+            ];
+        };
+
+        // Nếu lọc theo department_id, lấy luôn tất cả ID phòng ban con
+        $filterDeptIds = [];
+        if ($departmentId !== 'all' && !empty($departmentId)) {
+            $selectedDept = $allDepartments->get((int) $departmentId);
+            if ($selectedDept) {
+                $filterDeptIds = array_merge([$selectedDept->id], $selectedDept->getAllDescendantIds());
+            } else {
+                $filterDeptIds = [(int) $departmentId];
+            }
+        }
+
         $historyQuery = UserCourseHistory::with([
             'user.department',
             'post.tests' => function ($q) {
@@ -123,9 +222,9 @@ class FrontendLearningReportController extends Controller
             }
         ]);
 
-        if ($departmentId !== 'all' && !empty($departmentId)) {
-            $historyQuery->whereHas('user', function ($uq) use ($departmentId) {
-                $uq->where('department_id', (int) $departmentId);
+        if (!empty($filterDeptIds)) {
+            $historyQuery->whereHas('user', function ($uq) use ($filterDeptIds) {
+                $uq->whereIn('department_id', $filterDeptIds);
             });
         }
 
@@ -188,6 +287,8 @@ class FrontendLearningReportController extends Controller
                     $totalAttempts = $attempts->count();
                     $totalQuestions = (int) ($test->questions_count ?? ($test->relationLoaded('questions') ? $test->questions->count() : ($test ? $test->questions()->count() : 0)));
 
+                    $deptInfo = $resolveDeptInfo($user);
+
                     if ($totalAttempts === 0) {
                         $rawRows[] = [
                             'user_id' => $user->id,
@@ -197,7 +298,8 @@ class FrontendLearningReportController extends Controller
                             'employee_code' => $user->employee_code ?: '',
                             'name' => $user->name,
                             'job_title' => $user->job_title ?: '',
-                            'department' => $user->department->name ?? '',
+                            'company' => $deptInfo['company'],
+                            'department' => $deptInfo['department'],
                             'email' => $user->email,
                             'course_code' => $courseCode,
                             'course_title' => $courseTitle,
@@ -205,6 +307,8 @@ class FrontendLearningReportController extends Controller
                             'learning_status' => $learningStatusText,
                             'attempts_count' => 0,
                             'attempt_status' => 'Chưa thi',
+                            'test_date' => '-',
+                            'test_duration' => '-',
                             'score' => '-',
                             'result' => 'Chưa thi',
                             'completed_at' => null,
@@ -232,7 +336,8 @@ class FrontendLearningReportController extends Controller
                                 'employee_code' => $user->employee_code ?: '',
                                 'name' => $user->name,
                                 'job_title' => $user->job_title ?: '',
-                                'department' => $user->department->name ?? '',
+                                'company' => $deptInfo['company'],
+                                'department' => $deptInfo['department'],
                                 'email' => $user->email,
                                 'course_code' => $courseCode,
                                 'course_title' => $courseTitle,
@@ -240,6 +345,8 @@ class FrontendLearningReportController extends Controller
                                 'learning_status' => $learningStatusText,
                                 'attempts_count' => $totalAttempts,
                                 'attempt_status' => 'Lần ' . ($bestIndex + 1),
+                                'test_date' => $formatTestDate($bestAtt->completed_at ?: $bestAtt->created_at),
+                                'test_duration' => $formatTestDuration($bestAtt),
                                 'score' => $formatScore($bestAtt->score, $totalQuestions),
                                 'result' => $bestAtt->is_passed ? 'Đạt' : 'Không đạt',
                                 'completed_at' => $bestAtt->completed_at ?: $bestAtt->created_at,
@@ -257,7 +364,8 @@ class FrontendLearningReportController extends Controller
                                 'employee_code' => $user->employee_code ?: '',
                                 'name' => $user->name,
                                 'job_title' => $user->job_title ?: '',
-                                'department' => $user->department->name ?? '',
+                                'company' => $deptInfo['company'],
+                                'department' => $deptInfo['department'],
                                 'email' => $user->email,
                                 'course_code' => $courseCode,
                                 'course_title' => $courseTitle,
@@ -265,6 +373,8 @@ class FrontendLearningReportController extends Controller
                                 'learning_status' => $learningStatusText,
                                 'attempts_count' => $totalAttempts,
                                 'attempt_status' => 'Lần ' . ($lastIndex + 1),
+                                'test_date' => $formatTestDate($latestAtt->completed_at ?: $latestAtt->created_at),
+                                'test_duration' => $formatTestDuration($latestAtt),
                                 'score' => $formatScore($latestAtt->score, $totalQuestions),
                                 'result' => $latestAtt->is_passed ? 'Đạt' : 'Không đạt',
                                 'completed_at' => $latestAtt->completed_at ?: $latestAtt->created_at,
@@ -281,7 +391,8 @@ class FrontendLearningReportController extends Controller
                                     'employee_code' => $user->employee_code ?: '',
                                     'name' => $user->name,
                                     'job_title' => $user->job_title ?: '',
-                                    'department' => $user->department->name ?? '',
+                                    'company' => $deptInfo['company'],
+                                    'department' => $deptInfo['department'],
                                     'email' => $user->email,
                                     'course_code' => $courseCode,
                                     'course_title' => $courseTitle,
@@ -289,6 +400,8 @@ class FrontendLearningReportController extends Controller
                                     'learning_status' => $learningStatusText,
                                     'attempts_count' => $totalAttempts,
                                     'attempt_status' => 'Lần ' . ($idx + 1),
+                                    'test_date' => $formatTestDate($att->completed_at ?: $att->created_at),
+                                    'test_duration' => $formatTestDuration($att),
                                     'score' => $formatScore($att->score, $totalQuestions),
                                     'result' => $att->is_passed ? 'Đạt' : 'Không đạt',
                                     'completed_at' => $att->completed_at ?: $att->created_at,
@@ -301,6 +414,7 @@ class FrontendLearningReportController extends Controller
                 }
             } else {
                 // Khóa học chưa gán bài thi
+                $deptInfo = $resolveDeptInfo($user);
                 $rawRows[] = [
                     'user_id' => $user->id,
                     'user_avatar' => $user->avatar,
@@ -309,7 +423,8 @@ class FrontendLearningReportController extends Controller
                     'employee_code' => $user->employee_code ?: '',
                     'name' => $user->name,
                     'job_title' => $user->job_title ?: '',
-                    'department' => $user->department->name ?? '',
+                    'company' => $deptInfo['company'],
+                    'department' => $deptInfo['department'],
                     'email' => $user->email,
                     'course_code' => $courseCode,
                     'course_title' => $courseTitle,
@@ -317,6 +432,8 @@ class FrontendLearningReportController extends Controller
                     'learning_status' => $learningStatusText,
                     'attempts_count' => 0,
                     'attempt_status' => 'Không có bài thi',
+                    'test_date' => '-',
+                    'test_duration' => '-',
                     'score' => '-',
                     'result' => '-',
                     'completed_at' => null,
@@ -334,9 +451,9 @@ class FrontendLearningReportController extends Controller
             },
             'test.post'
         ])->orderBy('id', 'asc');
-        if ($departmentId !== 'all' && !empty($departmentId)) {
-            $testResultsQuery->whereHas('user', function ($uq) use ($departmentId) {
-                $uq->where('department_id', (int) $departmentId);
+        if (!empty($filterDeptIds)) {
+            $testResultsQuery->whereHas('user', function ($uq) use ($filterDeptIds) {
+                $uq->whereIn('department_id', $filterDeptIds);
             });
         }
 
@@ -374,6 +491,8 @@ class FrontendLearningReportController extends Controller
             $totalQuestions = (int) ($test->questions_count ?? ($test->relationLoaded('questions') ? $test->questions->count() : ($test ? $test->questions()->count() : 0)));
             $processedUserTests[$key] = true;
 
+            $deptInfo = $resolveDeptInfo($user);
+
             if ($viewMode === 'best_attempt') {
                 $bestIndex = 0;
                 $bestAtt = $attempts[0];
@@ -394,7 +513,8 @@ class FrontendLearningReportController extends Controller
                     'employee_code' => $user->employee_code ?: '',
                     'name' => $user->name,
                     'job_title' => $user->job_title ?: '',
-                    'department' => $user->department->name ?? '',
+                    'company' => $deptInfo['company'],
+                    'department' => $deptInfo['department'],
                     'email' => $user->email,
                     'course_code' => $courseCode,
                     'course_title' => $courseTitle,
@@ -402,6 +522,8 @@ class FrontendLearningReportController extends Controller
                     'learning_status' => 'Chưa hoàn thành',
                     'attempts_count' => $totalAttempts,
                     'attempt_status' => 'Lần ' . ($bestIndex + 1),
+                    'test_date' => $formatTestDate($bestAtt->completed_at ?: $bestAtt->created_at),
+                    'test_duration' => $formatTestDuration($bestAtt),
                     'score' => $formatScore($bestAtt->score, $totalQuestions),
                     'result' => $bestAtt->is_passed ? 'Đạt' : 'Không đạt',
                     'completed_at' => $bestAtt->completed_at ?: $bestAtt->created_at,
@@ -419,7 +541,8 @@ class FrontendLearningReportController extends Controller
                     'employee_code' => $user->employee_code ?: '',
                     'name' => $user->name,
                     'job_title' => $user->job_title ?: '',
-                    'department' => $user->department->name ?? '',
+                    'company' => $deptInfo['company'],
+                    'department' => $deptInfo['department'],
                     'email' => $user->email,
                     'course_code' => $courseCode,
                     'course_title' => $courseTitle,
@@ -427,6 +550,8 @@ class FrontendLearningReportController extends Controller
                     'learning_status' => 'Chưa hoàn thành',
                     'attempts_count' => $totalAttempts,
                     'attempt_status' => 'Lần ' . ($lastIndex + 1),
+                    'test_date' => $formatTestDate($latestAtt->completed_at ?: $latestAtt->created_at),
+                    'test_duration' => $formatTestDuration($latestAtt),
                     'score' => $formatScore($latestAtt->score, $totalQuestions),
                     'result' => $latestAtt->is_passed ? 'Đạt' : 'Không đạt',
                     'completed_at' => $latestAtt->completed_at ?: $latestAtt->created_at,
@@ -443,7 +568,8 @@ class FrontendLearningReportController extends Controller
                         'employee_code' => $user->employee_code ?: '',
                         'name' => $user->name,
                         'job_title' => $user->job_title ?: '',
-                        'department' => $user->department->name ?? '',
+                        'company' => $deptInfo['company'],
+                        'department' => $deptInfo['department'],
                         'email' => $user->email,
                         'course_code' => $courseCode,
                         'course_title' => $courseTitle,
@@ -451,6 +577,8 @@ class FrontendLearningReportController extends Controller
                         'learning_status' => 'Chưa hoàn thành',
                         'attempts_count' => $totalAttempts,
                         'attempt_status' => 'Lần ' . ($idx + 1),
+                        'test_date' => $formatTestDate($att->completed_at ?: $att->created_at),
+                        'test_duration' => $formatTestDuration($att),
                         'score' => $formatScore($att->score, $totalQuestions),
                         'result' => $att->is_passed ? 'Đạt' : 'Không đạt',
                         'completed_at' => $att->completed_at ?: $att->created_at,
@@ -473,6 +601,7 @@ class FrontendLearningReportController extends Controller
                     str_contains(mb_strtolower($row['employee_code'], 'UTF-8'), $searchLower) ||
                     str_contains(mb_strtolower($row['course_title'], 'UTF-8'), $searchLower) ||
                     str_contains(mb_strtolower($row['course_code'], 'UTF-8'), $searchLower) ||
+                    str_contains(mb_strtolower($row['company'], 'UTF-8'), $searchLower) ||
                     str_contains(mb_strtolower($row['department'], 'UTF-8'), $searchLower)
                 );
                 if (!$match) {

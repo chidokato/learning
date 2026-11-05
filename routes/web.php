@@ -40,6 +40,10 @@ $postDetailHandler = function (string $slug) {
 };
 
 $courseLearnHandler = function (string $slug) {
+    if (!auth()->check()) {
+        return redirect()->guest(route('frontend.login'))->with('info', 'Vui lòng đăng nhập để vào bài học.');
+    }
+
     $cleanSlug = trim(urldecode($slug));
 
     $post = \App\Models\Post::query()
@@ -47,44 +51,25 @@ $courseLearnHandler = function (string $slug) {
         ->with(['category', 'seller'])
         ->first();
 
-
     abort_unless($post, 404);
 
-    $userHistory = null;
-    if (auth()->check()) {
-        $userId = auth()->id();
-        $userHistory = \App\Models\UserCourseHistory::firstOrCreate(
-            ['user_id' => $userId, 'post_id' => $post->id],
-            [
-                'last_learned_at' => now(),
-                'study_time_seconds' => 0,
-                'current_page' => 1,
-                'total_pages' => 0,
-                'progress_percent' => 0,
-            ]
-        );
-        $userHistory->update(['last_learned_at' => now()]);
-
-        $cacheKey = "user_{$userId}_learned_post_{$post->id}";
-        if (!cache()->has($cacheKey)) {
-            $post->increment('view_count');
-            cache()->put($cacheKey, true, now()->addYears(10));
-        }
-    } else {
-        $sessionKey = "guest_learned_post_{$post->id}";
-        if (!session()->has($sessionKey)) {
-            $post->increment('view_count');
-            session()->put($sessionKey, true);
-        }
-        $guestData = session()->get("guest_learning_{$post->id}", [
+    $userId = auth()->id();
+    $userHistory = \App\Models\UserCourseHistory::firstOrCreate(
+        ['user_id' => $userId, 'post_id' => $post->id],
+        [
+            'last_learned_at' => now(),
             'study_time_seconds' => 0,
             'current_page' => 1,
             'total_pages' => 0,
-            'completed_slides' => [],
             'progress_percent' => 0,
-        ]);
-        $guestData['completed_slides_array'] = $guestData['completed_slides'] ?? [];
-        $userHistory = (object) $guestData;
+        ]
+    );
+    $userHistory->update(['last_learned_at' => now()]);
+
+    $cacheKey = "user_{$userId}_learned_post_{$post->id}";
+    if (!cache()->has($cacheKey)) {
+        $post->increment('view_count');
+        cache()->put($cacheKey, true, now()->addYears(10));
     }
 
     // Lấy bài test riêng của khóa học hiện tại (post_id = $post->id)
@@ -103,20 +88,18 @@ $courseLearnHandler = function (string $slug) {
         ->latest()
         ->get();
 
-    // Lấy kết quả làm bài của học viên (nếu đã đăng nhập)
-    $userTestResults = auth()->check()
-        ? \App\Models\UserTestResult::where('user_id', auth()->id())
-            ->get()
-            ->groupBy('test_id')
-            ->map(function ($items) {
-                return [
-                    'attempts'   => $items->count(),
-                    'max_score'  => $items->max('score'),
-                    'is_passed'  => $items->contains('is_passed', true),
-                    'latest'     => $items->sortByDesc('created_at')->first(),
-                ];
-            })
-        : collect();
+    // Lấy kết quả làm bài của học viên
+    $userTestResults = \App\Models\UserTestResult::where('user_id', $userId)
+        ->get()
+        ->groupBy('test_id')
+        ->map(function ($items) {
+            return [
+                'attempts'   => $items->count(),
+                'max_score'  => $items->max('score'),
+                'is_passed'  => $items->contains('is_passed', true),
+                'latest'     => $items->sortByDesc('created_at')->first(),
+            ];
+        });
 
     return view('frontend.course-learn', compact('post', 'userHistory', 'courseTests', 'generalTests', 'userTestResults'));
 };
@@ -149,6 +132,10 @@ Route::get('courses-details-v2.html', $fallbackCourseDetailHandler)->name('front
 Route::get('courses/{slug}/hoc', fn (string $slug) => $courseLearnHandler($slug))->name('frontend.course.learn.prefix');
 Route::get('hoc-khoa-hoc/{slug}', fn (string $slug) => $courseLearnHandler($slug))->name('frontend.course.learn');
 Route::get('courses/{slug}/download-pdf', function (string $slug) {
+    if (!auth()->check()) {
+        return redirect()->guest(route('frontend.login'))->with('info', 'Vui lòng đăng nhập để tải tài liệu bài học.');
+    }
+
     $post = \App\Models\Post::query()
         ->where('slug', $slug)
         ->firstOrFail();

@@ -83,4 +83,15 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
+
+    /**
+     * Lấy tên Công ty quản lý
+     */
+    public function getCompanyNameAttribute(): string
+    {
+        if (!$this->department) {
+            return '-';
+        }
+        return $this->department->company_name ?: '-';
+    }
 }

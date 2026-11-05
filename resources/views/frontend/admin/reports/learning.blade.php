@@ -322,10 +322,14 @@
             <div class="filter-input-wrap">
                <i class="fa-solid fa-building filter-icon"></i>
                <select name="department_id" class="filter-control select2-filter">
-                  <option value="all">Tất cả phòng ban</option>
-                  @foreach($departments as $dept)
-                     <option value="{{ $dept->id }}" {{ $filters['department_id'] == $dept->id ? 'selected' : '' }}>
-                        {{ $dept->name }}
+                  <option value="all">Tất cả đơn vị / phòng ban</option>
+                  @foreach($departments as $deptKey => $deptVal)
+                     @php
+                        $dId = is_object($deptVal) ? $deptVal->id : $deptKey;
+                        $dName = is_object($deptVal) ? $deptVal->name : $deptVal;
+                     @endphp
+                     <option value="{{ $dId }}" {{ (string)$filters['department_id'] === (string)$dId ? 'selected' : '' }}>
+                        {{ $dName }}
                      </option>
                   @endforeach
                </select>
@@ -420,6 +424,7 @@
                   <th class="th-user-info text-center">Mã NV</th>
                   <th class="th-user-info">Họ tên</th>
                   <th class="th-user-info">Chức danh</th>
+                  <th class="th-user-info">Công ty</th>
                   <th class="th-user-info">Phòng ban</th>
                   <th class="th-user-info">Email</th>
 
@@ -429,6 +434,8 @@
                   <th class="th-course-info text-center">TG học</th>
                   <th class="th-course-info text-center">TT học</th>
                   <th class="th-course-info text-center">Lần thi</th>
+                  <th class="th-course-info text-center">Ngày thi</th>
+                  <th class="th-course-info text-center" title="Thời gian hoàn thành bài thi">TG hoàn thành</th>
                   <th class="th-course-info text-center">Điểm</th>
                   <th class="th-course-info text-center">Kết quả</th>
                </tr>
@@ -460,16 +467,25 @@
                         <span>{{ $item['job_title'] ?: '-' }}</span>
                      </td>
 
-                     <!-- 5. Phòng ban -->
+                     <!-- 5. Công ty -->
                      <td>
-                        @if(!empty($item['department']))
-                           <span class="text-primary"><i class="fa-solid fa-building me-1"></i>{{ $item['department'] }}</span>
+                        @if(!empty($item['company']) && $item['company'] !== '-')
+                           <span class="text-dark" style="white-space: nowrap;"><i class="fa-solid fa-city me-1 text-secondary" style="font-size: 11px;"></i>{{ $item['company'] }}</span>
                         @else
                            <span class="text-muted">-</span>
                         @endif
                      </td>
 
-                     <!-- 6. Email -->
+                     <!-- 6. Phòng ban -->
+                     <td>
+                        @if(!empty($item['department']) && $item['department'] !== '-')
+                           <span class="text-primary" style="white-space: nowrap;"><i class="fa-solid fa-building me-1"></i>{{ $item['department'] }}</span>
+                        @else
+                           <span class="text-muted">-</span>
+                        @endif
+                     </td>
+
+                     <!-- 7. Email -->
                      <td>
                         <span class="text-muted"><i class="fa-regular fa-envelope me-1 text-secondary"></i>{{ $item['email'] }}</span>
                      </td>
@@ -509,7 +525,25 @@
                         <span class="text-dark">{{ $item['attempts_count'] ?: 0 }}</span>
                      </td>
 
-                     <!-- 12. Điểm -->
+                     <!-- 12. Ngày thi -->
+                     <td class="text-center">
+                        @if(!empty($item['test_date']) && $item['test_date'] !== '-')
+                           <span class="text-secondary" style="white-space: nowrap;">{{ $item['test_date'] }}</span>
+                        @else
+                           <span class="text-muted">-</span>
+                        @endif
+                     </td>
+
+                     <!-- 13. Thời gian hoàn thành bài thi -->
+                     <td class="text-center">
+                        @if(!empty($item['test_duration']) && $item['test_duration'] !== '-')
+                           <span class="text-secondary" style="white-space: nowrap;"><i class="fa-regular fa-stopwatch me-1 text-muted"></i>{{ $item['test_duration'] }}</span>
+                        @else
+                           <span class="text-muted">-</span>
+                        @endif
+                     </td>
+
+                     <!-- 14. Điểm -->
                      <td class="text-center">
                         @if($item['score'] !== '-' && $item['score'] !== null && $item['score'] !== '')
                            <span class="fs-13 {{ $item['result'] === 'Đạt' ? 'text-success' : ($item['result'] === 'Không đạt' ? 'text-danger' : 'text-dark') }}">

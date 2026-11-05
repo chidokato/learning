@@ -32,10 +32,17 @@ class CourseLearningController extends Controller
         }
         $clientCompletedSlides = is_array($rawSlides) ? array_map('intval', $rawSlides) : [];
 
-        if (auth()->check()) {
-            $userId = auth()->id();
+        if (! auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'logged_in' => false,
+                'message' => 'Vui lòng đăng nhập để lưu tiến trình học tập.',
+            ], 401);
+        }
 
-            $history = UserCourseHistory::firstOrCreate(
+        $userId = auth()->id();
+
+        $history = UserCourseHistory::firstOrCreate(
                 ['user_id' => $userId, 'post_id' => $post->id],
                 [
                     'last_learned_at' => now(),
@@ -123,78 +130,6 @@ class CourseLearningController extends Controller
                 'current_page' => $history->current_page,
                 'total_pages' => $history->total_pages,
                 'completed' => (bool) $history->completed_at,
-            ]);
-        }
-
-        // Người dùng chưa đăng nhập (Khách) -> Lưu tạm vào session
-        $sessionKey = "guest_learning_{$post->id}";
-        $data = session()->get($sessionKey, [
-            'study_time_seconds' => 0,
-            'current_page' => 1,
-            'total_pages' => $totalPages,
-            'completed_slides' => [],
-            'progress_percent' => 0,
-            'completed_at' => null,
-        ]);
-
-        $data['study_time_seconds'] = ((int) ($data['study_time_seconds'] ?? 0)) + $activeSeconds;
-        $data['current_page'] = $currentPage;
-        if ($pdfReady && $totalPages > 0) {
-            $data['total_pages'] = $totalPages;
-        } elseif ($totalPages > 1) {
-            $data['total_pages'] = $totalPages;
-        }
-
-        if (!empty($data['total_pages']) && $data['current_page'] > $data['total_pages']) {
-            $data['current_page'] = $data['total_pages'];
-        }
-
-        $guestExisting = is_array($data['completed_slides'] ?? null) ? $data['completed_slides'] : [];
-        $guestMerged = array_values(array_unique(array_filter(
-            array_merge($guestExisting, $clientCompletedSlides),
-            fn ($p) => $p >= 1 && ($data['total_pages'] <= 0 || $p <= $data['total_pages'])
-        )));
-        sort($guestMerged);
-        $data['completed_slides'] = $guestMerged;
-
-        $completedSlidesCount = count($guestMerged);
-        $minRequiredSeconds = $data['total_pages'] * 5;
-        $isAllSlidesRead = ($data['total_pages'] > 0 && (
-            $completedSlidesCount >= $data['total_pages'] ||
-            ($currentPage >= $data['total_pages'] && $completedSlidesCount >= ($data['total_pages'] - 1))
-        ));
-        $isSufficientTime = ($data['study_time_seconds'] >= $minRequiredSeconds);
-        $calculatedPercent = $data['total_pages'] > 0
-            ? (int) round(($completedSlidesCount / $data['total_pages'] * 100))
-            : 0;
-
-        if ($isAllSlidesRead) {
-            $data['progress_percent'] = 100;
-            $data['current_page'] = $data['total_pages'];
-            $data['completed_at'] = now()->toIso8601String();
-            if ($data['study_time_seconds'] < $minRequiredSeconds) {
-                $data['study_time_seconds'] = $minRequiredSeconds;
-            }
-        } else {
-            $data['progress_percent'] = min(99, $calculatedPercent);
-            $data['completed_at'] = null;
-        }
-
-        session()->put($sessionKey, $data);
-
-        return response()->json([
-            'success' => true,
-            'logged_in' => false,
-            'study_time_seconds' => $data['study_time_seconds'],
-            'progress_percent' => $data['progress_percent'],
-            'completed_slides' => $guestMerged,
-            'completed_count' => $completedSlidesCount,
-            'min_required_seconds' => $minRequiredSeconds,
-            'is_all_slides_read' => $isAllSlidesRead,
-            'is_sufficient_time' => $isSufficientTime,
-            'current_page' => $data['current_page'],
-            'total_pages' => $data['total_pages'],
-            'completed' => ($data['progress_percent'] >= 100),
         ]);
     }
 }

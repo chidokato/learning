@@ -1192,7 +1192,7 @@
       const REQUIRED_SLIDE_SECONDS = 5; // Yêu cầu tối thiểu 5s cho mỗi slide
       let slideActiveSeconds = 0;
       let slideCountdown = REQUIRED_SLIDE_SECONDS;
-      let hasCelebratedCompletion = {{ ($userHistory->completed_at || ($userHistory->progress_percent ?? 0) >= 100) ? 'true' : 'false' }};
+      let hasCelebratedCompletion = {{ (!empty($userHistory->completed_at) || ($userHistory->progress_percent ?? 0) >= 100) ? 'true' : 'false' }};
       let currentProgressPercent = {{ (int) ($userHistory->progress_percent ?? 0) }};
 
       const pdfUrl = @json($post->pdf_url);

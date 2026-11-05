@@ -96,6 +96,28 @@ class Department extends Model
     }
 
     /**
+     * Lấy phòng ban/đơn vị gốc cao nhất trong cây (thường là Công ty)
+     */
+    public function getRootDepartment(): self
+    {
+        $current = $this;
+        $visited = [];
+        while ($current->parent && !isset($visited[$current->id])) {
+            $visited[$current->id] = true;
+            $current = $current->parent;
+        }
+        return $current;
+    }
+
+    /**
+     * Lấy tên Công ty quản lý (đơn vị gốc)
+     */
+    public function getCompanyNameAttribute(): string
+    {
+        return $this->getRootDepartment()->name;
+    }
+
+    /**
      * Get tree options formatted for select dropdowns.
      */
     public static function getTreeOptions(?int $excludeId = null): array
