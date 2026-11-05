@@ -22,7 +22,7 @@
                     <i class="ri-building-line align-bottom me-1"></i> Quản lý phòng ban
                 </a>
                 <a href="{{ route('backend.users.create') }}" class="btn btn-primary">
-                    <i class="ri-user-add-line align-bottom me-1"></i> Thêm user
+                    <i class="ri-user-add-line align-bottom me-1"></i> Thêm người dùng
                 </a>
             </div>
         </div>
