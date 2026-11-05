@@ -136,6 +136,25 @@
          font-weight: 700 !important;
       }
 
+      /* Bắt buộc toàn bộ các ô trong bảng không được xuống dòng */
+      .report-table {
+         white-space: nowrap !important;
+      }
+      .report-table thead tr th,
+      .report-table tbody tr td {
+         white-space: nowrap !important;
+         vertical-align: middle !important;
+         padding: 8px 12px !important;
+         font-size: 13px !important;
+      }
+      .report-table tbody tr {
+         height: 42px !important;
+      }
+      .report-table td > span,
+      .report-table td > div {
+         white-space: nowrap !important;
+      }
+
       /* Tùy chỉnh màu header bảng giống hệt ảnh mẫu Excel của khách */
       .report-table thead tr th.th-user-info {
          background: #fff8e1 !important;
@@ -148,83 +167,39 @@
          border-bottom: 2px solid #b7dfb9 !important;
       }
       
-      .badge-status-completed {
-         background: #d1e7dd;
-         color: #0f5132;
-         border: 1px solid #badbcc;
-         font-weight: 600;
-         padding: 4px 9px;
-         border-radius: 6px;
-         font-size: 12px;
+      /* Màu chữ trạng thái gọn gàng, không dùng khung viền hay background */
+      .text-completed {
+         color: #16a34a !important;
+         font-weight: 700 !important;
          display: inline-flex;
          align-items: center;
-         gap: 4px;
+         white-space: nowrap !important;
       }
-      .badge-status-in-progress {
-         background: #fff3cd;
-         color: #664d03;
-         border: 1px solid #ffecb5;
-         font-weight: 600;
-         padding: 4px 9px;
-         border-radius: 6px;
-         font-size: 12px;
+      .text-in-progress {
+         color: #d97706 !important;
+         font-weight: 700 !important;
          display: inline-flex;
          align-items: center;
-         gap: 4px;
+         white-space: nowrap !important;
       }
-      .badge-attempt-tag {
-         background: #e0f2fe;
-         color: #0369a1;
-         border: 1px solid #bae6fd;
-         font-weight: 700;
-         padding: 3px 8px;
-         border-radius: 6px;
-         font-size: 11.5px;
-         display: inline-block;
+      .text-attempt {
+         color: #0284c7 !important;
+         font-weight: 700 !important;
+         white-space: nowrap !important;
       }
-      .badge-result-passed {
-         background: #dcfce7;
-         color: #15803d;
-         border: 1px solid #bbf7d0;
-         font-weight: 700;
-         padding: 4px 10px;
-         border-radius: 6px;
-         font-size: 12px;
+      .text-passed {
+         color: #16a34a !important;
+         font-weight: 700 !important;
          display: inline-flex;
          align-items: center;
-         gap: 4px;
+         white-space: nowrap !important;
       }
-      .badge-result-failed {
-         background: #fee2e2;
-         color: #b91c1c;
-         border: 1px solid #fecaca;
-         font-weight: 700;
-         padding: 4px 10px;
-         border-radius: 6px;
-         font-size: 12px;
+      .text-failed {
+         color: #dc2626 !important;
+         font-weight: 700 !important;
          display: inline-flex;
          align-items: center;
-         gap: 4px;
-      }
-      .badge-result-none {
-         background: #f1f5f9;
-         color: #64748b;
-         border: 1px solid #e2e8f0;
-         font-weight: 500;
-         padding: 4px 10px;
-         border-radius: 6px;
-         font-size: 12px;
-      }
-      .code-pill {
-         font-family: monospace;
-         background: #f8fafc;
-         border: 1px solid #cbd5e1;
-         color: #334155;
-         padding: 2px 7px;
-         border-radius: 5px;
-         font-size: 12px;
-         font-weight: 600;
-         display: inline-block;
+         white-space: nowrap !important;
       }
    </style>
 @endpush
@@ -311,7 +286,7 @@
          <div class="col-lg-3 col-md-6 col-12">
             <div class="filter-input-wrap">
                <i class="fa-solid fa-book-open filter-icon"></i>
-               <select name="course_id" class="filter-control filter-select" onchange="document.getElementById('learningReportFilterForm').submit();">
+               <select name="course_id" class="filter-control select2-filter">
                   <option value="all">Tất cả khóa học</option>
                   @foreach($courses as $c)
                      <option value="{{ $c->id }}" {{ $filters['course_id'] == $c->id ? 'selected' : '' }}>
@@ -326,7 +301,7 @@
          <div class="col-lg-2 col-md-4 col-6">
             <div class="filter-input-wrap">
                <i class="fa-solid fa-building filter-icon"></i>
-               <select name="department_id" class="filter-control filter-select" onchange="document.getElementById('learningReportFilterForm').submit();">
+               <select name="department_id" class="filter-control select2-filter">
                   <option value="all">Tất cả phòng ban</option>
                   @foreach($departments as $dept)
                      <option value="{{ $dept->id }}" {{ $filters['department_id'] == $dept->id ? 'selected' : '' }}>
@@ -341,7 +316,7 @@
          <div class="col-lg-2 col-md-4 col-6">
             <div class="filter-input-wrap">
                <i class="fa-solid fa-book-reader filter-icon"></i>
-               <select name="learning_status" class="filter-control filter-select" onchange="document.getElementById('learningReportFilterForm').submit();">
+               <select name="learning_status" class="filter-control select2-filter">
                   <option value="all" {{ $filters['learning_status'] == 'all' ? 'selected' : '' }}>Tất cả tình trạng học</option>
                   <option value="completed" {{ $filters['learning_status'] == 'completed' ? 'selected' : '' }}>Hoàn thành</option>
                   <option value="in_progress" {{ $filters['learning_status'] == 'in_progress' ? 'selected' : '' }}>Chưa hoàn thành</option>
@@ -353,7 +328,7 @@
          <div class="col-lg-2 col-md-4 col-6">
             <div class="filter-input-wrap">
                <i class="fa-solid fa-square-poll-vertical filter-icon"></i>
-               <select name="test_result" class="filter-control filter-select" onchange="document.getElementById('learningReportFilterForm').submit();">
+               <select name="test_result" class="filter-control select2-filter">
                   <option value="all" {{ $filters['test_result'] == 'all' ? 'selected' : '' }}>Tất cả kết quả thi</option>
                   <option value="passed" {{ $filters['test_result'] == 'passed' ? 'selected' : '' }}>Đạt</option>
                   <option value="failed" {{ $filters['test_result'] == 'failed' ? 'selected' : '' }}>Không đạt</option>
@@ -366,7 +341,7 @@
          <div class="col-lg-3 col-md-6 col-12 mt-2">
             <div class="filter-input-wrap">
                <i class="fa-solid fa-layer-group filter-icon"></i>
-               <select name="view_mode" class="filter-control filter-select" onchange="document.getElementById('learningReportFilterForm').submit();">
+               <select name="view_mode" class="filter-control select2-filter">
                   <option value="all_attempts" {{ $filters['view_mode'] == 'all_attempts' ? 'selected' : '' }}>Hiển thị tất cả lần thi (Chi tiết)</option>
                   <option value="best_attempt" {{ $filters['view_mode'] == 'best_attempt' ? 'selected' : '' }}>Chỉ lấy lần điểm cao nhất</option>
                   <option value="latest_attempt" {{ $filters['view_mode'] == 'latest_attempt' ? 'selected' : '' }}>Chỉ lấy lần thi mới nhất</option>
@@ -403,7 +378,7 @@
          <table class="table report-table align-middle">
             <thead>
                <tr>
-                  <th class="text-center" style="width: 45px;">#</th>
+                  <th class="text-center" style="width: 40px;">#</th>
                   <!-- Cột C -> G: Nhóm thông tin nhân viên (Màu vàng nhạt) -->
                   <th class="th-user-info text-center">Mã NV</th>
                   <th class="th-user-info">Họ tên</th>
@@ -412,13 +387,13 @@
                   <th class="th-user-info">Email</th>
 
                   <!-- Cột H -> O: Nhóm thông tin khóa học & bài thi (Màu xanh lá nhạt) -->
-                  <th class="th-course-info text-center">Mã khóa học</th>
-                  <th class="th-course-info" style="min-width: 220px;">Tên khóa học</th>
-                  <th class="th-course-info text-center">Thời gian học</th>
-                  <th class="th-course-info text-center">Tình trạng học</th>
-                  <th class="th-course-info text-center">Số lần thi</th>
-                  <th class="th-course-info text-center">Tình trạng thi</th>
-                  <th class="th-course-info text-center">Điểm thi</th>
+                  <th class="th-course-info text-center">Mã KH</th>
+                  <th class="th-course-info">Tên khóa học</th>
+                  <th class="th-course-info text-center">TG học</th>
+                  <th class="th-course-info text-center">TT học</th>
+                  <th class="th-course-info text-center">Lần thi</th>
+                  <th class="th-course-info text-center">TT thi</th>
+                  <th class="th-course-info text-center">Điểm</th>
                   <th class="th-course-info text-center">Kết quả</th>
                </tr>
             </thead>
@@ -433,7 +408,7 @@
                      <!-- 2. Mã NV -->
                      <td class="text-center">
                         @if(!empty($item['employee_code']))
-                           <span class="code-pill">{{ $item['employee_code'] }}</span>
+                           <span class="font-monospace fw-semibold text-secondary">{{ $item['employee_code'] }}</span>
                         @else
                            <span class="text-muted">-</span>
                         @endif
@@ -441,27 +416,18 @@
 
                      <!-- 3. Họ tên -->
                      <td>
-                        <div class="d-flex align-items-center gap-2">
-                           <div class="user-avatar-circle" style="width: 32px; height: 32px; font-size: 13px;">
-                              @if(!empty($item['user_avatar']))
-                                 <img src="{{ \Illuminate\Support\Str::startsWith($item['user_avatar'], ['http://', 'https://']) ? $item['user_avatar'] : asset($item['user_avatar']) }}" alt="{{ $item['name'] }}">
-                              @else
-                                 {{ mb_strtoupper(mb_substr($item['name'] ?? 'N', 0, 1, 'UTF-8'), 'UTF-8') }}
-                              @endif
-                           </div>
-                           <div class="fw-bold text-dark">{{ $item['name'] }}</div>
-                        </div>
+                        <span class="fw-bold text-dark">{{ $item['name'] }}</span>
                      </td>
 
                      <!-- 4. Chức danh -->
                      <td>
-                        {{ $item['job_title'] ?: '-' }}
+                        <span>{{ $item['job_title'] ?: '-' }}</span>
                      </td>
 
                      <!-- 5. Phòng ban -->
                      <td>
                         @if(!empty($item['department']))
-                           <span class="badge bg-light text-primary border"><i class="fa-solid fa-building me-1"></i>{{ $item['department'] }}</span>
+                           <span class="text-primary fw-medium"><i class="fa-solid fa-building me-1"></i>{{ $item['department'] }}</span>
                         @else
                            <span class="text-muted">-</span>
                         @endif
@@ -469,69 +435,59 @@
 
                      <!-- 6. Email -->
                      <td>
-                        <span class="text-muted fs-13"><i class="fa-regular fa-envelope me-1"></i>{{ $item['email'] }}</span>
+                        <span class="text-muted"><i class="fa-regular fa-envelope me-1 text-secondary"></i>{{ $item['email'] }}</span>
                      </td>
 
-                     <!-- 7. Mã khóa học -->
+                     <!-- 7. Mã KH -->
                      <td class="text-center">
-                        <span class="code-pill text-primary border-primary" style="background: rgba(13,110,253,0.05);">{{ $item['course_code'] }}</span>
+                        <span class="fw-bold text-primary font-monospace">{{ $item['course_code'] }}</span>
                      </td>
 
                      <!-- 8. Tên khóa học -->
                      <td>
-                        <div class="fw-semibold text-dark" title="{{ $item['course_title'] }}">
-                           {{ $item['course_title'] }}
-                        </div>
+                        <span class="fw-semibold text-dark" title="{{ $item['course_title'] }}">{{ $item['course_title'] }}</span>
                      </td>
 
-                     <!-- 9. Thời gian học -->
+                     <!-- 9. TG học -->
                      <td class="text-center">
-                        <span class="fw-semibold text-secondary fs-13">
+                        <span class="fw-semibold text-secondary">
                            <i class="fa-regular fa-clock me-1 text-muted"></i>{{ $item['study_time'] }}
                         </span>
                      </td>
 
-                     <!-- 10. Tình trạng học (Hoàn thành / Chưa hoàn thành) -->
+                     <!-- 10. TT học -->
                      <td class="text-center">
                         @if($item['learning_status'] === 'Hoàn thành')
-                           <span class="badge-status-completed">
-                              <i class="fa-solid fa-circle-check"></i> Hoàn thành
+                           <span class="text-completed" title="Hoàn thành khóa học">
+                              <i class="fa-solid fa-check me-1"></i>Hoàn thành
                            </span>
                         @else
-                           <span class="badge-status-in-progress">
-                              <i class="fa-solid fa-spinner"></i> Chưa hoàn thành
+                           <span class="text-in-progress" title="Chưa hoàn thành khóa học">
+                              <i class="fa-solid fa-clock me-1"></i>Chưa xong
                            </span>
                         @endif
                      </td>
 
-                     <!-- 11. Số lần thi -->
+                     <!-- 11. Lần thi -->
                      <td class="text-center">
-                        @if($item['attempts_count'] > 0)
-                           <span class="badge bg-light text-dark border fw-bold px-2 py-1">
-                              {{ $item['attempts_count'] }}
-                           </span>
-                        @else
-                           <span class="text-muted">0</span>
-                        @endif
+                        <span class="fw-bold text-dark">{{ $item['attempts_count'] ?: 0 }}</span>
                      </td>
 
-                     <!-- 12. Tình trạng thi (Lần 1, Lần 2, Lần 3, Chưa thi) -->
+                     <!-- 12. TT thi -->
                      <td class="text-center">
                         @if(str_starts_with($item['attempt_status'], 'Lần'))
-                           <span class="badge-attempt-tag">
-                              {{ $item['attempt_status'] }}
-                           </span>
+                           <span class="text-attempt">{{ $item['attempt_status'] }}</span>
                         @elseif($item['attempt_status'] === 'Chưa thi')
-                           <span class="badge bg-light text-muted border">Chưa thi</span>
+                           <span class="text-muted">Chưa thi</span>
                         @else
-                           <span class="text-muted fs-12">{{ $item['attempt_status'] }}</span>
+                           <span class="text-muted">-</span>
                         @endif
                      </td>
 
-                     <!-- 13. Điểm thi -->
+                     <!-- 13. Điểm -->
                      <td class="text-center">
                         @if($item['score'] !== '-' && is_numeric($item['score']))
-                           <span class="fw-bold fs-15 {{ $item['result'] === 'Đạt' ? 'text-success' : 'text-danger' }}">
+                           <span class="fw-bold fs-14 {{ $item['result'] === 'Đạt' ? 'text-success' : 'text-danger' }}">
                               {{ $item['score'] }}
                            </span>
                         @else
@@ -539,20 +495,18 @@
                         @endif
                      </td>
 
-                     <!-- 14. Kết quả (Đạt / Không đạt / Chưa thi) -->
+                     <!-- 14. Kết quả -->
                      <td class="text-center">
                         @if($item['result'] === 'Đạt')
-                           <span class="badge-result-passed">
-                              <i class="fa-solid fa-check"></i> Đạt
+                           <span class="text-passed">
+                              <i class="fa-solid fa-check me-1"></i>Đạt
                            </span>
                         @elseif($item['result'] === 'Không đạt')
-                           <span class="badge-result-failed">
-                              <i class="fa-solid fa-xmark"></i> Không đạt
+                           <span class="text-failed" title="Không đạt">
+                              <i class="fa-solid fa-xmark me-1"></i>K.Đạt
                            </span>
                         @else
-                           <span class="badge-result-none">
-                              {{ $item['result'] }}
-                           </span>
+                           <span class="text-muted">{{ $item['result'] }}</span>
                         @endif
                      </td>
                   </tr>
@@ -586,16 +540,41 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('admin-assets/libs/select2/select2.min.js') }}"></script>
 <script>
-   document.addEventListener('DOMContentLoaded', function() {
-      // Tắt bỏ plugin niceSelect trên các ô chọn của trang báo cáo này
-      if (typeof jQuery !== 'undefined' && jQuery.fn.niceSelect) {
-         jQuery('.report-filter-card select').each(function() {
-            if (jQuery(this).next('.nice-select').length) {
-               jQuery(this).niceSelect('destroy');
-            }
+   $(document).ready(function() {
+      // 1. Phá bỏ niceSelect trên các ô chọn của trang báo cáo
+      if (typeof $.fn.niceSelect !== 'undefined') {
+         $('.report-filter-card select').each(function() {
+            try {
+               $(this).niceSelect('destroy');
+            } catch (err) {}
+            $(this).next('.nice-select').remove();
          });
       }
+
+      // 2. Khởi tạo Select2 cho toàn bộ các ô chọn trong bộ lọc
+      $('.select2-filter').each(function() {
+         var $sel = $(this);
+         var name = $sel.attr('name');
+         var isSmallList = (name === 'learning_status' || name === 'test_result' || name === 'view_mode');
+
+         $sel.select2({
+            width: '100%',
+            dropdownAutoWidth: false,
+            minimumResultsForSearch: isSmallList ? Infinity : 0,
+            language: {
+               noResults: function() {
+                  return 'Không tìm thấy kết quả';
+               }
+            }
+         });
+      });
+
+      // 3. Khi người dùng chọn một mục trong Select2, tự động submit form để lọc
+      $('.select2-filter').on('change', function() {
+         $('#learningReportFilterForm').submit();
+      });
    });
 </script>
 @endpush

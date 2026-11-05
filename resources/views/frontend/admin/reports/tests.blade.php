@@ -15,6 +15,114 @@
 
 @push('styles')
    <link rel="stylesheet" href="{{ asset('assets/css/test-report.css') }}?v={{ filemtime(public_path('assets/css/test-report.css')) }}">
+   <link rel="stylesheet" href="{{ asset('admin-assets/libs/select2/select2.min.css') }}">
+   <style>
+      select.select2-hidden-accessible {
+         display: none !important;
+         position: absolute !important;
+         visibility: hidden !important;
+      }
+      .filter-input-wrap .select2-container {
+         width: 100% !important;
+         display: block !important;
+      }
+      .filter-input-wrap .select2-container .select2-selection--single {
+         height: 42px !important;
+         background-color: #f8fafc !important;
+         border: 1.5px solid #e2e8f0 !important;
+         border-radius: 8px !important;
+         padding-left: 38px !important;
+         padding-right: 32px !important;
+         display: flex !important;
+         align-items: center !important;
+         transition: all 0.2s ease !important;
+      }
+      .filter-input-wrap .select2-container .select2-selection--single:hover {
+         background-color: #ffffff !important;
+         border-color: #cbd5e1 !important;
+      }
+      .filter-input-wrap .select2-container--open .select2-selection--single,
+      .filter-input-wrap .select2-container--focus .select2-selection--single {
+         background-color: #ffffff !important;
+         border-color: #03594e !important;
+         outline: none !important;
+         box-shadow: 0 0 0 3px rgba(3, 89, 78, 0.12) !important;
+      }
+      .filter-input-wrap .select2-container .select2-selection__rendered {
+         padding-left: 0 !important;
+         padding-right: 0 !important;
+         font-size: 13.5px !important;
+         font-weight: 500 !important;
+         color: #1e293b !important;
+         line-height: normal !important;
+         overflow: hidden !important;
+         text-overflow: ellipsis !important;
+         white-space: nowrap !important;
+         width: 100% !important;
+         text-align: left !important;
+      }
+      .filter-input-wrap .select2-container .select2-selection__arrow {
+         height: 40px !important;
+         right: 12px !important;
+         top: 50% !important;
+         transform: translateY(-50%) !important;
+      }
+      .filter-input-wrap .select2-container .select2-selection__arrow b {
+         border-color: #64748b transparent transparent transparent !important;
+         border-width: 5px 4px 0 4px !important;
+      }
+      .filter-input-wrap .select2-container--open .select2-selection__arrow b {
+         border-color: transparent transparent #03594e transparent !important;
+         border-width: 0 4px 5px 4px !important;
+      }
+      .select2-dropdown {
+         border: 1.5px solid #03594e !important;
+         border-radius: 8px !important;
+         box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12) !important;
+         z-index: 99999 !important;
+         overflow: hidden !important;
+         background: #ffffff !important;
+      }
+      .select2-search--dropdown {
+         padding: 8px 10px !important;
+         background: #f8fafc !important;
+         border-bottom: 1px solid #e2e8f0 !important;
+      }
+      .select2-search--dropdown .select2-search__field {
+         height: 38px !important;
+         border: 1.5px solid #cbd5e1 !important;
+         border-radius: 6px !important;
+         padding: 0 12px !important;
+         font-size: 13px !important;
+         outline: none !important;
+         background: #ffffff !important;
+      }
+      .select2-search--dropdown .select2-search__field:focus {
+         border-color: #03594e !important;
+         box-shadow: 0 0 0 2px rgba(3, 89, 78, 0.1) !important;
+      }
+      .select2-results__options {
+         max-height: 280px !important;
+         padding: 4px !important;
+      }
+      .select2-results__option {
+         font-size: 13.5px !important;
+         padding: 9px 12px !important;
+         border-radius: 6px !important;
+         margin-bottom: 2px !important;
+         color: #1e293b !important;
+         line-height: 1.35 !important;
+      }
+      .select2-results__option--highlighted[aria-selected] {
+         background-color: #03594e !important;
+         color: #ffffff !important;
+      }
+      .select2-results__option[aria-selected="true"] {
+         background-color: rgba(3, 89, 78, 0.08) !important;
+         color: #03594e !important;
+         font-weight: 700 !important;
+      }
+   </style>
 @endpush
 
 @section('content')
@@ -99,7 +207,7 @@
          <div class="col-lg-3 col-md-6 col-12">
             <div class="filter-input-wrap">
                <i class="fa-solid fa-clipboard-list filter-icon"></i>
-               <select name="test_id" class="filter-control filter-select" onchange="document.getElementById('reportFilterForm').submit();">
+               <select name="test_id" class="filter-control select2-filter">
                   <option value="all">Tất cả bài kiểm tra</option>
                   @foreach($allTests as $tp)
                      <option value="{{ $tp->id }}" {{ $testId == $tp->id ? 'selected' : '' }}>
@@ -114,7 +222,7 @@
          <div class="col-lg-2 col-md-4 col-6">
             <div class="filter-input-wrap">
                <i class="fa-solid fa-building-user filter-icon"></i>
-               <select name="department_id" class="filter-control filter-select" onchange="document.getElementById('reportFilterForm').submit();">
+               <select name="department_id" class="filter-control select2-filter">
                   <option value="all">Tất cả phòng ban</option>
                   @foreach($departments as $dept)
                      <option value="{{ $dept->id }}" {{ $departmentId == $dept->id ? 'selected' : '' }}>
@@ -129,7 +237,7 @@
          <div class="col-lg-2 col-md-4 col-6">
             <div class="filter-input-wrap">
                <i class="fa-solid fa-filter filter-icon"></i>
-               <select name="status" class="filter-control filter-select" onchange="document.getElementById('reportFilterForm').submit();">
+               <select name="status" class="filter-control select2-filter">
                   <option value="all" {{ $status == 'all' ? 'selected' : '' }}>Tất cả kết quả</option>
                   <option value="passed" {{ $status == 'passed' ? 'selected' : '' }}>Đã đạt</option>
                   <option value="failed" {{ $status == 'failed' ? 'selected' : '' }}>Chưa đạt</option>
@@ -430,8 +538,38 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('admin-assets/libs/select2/select2.min.js') }}"></script>
 <script>
    $(document).ready(function() {
+      // 1. Phá bỏ niceSelect trên các ô chọn của trang báo cáo
+      if (typeof $.fn.niceSelect !== 'undefined') {
+         $('.report-filter-card select').each(function() {
+            try { $(this).niceSelect('destroy'); } catch (err) {}
+            $(this).next('.nice-select').remove();
+         });
+      }
+
+      // 2. Khởi tạo Select2 cho các ô chọn trong bộ lọc
+      $('.select2-filter').each(function() {
+         var $sel = $(this);
+         var isSmall = $sel.attr('name') === 'status';
+
+         $sel.select2({
+            width: '100%',
+            dropdownAutoWidth: false,
+            minimumResultsForSearch: isSmall ? Infinity : 0,
+            language: {
+               noResults: function() {
+                  return 'Không tìm thấy kết quả';
+               }
+            }
+         });
+      });
+
+      // 3. Tự động lọc khi chọn mục mới trên Select2
+      $('.select2-filter').on('change', function() {
+         $('#reportFilterForm').submit();
+      });
       // 1. Tắt bỏ niceSelect trên các ô chọn của trang báo cáo
       if ($.fn.niceSelect) {
          $('.filter-select, select').niceSelect('destroy');
