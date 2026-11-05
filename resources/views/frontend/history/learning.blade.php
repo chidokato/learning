@@ -40,7 +40,12 @@
                            <span class="badge bg-white text-danger border">
                               <i class="far fa-stopwatch me-1"></i> Thời gian học: <strong>{{ $item->formatted_study_time }}</strong>
                            </span>
-                           @if($item->completed_at && ($item->progress_percent ?? 0) >= 100)
+                           @php
+                              $isDone = $item->is_completed;
+                              $effectivePercent = $item->effective_progress_percent;
+                              $effectivePage = $isDone ? ($item->total_pages ?: $item->current_page) : min($item->current_page ?? 1, $item->total_pages ?: 1);
+                           @endphp
+                           @if($isDone)
                               <span class="badge bg-success text-white">
                                  <i class="far fa-check-circle me-1"></i> Đã hoàn thành
                               </span>
@@ -50,17 +55,23 @@
                         <div style="max-width: 360px;">
                            <div class="d-flex justify-content-between align-items-center mb-1" style="font-size: 11.5px;">
                               <span class="fw-semibold text-secondary">
-                                 Tiến độ: <strong class="text-success">{{ $item->progress_percent ?? 0 }}%</strong>
+                                 Tiến độ: <strong class="text-success">{{ $effectivePercent }}%</strong>
                               </span>
-                              <span class="text-muted">
-                                 Đang học slide: {{ $item->current_page ?? 1 }}/{{ $item->total_pages ?: '--' }}
-                              </span>
+                              @if($isDone)
+                                 <span class="text-success fw-semibold">
+                                    <i class="far fa-check me-1"></i> Đã học {{ $effectivePage }}/{{ $item->total_pages ?: $effectivePage }} slide
+                                 </span>
+                              @else
+                                 <span class="text-muted">
+                                    Đang học slide: {{ $effectivePage }}/{{ $item->total_pages ?: '--' }}
+                                 </span>
+                              @endif
                            </div>
                            <div class="progress" style="height: 6px; border-radius: 999px; background-color: #e2e8f0;">
                               <div class="progress-bar" 
-                                   style="width: {{ $item->progress_percent ?? 0 }}%; background-color: {{ ($item->progress_percent ?? 0) >= 100 ? '#10b981' : '#03594e' }}; border-radius: 999px;" 
+                                   style="width: {{ $effectivePercent }}%; background-color: {{ $effectivePercent >= 100 ? '#10b981' : '#03594e' }}; border-radius: 999px;" 
                                    role="progressbar" 
-                                   aria-valuenow="{{ $item->progress_percent ?? 0 }}" 
+                                   aria-valuenow="{{ $effectivePercent }}" 
                                    aria-valuemin="0" 
                                    aria-valuemax="100"></div>
                            </div>

@@ -986,7 +986,7 @@
                                  </a>
                               @endif
 
-                              <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
+                              <a href="{{ route('frontend.tests.show', $test->id) }}{{ $itemResult ? '?retake=1' : '' }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
                                  <span>
                                     <span class="text-1">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
                                     <span class="text-2">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
@@ -1162,7 +1162,7 @@
                                  </a>
                               @endif
 
-                              <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
+                              <a href="{{ route('frontend.tests.show', $test->id) }}{{ $itemResult ? '?retake=1' : '' }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
                                  <span>
                                     <span class="text-1">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
                                     <span class="text-2">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
@@ -1294,7 +1294,7 @@
                                  </a>
                               @endif
 
-                              <a href="{{ route('frontend.tests.show', $test->id) }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
+                              <a href="{{ route('frontend.tests.show', $test->id) }}{{ $itemResult ? '?retake=1' : '' }}" class="it-btn-yellow {{ $itemResult ? 'it-btn-retake' : '' }}">
                                  <span>
                                     <span class="text-1">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>
                                     <span class="text-2">{{ $itemResult ? 'Làm lại' : 'Vào thi' }}</span>

@@ -42,6 +42,31 @@ class UserCourseHistory extends Model
     }
 
     /**
+     * Kiểm tra trạng thái hoàn thành khóa học:
+     * - Có completed_at
+     * - Hoặc progress_percent >= 100
+     * - Hoặc đã đọc đến trang cuối (current_page >= total_pages)
+     */
+    public function getIsCompletedAttribute(): bool
+    {
+        return (bool) ($this->completed_at 
+            || ($this->progress_percent ?? 0) >= 100 
+            || ($this->total_pages > 0 && ($this->current_page ?? 0) >= $this->total_pages));
+    }
+
+    /**
+     * Lấy tiến độ phần trăm hiển thị (nếu đã hoàn thành thì luôn là 100%)
+     */
+    public function getEffectiveProgressPercentAttribute(): int
+    {
+        if ($this->is_completed) {
+            return 100;
+        }
+
+        return (int) ($this->progress_percent ?? 0);
+    }
+
+    /**
      * Định dạng thời gian học thân thiện (ví dụ: "1 giờ 25 phút", "45 phút", "30 giây")
      */
     public function getFormattedStudyTimeAttribute(): string

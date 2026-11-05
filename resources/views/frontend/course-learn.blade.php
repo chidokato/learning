@@ -1054,7 +1054,7 @@
                                  </div>
                               @endif
 
-                              <a href="{{ route('frontend.tests.show', $cTest->id) }}" class="btn text-white w-100 fw-bold py-2 shadow-sm" style="background: linear-gradient(135deg, #03594e 0%, #057d6e 100%); border-radius: 8px; font-size: 13.5px;">
+                              <a href="{{ route('frontend.tests.show', $cTest->id) }}{{ $res ? '?retake=1' : '' }}" class="btn text-white w-100 fw-bold py-2 shadow-sm" style="background: linear-gradient(135deg, #03594e 0%, #057d6e 100%); border-radius: 8px; font-size: 13.5px;">
                                  <i class="fa-solid fa-pen-to-square me-1"></i> {{ $res ? 'Làm lại bài kiểm tra' : 'Bắt đầu làm bài test ngay' }} <i class="fa-solid fa-arrow-right ms-1"></i>
                               </a>
                            </div>
@@ -1115,7 +1115,7 @@
                                     <span>•</span>
                                     <span><i class="fa-regular fa-bullseye me-1"></i> Đạt: {{ $gTest->pass_score }}/{{ $gTest->questions_count }} câu</span>
                                  </div>
-                                 <a href="{{ route('frontend.tests.show', $gTest->id) }}" class="btn btn-sm btn-outline-primary px-3 py-1" style="font-size: 12px; font-weight: 600; border-radius: 6px;">
+                                 <a href="{{ route('frontend.tests.show', $gTest->id) }}{{ $gRes ? '?retake=1' : '' }}" class="btn btn-sm btn-outline-primary px-3 py-1" style="font-size: 12px; font-weight: 600; border-radius: 6px;">
                                     {{ $gRes ? 'Làm lại' : 'Vào thi' }} <i class="fa-solid fa-angle-right ms-1"></i>
                                  </a>
                               </div>
@@ -1366,6 +1366,7 @@
             active_seconds: unsavedActiveSeconds,
             current_page: currentPage,
             total_pages: totalPagesCount,
+            pdf_ready: !!pdfDoc,
             completed_slides: Array.from(completedSlides),
             progress_percent: currentProgressPercent,
             _token: csrfToken
@@ -1426,13 +1427,10 @@
          const readCount = completedSlides.size;
          const minRequiredSeconds = totalPagesCount * REQUIRED_SLIDE_SECONDS;
 
-         // 2 điều kiện hoàn thành bài học:
-         // 1. Trải qua hết tất cả các slide (mỗi slide tối thiểu 5s)
+         // Điều kiện hoàn thành bài học: Đã đọc hết tất cả các slide
          const isAllSlidesRead = (totalPagesCount > 0 && readCount >= totalPagesCount);
-         // 2. Phải học đủ tổng thời gian
-         const isSufficientTime = (totalStudySeconds >= minRequiredSeconds);
 
-         if (isAllSlidesRead && isSufficientTime) {
+         if (isAllSlidesRead) {
             currentProgressPercent = 100;
             if (!hasCelebratedCompletion) {
                hasCelebratedCompletion = true;
@@ -1454,9 +1452,6 @@
          if (progressSubtext) {
             if (currentProgressPercent >= 100) {
                progressSubtext.innerHTML = '<span class="text-success fw-bold"><i class="fa-solid fa-check me-1"></i>Đã hoàn thành</span>';
-            } else if (isAllSlidesRead && !isSufficientTime) {
-               const remainingSec = minRequiredSeconds - totalStudySeconds;
-               progressSubtext.innerHTML = `<span class="text-warning fw-semibold">Cần học thêm ${remainingSec}s</span>`;
             } else {
                progressSubtext.innerText = `Đã đọc ${readCount}/${totalPagesCount} slide`;
             }

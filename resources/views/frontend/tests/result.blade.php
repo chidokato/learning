@@ -490,7 +490,7 @@
 
             <!-- Các nút thao tác nhỏ gọn (2 dòng) -->
             <div class="d-flex flex-column gap-2 pt-2 border-top">
-               <a href="{{ route('frontend.tests.show', $test->id) }}" class="btn-result-action btn-main">
+               <a href="{{ route('frontend.tests.show', $test->id) }}?retake=1" class="btn-result-action btn-main">
                   <i class="fa-solid fa-rotate-right"></i> Làm lại bài thi
                </a>
                <div class="row g-2">

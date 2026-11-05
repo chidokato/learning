@@ -55,6 +55,21 @@ class TestController extends Controller
             return response()->json(['error' => 'Bài test không tồn tại'], 404);
         }
 
+        // Xáo trộn ngẫu nhiên danh sách câu hỏi và đáp án cho học viên
+        $shuffledQuestions = $test->questions->shuffle()->values();
+        $optionLetters = range('A', 'Z');
+
+        foreach ($shuffledQuestions as $q) {
+            $shuffledAnswers = $q->answers->shuffle()->values();
+            foreach ($shuffledAnswers as $idx => $ans) {
+                $ans->label = $optionLetters[$idx] ?? chr(65 + $idx);
+                $ans->content = preg_replace('/^[A-Da-d][\.\:\)]\s*/u', '', $ans->content);
+            }
+            $q->setRelation('answers', $shuffledAnswers);
+        }
+
+        $test->setRelation('questions', $shuffledQuestions);
+
         return response()->json($test);
     }
 
@@ -70,6 +85,9 @@ class TestController extends Controller
                 'redirect' => route('frontend.login')
             ], 401);
         }
+
+        // Xóa thứ tự xáo trộn bài thi trong session sau khi đã nộp hoặc hủy bài để lần sau xáo trộn đề mới
+        session()->forget("test_attempt_order_{$test_id}_{$user_id}");
 
         $test = Test::with(['questions.answers'])->find($test_id);
         if (!$test) {

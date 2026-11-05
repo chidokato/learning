@@ -135,11 +135,21 @@ class FrontendLearningReportController extends Controller
 
         if ($learningStatus === 'completed') {
             $historyQuery->where(function ($q) {
-                $q->whereNotNull('completed_at')->orWhere('progress_percent', '>=', 100);
+                $q->whereNotNull('completed_at')
+                  ->orWhere('progress_percent', '>=', 100)
+                  ->orWhere(function ($sub) {
+                      $sub->where('total_pages', '>', 0)
+                          ->whereRaw('current_page >= total_pages');
+                  });
             });
         } elseif ($learningStatus === 'in_progress') {
             $historyQuery->where(function ($q) {
-                $q->whereNull('completed_at')->where('progress_percent', '<', 100);
+                $q->whereNull('completed_at')
+                  ->where('progress_percent', '<', 100)
+                  ->where(function ($sub) {
+                      $sub->where('total_pages', '<=', 0)
+                          ->orWhereRaw('current_page < total_pages');
+                  });
             });
         }
 
@@ -157,7 +167,7 @@ class FrontendLearningReportController extends Controller
             $courseCode = 'KH' . str_pad($post->id, 3, '0', STR_PAD_LEFT);
             $courseTitle = $post->title;
             $studyTime = $h->formatted_study_time;
-            $isCourseCompleted = ($h->completed_at || $h->progress_percent >= 100);
+            $isCourseCompleted = ($h->completed_at || $h->progress_percent >= 100 || ($h->total_pages > 0 && $h->current_page >= $h->total_pages));
             $learningStatusText = $isCourseCompleted ? 'Hoàn thành' : 'Chưa hoàn thành';
 
             $tests = $post->tests;

@@ -201,20 +201,27 @@
 </div>
 
 <form id="test-form" autocomplete="off">
+   @php
+      $optionLetters = range('A', 'Z');
+   @endphp
    @foreach($test->questions as $index => $q)
       <div class="question-box">
          <div class="question-title">
             Câu {{ $index + 1 }}: {{ $q->content }}
          </div>
          <div class="answers-list">
-            @foreach($q->answers as $a)
+            @foreach($q->answers as $ansIndex => $a)
+               @php
+                  $displayLabel = $optionLetters[$ansIndex] ?? chr(65 + $ansIndex);
+                  $cleanContent = preg_replace('/^[A-Da-d][\.\:\)]\s*/u', '', $a->content);
+               @endphp
                <label class="answer-option">
                   @if($q->type == 'single_choice')
                      <input type="radio" name="q_{{ $q->id }}" value="{{ $a->id }}">
                   @else
                      <input type="checkbox" name="q_{{ $q->id }}[]" value="{{ $a->id }}">
                   @endif
-                  <span class="answer-text"><strong>{{ $a->label }}.</strong> {{ $a->content }}</span>
+                  <span class="answer-text"><strong>{{ $displayLabel }}.</strong> {{ $cleanContent }}</span>
                </label>
             @endforeach
          </div>
@@ -260,7 +267,7 @@
    <p id="result-subtext" class="text-muted mb-4" style="font-size: 14.5px;"></p>
    <div class="d-flex justify-content-center gap-3 flex-wrap">
       {{-- Tạm thời ẩn nút Xem kết quả: <a id="btn-view-result" href="#" class="btn px-4 py-2" style="font-weight: 700; border-radius: 8px; background: #03594e; color: #ffffff;"><i class="fa-solid fa-eye me-2"></i> Xem kết quả</a> --}}
-      <button type="button" class="btn btn-warning px-4 py-2" onclick="location.reload();" style="font-weight: 700; border-radius: 8px;">
+      <button type="button" class="btn btn-warning px-4 py-2" onclick="window.location.href = '{{ route('frontend.tests.show', $test->id) }}?retake=1';" style="font-weight: 700; border-radius: 8px;">
          <i class="far fa-redo me-2"></i> Làm lại bài
       </button>
       <a href="{{ route('frontend.history.tests') }}" class="btn btn-outline-primary px-4 py-2" style="font-weight: 600; border-radius: 8px;">
@@ -358,6 +365,13 @@
       const totalAllowedSeconds = testDurationMinutes * 60;
       const totalQuestionsCount = {{ $test->questions->count() }};
       const passScoreRequired = {{ (int)($test->pass_score ?? 0) }};
+
+      // Nếu truy cập với tham số retake hoặc reset, xóa dữ liệu làm bài cũ trong localStorage
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('retake') || urlParams.has('reset')) {
+         localStorage.removeItem(testStorageKey);
+         localStorage.removeItem(testAnswersKey);
+      }
 
       function showModal(modalId) {
          var el = document.getElementById(modalId);

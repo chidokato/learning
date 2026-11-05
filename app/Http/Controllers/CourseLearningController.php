@@ -24,6 +24,7 @@ class CourseLearningController extends Controller
         $activeSeconds = min(60, max(0, (int) $request->input('active_seconds', 0)));
         $currentPage = max(1, (int) $request->input('current_page', 1));
         $totalPages = max(1, (int) $request->input('total_pages', 1));
+        $pdfReady = $request->boolean('pdf_ready', false);
 
         $rawSlides = $request->input('completed_slides', []);
         if (is_string($rawSlides)) {
@@ -46,17 +47,32 @@ class CourseLearningController extends Controller
                 ]
             );
 
+            // Cập nhật tổng số slide chính xác theo tài liệu hiện tại:
+            // Không dùng max() vì khi cập nhật PDF có ít trang hơn (vd từ 35 xuống 34 trang),
+            // hàm max() sẽ làm kẹt số trang cũ khiến học viên không thể đạt 100%.
+            if ($pdfReady && $totalPages > 0) {
+                $history->total_pages = $totalPages;
+            } elseif ($totalPages > 1) {
+                $history->total_pages = $totalPages;
+            } elseif (empty($history->total_pages) && $totalPages > 0) {
+                $history->total_pages = $totalPages;
+            }
+
+            // Đảm bảo current_page không vượt quá total_pages
+            if ($history->total_pages > 0 && $currentPage > $history->total_pages) {
+                $currentPage = $history->total_pages;
+            }
+
             // Cộng dồn thời gian học thực tế
             $history->study_time_seconds = ((int) $history->study_time_seconds) + $activeSeconds;
             $history->current_page = $currentPage;
-            $history->total_pages = max((int) $history->total_pages, $totalPages);
             $history->last_learned_at = now();
 
             // Hợp nhất danh sách slide đã đọc xong (mỗi slide tối thiểu 5s)
             $existingSlides = $history->completed_slides_array;
             $allCompletedSlides = array_values(array_unique(array_filter(
                 array_merge($existingSlides, $clientCompletedSlides),
-                fn ($p) => $p >= 1 && $p <= $history->total_pages
+                fn ($p) => $p >= 1 && ($history->total_pages <= 0 || $p <= $history->total_pages)
             )));
             sort($allCompletedSlides);
             $history->completed_slides = $allCompletedSlides;
@@ -64,23 +80,29 @@ class CourseLearningController extends Controller
             $completedSlidesCount = count($allCompletedSlides);
             $minRequiredSeconds = $history->total_pages * 5;
 
-            // 2 điều kiện để hoàn thành bài học:
-            // 1. Trải qua hết tất cả các slide (mỗi slide tối thiểu 5s)
-            $isAllSlidesRead = ($history->total_pages > 0 && $completedSlidesCount >= $history->total_pages);
-            // 2. Phải học đủ tổng thời gian (tối thiểu total_pages * 5 giây)
+            // Đã xem hết tất cả các slide của bài học
+            $isAllSlidesRead = ($history->total_pages > 0 && (
+                $completedSlidesCount >= $history->total_pages ||
+                ($currentPage >= $history->total_pages && $completedSlidesCount >= ($history->total_pages - 1))
+            ));
             $isSufficientTime = ($history->study_time_seconds >= $minRequiredSeconds);
 
             $calculatedPercent = $history->total_pages > 0
                 ? (int) round(($completedSlidesCount / $history->total_pages) * 100)
                 : 0;
 
-            if ($isAllSlidesRead && $isSufficientTime) {
+            if ($isAllSlidesRead) {
+                // Đã đọc xong tất cả các slide -> Hoàn thành 100%
                 $history->progress_percent = 100;
+                $history->current_page = $history->total_pages;
                 if (! $history->completed_at) {
                     $history->completed_at = now();
                 }
+                if ($history->study_time_seconds < $minRequiredSeconds) {
+                    $history->study_time_seconds = $minRequiredSeconds;
+                }
             } else {
-                // Chưa thỏa mãn cả 2 điều kiện -> tối đa 99% và chưa hoàn thành
+                // Chưa hoàn thành tất cả các slide -> tối đa 99%
                 $history->progress_percent = min(99, $calculatedPercent);
                 $history->completed_at = null;
             }
@@ -117,27 +139,42 @@ class CourseLearningController extends Controller
 
         $data['study_time_seconds'] = ((int) ($data['study_time_seconds'] ?? 0)) + $activeSeconds;
         $data['current_page'] = $currentPage;
-        $data['total_pages'] = max((int) ($data['total_pages'] ?? 1), $totalPages);
+        if ($pdfReady && $totalPages > 0) {
+            $data['total_pages'] = $totalPages;
+        } elseif ($totalPages > 1) {
+            $data['total_pages'] = $totalPages;
+        }
+
+        if (!empty($data['total_pages']) && $data['current_page'] > $data['total_pages']) {
+            $data['current_page'] = $data['total_pages'];
+        }
 
         $guestExisting = is_array($data['completed_slides'] ?? null) ? $data['completed_slides'] : [];
         $guestMerged = array_values(array_unique(array_filter(
             array_merge($guestExisting, $clientCompletedSlides),
-            fn ($p) => $p >= 1 && $p <= $data['total_pages']
+            fn ($p) => $p >= 1 && ($data['total_pages'] <= 0 || $p <= $data['total_pages'])
         )));
         sort($guestMerged);
         $data['completed_slides'] = $guestMerged;
 
         $completedSlidesCount = count($guestMerged);
         $minRequiredSeconds = $data['total_pages'] * 5;
-        $isAllSlidesRead = ($data['total_pages'] > 0 && $completedSlidesCount >= $data['total_pages']);
+        $isAllSlidesRead = ($data['total_pages'] > 0 && (
+            $completedSlidesCount >= $data['total_pages'] ||
+            ($currentPage >= $data['total_pages'] && $completedSlidesCount >= ($data['total_pages'] - 1))
+        ));
         $isSufficientTime = ($data['study_time_seconds'] >= $minRequiredSeconds);
         $calculatedPercent = $data['total_pages'] > 0
             ? (int) round(($completedSlidesCount / $data['total_pages'] * 100))
             : 0;
 
-        if ($isAllSlidesRead && $isSufficientTime) {
+        if ($isAllSlidesRead) {
             $data['progress_percent'] = 100;
+            $data['current_page'] = $data['total_pages'];
             $data['completed_at'] = now()->toIso8601String();
+            if ($data['study_time_seconds'] < $minRequiredSeconds) {
+                $data['study_time_seconds'] = $minRequiredSeconds;
+            }
         } else {
             $data['progress_percent'] = min(99, $calculatedPercent);
             $data['completed_at'] = null;
