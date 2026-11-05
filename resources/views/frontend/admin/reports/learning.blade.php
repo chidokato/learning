@@ -470,7 +470,7 @@
                      <!-- 5. Công ty -->
                      <td>
                         @if(!empty($item['company']) && $item['company'] !== '-')
-                           <span class="text-dark" style="white-space: nowrap;"><i class="fa-solid fa-city me-1 text-secondary" style="font-size: 11px;"></i>{{ $item['company'] }}</span>
+                           <span class="text-dark" style="white-space: nowrap;">{{ $item['company'] }}</span>
                         @else
                            <span class="text-muted">-</span>
                         @endif
@@ -479,7 +479,7 @@
                      <!-- 6. Phòng ban -->
                      <td>
                         @if(!empty($item['department']) && $item['department'] !== '-')
-                           <span class="text-primary" style="white-space: nowrap;"><i class="fa-solid fa-building me-1"></i>{{ $item['department'] }}</span>
+                           <span class="text-primary" style="white-space: nowrap;">{{ $item['department'] }}</span>
                         @else
                            <span class="text-muted">-</span>
                         @endif
@@ -487,7 +487,7 @@
 
                      <!-- 7. Email -->
                      <td>
-                        <span class="text-muted"><i class="fa-regular fa-envelope me-1 text-secondary"></i>{{ $item['email'] }}</span>
+                        <span class="text-muted">{{ $item['email'] }}</span>
                      </td>
 
                      <!-- 7. Mã KH -->
@@ -502,21 +502,15 @@
 
                      <!-- 9. TG học -->
                      <td class="text-center">
-                        <span class="text-secondary">
-                           <i class="fa-regular fa-clock me-1 text-muted"></i>{{ $item['study_time'] }}
-                        </span>
+                        <span class="text-secondary">{{ $item['study_time'] }}</span>
                      </td>
 
                      <!-- 10. TT học -->
                      <td class="text-center">
                         @if($item['learning_status'] === 'Hoàn thành')
-                           <span class="text-completed" title="Hoàn thành khóa học">
-                              <i class="fa-solid fa-check me-1"></i>Hoàn thành
-                           </span>
+                           <span class="text-completed" title="Hoàn thành khóa học">Hoàn thành</span>
                         @else
-                           <span class="text-in-progress" title="Chưa hoàn thành khóa học">
-                              <i class="fa-solid fa-clock me-1"></i>Chưa xong
-                           </span>
+                           <span class="text-in-progress" title="Chưa hoàn thành khóa học">Chưa xong</span>
                         @endif
                      </td>
 
@@ -537,7 +531,7 @@
                      <!-- 13. Thời gian hoàn thành bài thi -->
                      <td class="text-center">
                         @if(!empty($item['test_duration']) && $item['test_duration'] !== '-')
-                           <span class="text-secondary" style="white-space: nowrap;"><i class="fa-regular fa-stopwatch me-1 text-muted"></i>{{ $item['test_duration'] }}</span>
+                           <span class="text-secondary" style="white-space: nowrap;">{{ $item['test_duration'] }}</span>
                         @else
                            <span class="text-muted">-</span>
                         @endif
@@ -554,16 +548,12 @@
                         @endif
                      </td>
 
-                     <!-- 13. Kết quả -->
+                     <!-- 15. Kết quả -->
                      <td class="text-center">
                         @if($item['result'] === 'Đạt')
-                           <span class="text-passed">
-                              <i class="fa-solid fa-check me-1"></i>Đạt
-                           </span>
+                           <span class="text-passed">Đạt</span>
                         @elseif($item['result'] === 'Không đạt')
-                           <span class="text-failed" title="Không đạt">
-                              <i class="fa-solid fa-xmark me-1"></i>K.Đạt
-                           </span>
+                           <span class="text-failed" title="Không đạt">K.Đạt</span>
                         @else
                            <span class="text-muted">{{ $item['result'] }}</span>
                         @endif

@@ -551,6 +551,8 @@ class FrontendLearningReportController extends Controller
                     'score' => $formatScore($bestAtt->score, $totalQuestions),
                     'result' => $bestAtt->is_passed ? 'Đạt' : 'Không đạt',
                     'completed_at' => $bestAtt->completed_at ?: $bestAtt->created_at,
+                    'test_timestamp' => $getTimestamp($bestAtt->completed_at ?: $bestAtt->created_at),
+                    'activity_timestamp' => $getTimestamp($bestAtt->completed_at ?: $bestAtt->created_at),
                     'is_passed' => (bool) $bestAtt->is_passed,
                     'is_completed' => false,
                 ];
@@ -579,6 +581,8 @@ class FrontendLearningReportController extends Controller
                     'score' => $formatScore($latestAtt->score, $totalQuestions),
                     'result' => $latestAtt->is_passed ? 'Đạt' : 'Không đạt',
                     'completed_at' => $latestAtt->completed_at ?: $latestAtt->created_at,
+                    'test_timestamp' => $getTimestamp($latestAtt->completed_at ?: $latestAtt->created_at),
+                    'activity_timestamp' => $getTimestamp($latestAtt->completed_at ?: $latestAtt->created_at),
                     'is_passed' => (bool) $latestAtt->is_passed,
                     'is_completed' => false,
                 ];
@@ -606,6 +610,8 @@ class FrontendLearningReportController extends Controller
                         'score' => $formatScore($att->score, $totalQuestions),
                         'result' => $att->is_passed ? 'Đạt' : 'Không đạt',
                         'completed_at' => $att->completed_at ?: $att->created_at,
+                        'test_timestamp' => $getTimestamp($att->completed_at ?: $att->created_at),
+                        'activity_timestamp' => $getTimestamp($att->completed_at ?: $att->created_at),
                         'is_passed' => (bool) $att->is_passed,
                         'is_completed' => false,
                     ];
@@ -640,6 +646,27 @@ class FrontendLearningReportController extends Controller
 
             $filteredRows[] = $row;
         }
+
+        // 3.5. Sắp xếp theo thời gian làm bài gần nhất (mới nhất lên đầu)
+        usort($filteredRows, function ($a, $b) {
+            $timeA = $a['test_timestamp'] ?? 0;
+            $timeB = $b['test_timestamp'] ?? 0;
+
+            // 1. Bài làm có thời gian làm bài gần nhất lên đầu
+            if ($timeA !== $timeB) {
+                return $timeB <=> $timeA;
+            }
+
+            // 2. Nếu cùng thời gian thi hoặc cả 2 chưa thi: Sắp xếp theo thời gian học/hoạt động gần nhất
+            $actA = $a['activity_timestamp'] ?? 0;
+            $actB = $b['activity_timestamp'] ?? 0;
+            if ($actA !== $actB) {
+                return $actB <=> $actA;
+            }
+
+            // 3. Fallback theo user_id
+            return ($b['user_id'] ?? 0) <=> ($a['user_id'] ?? 0);
+        });
 
         // 4. Tính toán KPI thống kê tổng hợp
         $totalRecords = count($filteredRows);
