@@ -200,7 +200,7 @@
    </div>
 </div>
 
-<form id="test-form">
+<form id="test-form" autocomplete="off">
    @foreach($test->questions as $index => $q)
       <div class="question-box">
          <div class="question-title">
@@ -500,31 +500,53 @@
          timerInterval = setInterval(updateCountUpTimer, 1000);
       }
 
+      var isSubmitting = false;
+
+      // Ngăn chặn sự kiện submit mặc định của form
+      $('#test-form').on('submit', function(e) {
+         e.preventDefault();
+         return false;
+      });
+
       $('#bottom-submit-btn').on('click', function() {
+         if (isSubmitting) return;
          updateAnsweredCount();
          showModal('submitConfirmModal');
       });
 
       $('#btn-confirm-submit-action').on('click', function() {
+         if (isSubmitting) return;
          submitTestForm(false);
       });
 
       $('#btn-cancel-test').on('click', function() {
+         if (isSubmitting) return;
          showModal('cancelConfirmModal');
       });
 
       $('#btn-confirm-cancel-action').on('click', function() {
+         if (isSubmitting) return;
          submitTestForm(true);
       });
 
       function submitTestForm(isCanceled) {
+         if (isSubmitting) {
+            return;
+         }
+         isSubmitting = true;
+
          var bottomBtn = $('#bottom-submit-btn');
          var confirmBtn = $('#btn-confirm-submit-action');
          var cancelBtn = $('#btn-confirm-cancel-action');
 
-         bottomBtn.prop('disabled', true).html('<i class="far fa-spinner fa-spin me-2"></i> Đang nộp...');
-         confirmBtn.prop('disabled', true).html('<i class="far fa-spinner fa-spin me-1"></i> Đang xử lý...');
-         cancelBtn.prop('disabled', true).html('<i class="far fa-spinner fa-spin me-1"></i> Đang hủy...');
+         // Vô hiệu hóa ngay lập tức mọi nút bấm và chặn thao tác chuột
+         bottomBtn.prop('disabled', true).addClass('disabled pe-none').html('<i class="far fa-spinner fa-spin me-2"></i> Đang nộp...');
+         confirmBtn.prop('disabled', true).addClass('disabled pe-none').html('<i class="far fa-spinner fa-spin me-1"></i> Đang xử lý...');
+         cancelBtn.prop('disabled', true).addClass('disabled pe-none').html('<i class="far fa-spinner fa-spin me-1"></i> Đang hủy...');
+
+         // Đóng ngay các popup xác nhận để ngăn chặn double click / clickdup
+         hideModal('submitConfirmModal');
+         hideModal('cancelConfirmModal');
 
          var formData = $('#test-form').serializeArray();
          if (isCanceled) {
@@ -554,8 +576,6 @@
                localStorage.removeItem(testAnswersKey);
 
                hideModal('timeoutModal');
-               hideModal('submitConfirmModal');
-               hideModal('cancelConfirmModal');
                $('#test-bottom-bar').addClass('hidden');
 
                $('#test-form').slideUp();
@@ -596,7 +616,10 @@
                   errorMsg = xhr.responseJSON.error;
                }
                alert(errorMsg);
-               bottomBtn.prop('disabled', false).html('<i class="far fa-paper-plane me-2"></i> Nộp bài');
+               isSubmitting = false;
+               bottomBtn.prop('disabled', false).removeClass('disabled pe-none').html('<i class="far fa-paper-plane me-2"></i> Nộp bài');
+               confirmBtn.prop('disabled', false).removeClass('disabled pe-none').html('Đồng ý nộp');
+               cancelBtn.prop('disabled', false).removeClass('disabled pe-none').html('Xác nhận hủy');
             }
          });
       }

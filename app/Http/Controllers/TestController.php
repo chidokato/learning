@@ -76,6 +76,28 @@ class TestController extends Controller
             return response()->json(['error' => 'Bài test không tồn tại'], 404);
         }
 
+        // Chống kickdup / click đúp / spam gửi trùng lặp trong thời gian cực ngắn (< 5 giây)
+        $recentSubmission = UserTestResult::where('user_id', $user_id)
+            ->where('test_id', $test_id)
+            ->where('created_at', '>=', now()->subSeconds(5))
+            ->latest('id')
+            ->first();
+
+        if ($recentSubmission) {
+            $totalQuestions = $test->questions->count();
+            return response()->json([
+                'message' => 'Lượt bài thi đã được tiếp nhận và ghi nhận trước đó.',
+                'result' => [
+                    'id'              => $recentSubmission->id,
+                    'total_correct'   => $recentSubmission->score,
+                    'total_questions' => $totalQuestions,
+                    'is_passed'       => (bool) $recentSubmission->is_passed,
+                    'is_cancelled'    => false,
+                    'result_url'      => route('frontend.tests.result', $recentSubmission->id),
+                ]
+            ]);
+        }
+
         // 1. Lấy danh sách đáp án người dùng đã chọn
         $userAnswers = $request->input('answers', []);
 
@@ -123,7 +145,10 @@ class TestController extends Controller
         }
 
         $isCancelled = $request->boolean('is_cancelled') || $request->boolean('is_canceled');
-        $isPassed = !$isCancelled && ($totalCorrect >= $test->pass_score);
+        $isPassed = ($test->pass_score !== null && $totalCorrect >= (int)$test->pass_score);
+        if ($isCancelled && $totalCorrect < (int)$test->pass_score) {
+            $isPassed = false;
+        }
 
         $durationSeconds = $request->has('duration_seconds') ? max(0, (int)$request->input('duration_seconds')) : null;
 

@@ -197,8 +197,8 @@ class FrontendTestReportController extends Controller
                 'duration_seconds' => $att->duration_seconds,
                 'duration_formatted' => $att->formatted_duration,
                 'completed_at' => $att->completed_at 
-                    ? $att->completed_at->timezone('Asia/Ho_Chi_Minh')->format('H:i d/m/Y')
-                    : ($att->created_at ? $att->created_at->timezone('Asia/Ho_Chi_Minh')->format('H:i d/m/Y') : 'N/A'),
+                    ? $att->completed_at->timezone('Asia/Ho_Chi_Minh')->format('H:i:s d/m/Y')
+                    : ($att->created_at ? $att->created_at->timezone('Asia/Ho_Chi_Minh')->format('H:i:s d/m/Y') : 'N/A'),
                 'view_url' => route('frontend.tests.result', $att->id),
             ];
         })->reverse()->values();
