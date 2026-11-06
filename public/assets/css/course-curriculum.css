@@ -1,134 +1,513 @@
+/* ==========================================================================
+   MODERN COURSE CURRICULUM STYLING - INDOCHINE LMS
+   ========================================================================== */
+
+.course-curriculum {
+  font-family: 'Montserrat', sans-serif;
+  color: #334155;
+  --curriculum-primary: #03594E;
+  --curriculum-primary-light: #f0f7f5;
+  --curriculum-primary-hover: #02463e;
+  --curriculum-border: #e2e8f0;
+  --curriculum-title: #0C121D;
+  --curriculum-muted: #64748b;
+  --curriculum-radius: 14px;
+}
+
+/* Header & Metadata Bar */
+.course-curriculum-header {
+  background: #ffffff;
+  padding: 18px 22px;
+  border-radius: var(--curriculum-radius);
+  border: 1px solid var(--curriculum-border);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+  transition: all 0.2s ease;
+}
+
+.course-curriculum-header .it-details-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--curriculum-title);
+  margin-bottom: 4px;
+  line-height: 1.35;
+}
+
+.course-curriculum-header .curriculum-meta-info {
+  font-size: 13.5px;
+  color: var(--curriculum-muted);
+  font-weight: 500;
+}
+
+.course-curriculum-header .curriculum-meta-info strong {
+  color: var(--curriculum-primary);
+  font-weight: 700;
+}
+
+.course-curriculum-header .meta-dot {
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+/* Toggle All Button */
+.btn-curriculum-toggle {
+  background: var(--curriculum-primary-light);
+  color: var(--curriculum-primary);
+  border: 1px solid rgba(3, 89, 78, 0.22);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.btn-curriculum-toggle:hover,
+.btn-curriculum-toggle.active {
+  background: var(--curriculum-primary);
+  color: #ffffff;
+  border-color: var(--curriculum-primary);
+  box-shadow: 0 4px 14px rgba(3, 89, 78, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Custom Accordion Container */
 .course-curriculum .it-custom-accordion-2 {
-  border-radius: 20px;
-  border: 1px solid rgba(108, 117, 125, 0.2);
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
+
+/* Accordion Item Card */
 .course-curriculum .it-custom-accordion-2 .accordion-items {
-  border-radius: 20px;
-  background-color: var(--it-common-white);
+  border: 1px solid var(--curriculum-border) !important;
+  border-radius: var(--curriculum-radius) !important;
+  background-color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  margin-bottom: 0 !important;
 }
-.course-curriculum .it-custom-accordion-2 .accordion-items:first-child .accordion-buttons.collapsed {
-  border-radius: 20px 20px 0 0;
+
+.course-curriculum .it-custom-accordion-2 .accordion-items:hover {
+  border-color: #cbd5e1 !important;
 }
-.course-curriculum .it-custom-accordion-2 .accordion-items:first-child .accordion-buttons:not(.collapsed) {
-  border-radius: 20px 20px 0 0;
+
+.course-curriculum .it-custom-accordion-2 .accordion-items.active-chapter {
+  border-color: rgba(3, 89, 78, 0.4) !important;
+  box-shadow: 0 6px 18px rgba(3, 89, 78, 0.08);
 }
-.course-curriculum .it-custom-accordion-2 .accordion-items:last-child .accordion-buttons.collapsed {
-  border-radius: 0 0 20px 20px;
+
+.course-curriculum .it-custom-accordion-2 .accordion-header {
+  margin: 0;
+  padding: 0;
 }
+
+/* Accordion Header Button */
 .course-curriculum .it-custom-accordion-2 .accordion-buttons {
   position: relative;
   text-align: left;
-  padding: 21px 30px;
-  padding-left: 65px;
+  padding: 16px 20px;
   width: 100%;
-  font-size: 16px;
+  font-size: 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--it-common-black);
-  background-color: var(--it-gray-1);
-  font-family: var(--it-ff-spartan-semibold);
-  border-bottom: 1px solid rgba(108, 117, 125, 0.2);
-}
-@media (max-width: 767px) {
-  .course-curriculum .it-custom-accordion-2 .accordion-buttons {
-    font-size: 12px;
-    padding-left: 40px;
-  }
-}
-.course-curriculum .it-custom-accordion-2 .accordion-buttons span {
-  line-height: 1;
-}
-.course-curriculum .it-custom-accordion-2 .accordion-buttons span:last-child {
-  font-family: var(--it-ff-spartan-medium);
-}
-.course-curriculum .it-custom-accordion-2 .accordion-buttons::after {
-  position: absolute;
-  content: "\f106";
-  font-family: "Font Awesome 5 Pro";
-  top: 50%;
-  left: 30px;
-  font-weight: 400;
-  font-size: 16px;
-  height: 25px;
-  width: 25px;
-  line-height: 25px;
-  text-align: center;
-  opacity: 1;
-  border-radius: 50%;
-  transform: translateY(-50%);
-  color: var(--it-common-black);
-  background-color: var(--it-common-white);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-@media (max-width: 767px) {
-  .course-curriculum .it-custom-accordion-2 .accordion-buttons::after {
-    left: 8px;
-  }
-}
-.course-curriculum .it-custom-accordion-2 .accordion-buttons.collapsed::after {
-  content: "\f107";
-}
-.course-curriculum .it-custom-accordion-2 .accordion-buttons:not(.collapsed) {
-  padding-bottom: 17px;
-}
-@media only screen and (min-width: 992px) and (max-width: 1199px), only screen and (min-width: 768px) and (max-width: 991px), (max-width: 767px) {
-  .course-curriculum .it-custom-accordion-2 .accordion-buttons:not(.collapsed) {
-    padding-bottom: 12px;
-  }
-}
-.course-curriculum .it-custom-accordion-2 .accordion-body {
-  padding: 30px;
+  gap: 14px;
+  color: #1e293b;
+  background-color: #f8fafc;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  border: none !important;
+  border-radius: 0 !important;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-@font-face {
-   font-family: "Spartan-SemiBold";
-   src: url("../fonts/Spartan-SemiBold.woff2") format("woff2");
-   font-weight: 600;
-   font-display: swap;
+/* Disable old pseudo-element */
+.course-curriculum .it-custom-accordion-2 .accordion-buttons::after,
+.course-curriculum .it-custom-accordion-2 .accordion-buttons::before {
+  display: none !important;
+  content: none !important;
 }
-@font-face {
-   font-family: "Spartan-Medium";
-   src: url("../fonts/Spartan-Medium.woff2") format("woff2");
-   font-weight: 500;
-   font-display: swap;
+
+/* Expanded state of header */
+.course-curriculum .it-custom-accordion-2 .accordion-buttons:not(.collapsed) {
+  background-color: var(--curriculum-primary-light);
+  border-bottom: 1px solid rgba(3, 89, 78, 0.12) !important;
+  color: var(--curriculum-primary);
 }
-.course-curriculum {
-   --it-common-white: #fff;
-   --it-common-black: #1F2432;
-   --it-gray-1: #F0F4F5;
-   --it-ff-spartan-semibold: 'Montserrat', sans-serif;
-   --it-ff-spartan-medium: 'Montserrat', sans-serif;
-   font-family: 'Montserrat', sans-serif;
-   color: #6C757D;
-   font-size: 16px;
-   line-height: 1.6;
+
+.course-curriculum .it-custom-accordion-2 .accordion-buttons:hover {
+  background-color: #f1f5f9;
 }
-.course-curriculum .it-details-title {
-   font-family: 'Montserrat', sans-serif;
-   font-size: 22px;
-   font-weight: 600;
-   line-height: 1.4;
-   color: #0C121D;
-   margin-bottom: 15px;
+
+.course-curriculum .it-custom-accordion-2 .accordion-buttons:not(.collapsed):hover {
+  background-color: #e8f4f0;
 }
-.course-curriculum .it-course-faq-top-text { gap: 12px; }
-.course-curriculum .it-course-faq-top-text span { font-family: 'Montserrat', sans-serif; }
-.course-curriculum .it-course-faq-top-text a {
-   color: #03594E;
-   font-family: 'Montserrat', sans-serif;
-   text-decoration: none;
-   flex-shrink: 0;
+
+/* Header Left (Icon + Title) */
+.course-curriculum .chapter-info-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
 }
-.course-curriculum .accordion-header { margin: 0; }
-.course-curriculum .accordion-buttons { border: 0; border-bottom: 1px solid rgba(108,117,125,.2); gap: 12px; }
-.course-curriculum .accordion-buttons span { line-height: 1.5; }
-.course-curriculum .accordion-buttons span:first-child { text-transform: none; }
-.course-curriculum .accordion-buttons span:last-child { flex-shrink: 0; font-size: 14px; }
-.course-curriculum img, .course-curriculum iframe { max-width: 100%; }
-.course-curriculum img { height: auto; }
-.gitiho-course-panel .it-course-faq-top-text { flex-wrap: wrap; font-size: 13px; }
-.gitiho-course-panel .course-curriculum .it-details-title { font-size: 20px; }
-.gitiho-course-panel .course-curriculum .accordion-buttons { padding: 16px 14px 16px 46px; font-size: 14px; }
-.gitiho-course-panel .course-curriculum .accordion-buttons::after { left: 12px; }
-.gitiho-course-panel .course-curriculum .accordion-body { padding: 20px 16px; font-size: 14px; }
+
+/* Circular Arrow Icon */
+.course-curriculum .chapter-arrow-icon {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid var(--curriculum-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--curriculum-primary);
+  font-size: 12px;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.course-curriculum .accordion-buttons:not(.collapsed) .chapter-arrow-icon {
+  transform: rotate(180deg);
+  background-color: var(--curriculum-primary);
+  color: #ffffff;
+  border-color: var(--curriculum-primary);
+}
+
+/* Chapter Title Text */
+.course-curriculum .chapter-title-text {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.45;
+  transition: color 0.2s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.course-curriculum .accordion-buttons:hover .chapter-title-text {
+  color: var(--curriculum-primary);
+}
+
+.course-curriculum .accordion-buttons:not(.collapsed) .chapter-title-text {
+  color: var(--curriculum-primary);
+  font-weight: 700;
+}
+
+/* Header Right (Lesson count badge) */
+.course-curriculum .chapter-info-right {
+  flex-shrink: 0;
+}
+
+.course-curriculum .chapter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 13px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background-color: #ffffff;
+  color: var(--curriculum-primary);
+  border: 1px solid rgba(3, 89, 78, 0.2);
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.course-curriculum .accordion-buttons:hover .chapter-badge {
+  background-color: var(--curriculum-primary);
+  color: #ffffff;
+  border-color: var(--curriculum-primary);
+}
+
+/* Accordion Body & Lessons */
+.course-curriculum .it-custom-accordion-2 .accordion-body {
+  padding: 12px 18px 16px 18px;
+  background-color: #ffffff;
+}
+
+.course-curriculum .curriculum-lesson-list {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Individual Lesson Item */
+.course-curriculum .curriculum-lesson-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 11px 14px !important;
+  border-radius: 10px;
+  background-color: #ffffff;
+  border: 1px solid transparent;
+  border-bottom: 1px solid #f1f5f9 !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 12px;
+  margin: 0 !important;
+}
+
+.course-curriculum .curriculum-lesson-item:last-child {
+  border-bottom: 1px solid transparent !important;
+}
+
+.course-curriculum .curriculum-lesson-item:hover {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+  transform: translateX(4px);
+}
+
+/* Lesson Left */
+.course-curriculum .lesson-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Lesson Play Icon */
+.course-curriculum .lesson-play-icon {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  background-color: var(--curriculum-primary-light);
+  color: var(--curriculum-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin-top: 1px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.course-curriculum .curriculum-lesson-item:hover .lesson-play-icon {
+  background-color: var(--curriculum-primary);
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+/* Lesson Title / Text */
+.course-curriculum .lesson-text {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #334155;
+  line-height: 1.55;
+  flex: 1;
+  transition: color 0.2s ease;
+}
+
+.course-curriculum .lesson-text p {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline !important;
+}
+
+.course-curriculum .curriculum-lesson-item:hover .lesson-text {
+  color: var(--curriculum-primary);
+}
+
+/* Lesson Right Tag */
+.course-curriculum .lesson-right {
+  flex-shrink: 0;
+}
+
+.course-curriculum .lesson-type-tag {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--curriculum-muted);
+  background-color: #f1f5f9;
+  padding: 3px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  border: 1px solid var(--curriculum-border);
+}
+
+/* ==========================================================================
+   SUPPORTING CARDS (Summary & What You Learn)
+   ========================================================================== */
+
+.course-summary-card {
+  background: #ffffff;
+  border: 1px solid var(--curriculum-border);
+  border-radius: var(--curriculum-radius);
+  padding: 24px 26px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+  transition: all 0.2s ease;
+}
+
+.course-summary-card .it-details-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--curriculum-title);
+  margin-bottom: 16px;
+}
+
+.course-summary-card .course-summary-content {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #334155;
+}
+
+.course-summary-card .course-summary-content p:last-child {
+  margin-bottom: 0;
+}
+
+.what-to-learn-card {
+  background: #fafdfc;
+  border: 1px solid #d4ece5;
+  border-radius: var(--curriculum-radius);
+  padding: 24px 26px;
+  box-shadow: 0 2px 10px rgba(3, 89, 78, 0.03);
+}
+
+.what-to-learn-card .it-details-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--curriculum-primary);
+  margin-bottom: 18px;
+}
+
+.course-includes-card {
+  background: #ffffff;
+  border: 1px solid var(--curriculum-border);
+  border-radius: var(--curriculum-radius);
+  padding: 24px 26px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+}
+
+.course-includes-card .it-details-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--curriculum-title);
+  margin-bottom: 18px;
+}
+
+/* ==========================================================================
+   LEARNING PANEL OVERLAY (For course-learn screen)
+   ========================================================================== */
+
+.gitiho-course-panel .course-curriculum-header {
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.gitiho-course-panel .course-curriculum-header .it-details-title {
+  font-size: 17px;
+}
+
+.gitiho-course-panel .course-curriculum .accordion-buttons {
+  padding: 13px 15px;
+  font-size: 14px;
+}
+
+.gitiho-course-panel .course-curriculum .chapter-title-text {
+  font-size: 14px;
+}
+
+.gitiho-course-panel .course-curriculum .accordion-body {
+  padding: 10px 12px 14px 12px;
+}
+
+.gitiho-course-panel .course-curriculum .curriculum-lesson-item {
+  padding: 9px 11px !important;
+}
+
+.gitiho-course-panel .course-curriculum .lesson-text {
+  font-size: 13.5px;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (< 768px)
+   ========================================================================== */
+
+@media (max-width: 767px) {
+  .course-curriculum-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .course-curriculum-header .curriculum-actions {
+    width: 100%;
+  }
+
+  .btn-curriculum-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .course-curriculum .it-custom-accordion-2 .accordion-buttons {
+    padding: 13px 14px;
+    gap: 10px;
+  }
+
+  .course-curriculum .chapter-info-left {
+    gap: 10px;
+  }
+
+  .course-curriculum .chapter-arrow-icon {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    font-size: 11px;
+  }
+
+  .course-curriculum .chapter-title-text {
+    font-size: 14px;
+  }
+
+  .course-curriculum .chapter-badge {
+    font-size: 11.5px;
+    padding: 4px 9px;
+  }
+
+  .course-curriculum .it-custom-accordion-2 .accordion-body {
+    padding: 8px 10px 12px 10px;
+  }
+
+  .course-curriculum .curriculum-lesson-item {
+    padding: 9px 10px !important;
+    gap: 10px;
+  }
+
+  .course-curriculum .lesson-play-icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    font-size: 12px;
+  }
+
+  .course-curriculum .lesson-text {
+    font-size: 13.5px;
+  }
+
+  .course-curriculum .lesson-type-tag {
+    display: none;
+  }
+
+  .course-summary-card,
+  .what-to-learn-card,
+  .course-includes-card {
+    padding: 18px 16px;
+  }
+}

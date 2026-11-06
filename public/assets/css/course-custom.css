@@ -105,19 +105,16 @@
    display: none !important;
 }
 
-/* Căn chỉnh khoảng cách dãn dòng cho nội dung Chương trình học (Accordion) */
-.it-custom-accordion-2 .accordion-content {
-   /*padding: 15px 25px 25px 25px !important;*/
-}
-.it-custom-accordion-2 .accordion-content ul {
+/* Căn chỉnh khoảng cách dãn dòng cho nội dung Chương trình học (Accordion fallback) */
+.it-custom-accordion-2 .accordion-content ul:not(.curriculum-lesson-list) {
    margin: 0 !important;
    padding: 0 !important;
    list-style: none !important;
    display: flex;
    flex-direction: column;
-   gap: 15px;
+   gap: 12px;
 }
-.it-custom-accordion-2 .accordion-content ul li {
+.it-custom-accordion-2 .accordion-content ul:not(.curriculum-lesson-list) li {
    margin: 0 !important;
    padding: 0 !important;
    list-style: none !important;
@@ -125,12 +122,6 @@
    align-items: flex-start !important;
    gap: 10px;
    line-height: 1.6;
-}
-.it-custom-accordion-2 .accordion-content ul li i {
-   margin-top: 4px;
-}
-.it-custom-accordion-2 .accordion-content ul li .lesson-text {
-   flex: 1;
 }
 .it-custom-accordion-2 .accordion-content ul li p {
    margin: 0;

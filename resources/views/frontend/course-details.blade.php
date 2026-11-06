@@ -28,8 +28,8 @@
    <link rel="stylesheet" href="{{ asset('assets/css/spacing.css') }}">          
    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}?v=1.0.1">   
 
-   <link rel="stylesheet" href="{{ asset('assets/css/course-curriculum.css') }}">
-   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v=1.0.1">
+   <link rel="stylesheet" href="{{ asset('assets/css/course-curriculum.css') }}?v={{ time() }}">
+   <link rel="stylesheet" href="{{ asset('assets/css/course-custom.css') }}?v={{ time() }}">
 </head>
 
 <body>
@@ -239,33 +239,48 @@
                            </ul>
                         </nav>
                      </div>
-                     <div id="summary-section">
-                        @if ($post->summary)
-                        <div class="postbox-dsc mb-55">
-                           <div class="course-summary-content">{!! $post->summary !!}</div>
-                        </div>
-                        @endif
-                     </div>
-
+                     {{-- Nội dung học (Chương trình học) được chuyển lên đầu --}}
                      @if ($post->content)
-                     <div id="curriculum">                     
-                        <div class="mb-60">
-                           @include('frontend.partials.course-curriculum')
-                        </div>
+                     <div id="curriculum" class="mb-50">                     
+                        @include('frontend.partials.course-curriculum')
                      </div>
                      @endif
 
+                     <div id="summary-section">
+                        @if ($post->summary)
+                        <div class="course-summary-card mb-50">
+                           <h4 class="it-details-title mb-20 d-flex align-items-center gap-2">
+                              <i class="fa-solid fa-circle-info text-primary-color" style="color: #03594E;"></i>
+                              <span>Giới thiệu khóa học</span>
+                           </h4>
+                           <div class="postbox-dsc">
+                              <div class="course-summary-content">{!! $post->summary !!}</div>
+                           </div>
+                        </div>
+                        @endif
+                     </div>
+
                      <div id="overview">
                         @if ($post->what_to_learn)
-                        <h4 class="it-details-title">Bạn sẽ học được gì</h4>
-                        <div class="it-details-list-box mt-5 mb-60 ck-content-list style-1">
+                        <div class="what-to-learn-card mb-50">
+                           <h4 class="it-details-title mb-20 d-flex align-items-center gap-2">
+                              <i class="fa-solid fa-bullseye text-primary-color" style="color: #03594E;"></i>
+                              <span>Bạn sẽ học được gì</span>
+                           </h4>
+                           <div class="it-details-list-box ck-content-list style-1">
                               {!! $post->what_to_learn !!}
+                           </div>
                         </div>
                         @endif
                         @if ($post->course_includes)
-                        <h4 class="it-details-title">Khóa học này bao gồm:</h4>
-                        <div class="it-details-list-box mt-5 mb-60 ck-content-list style-1">
+                        <div class="course-includes-card mb-50">
+                           <h4 class="it-details-title mb-20 d-flex align-items-center gap-2">
+                              <i class="fa-solid fa-box-open text-primary-color" style="color: #03594E;"></i>
+                              <span>Khóa học này bao gồm:</span>
+                           </h4>
+                           <div class="it-details-list-box ck-content-list style-1">
                               {!! $post->course_includes !!}
+                           </div>
                         </div>
                         @endif
                      </div>
