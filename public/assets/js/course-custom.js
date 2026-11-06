@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <li class="curriculum-lesson-item">
                <div class="lesson-left">
                   <span class="lesson-play-icon">
-                     <i class="fa-regular fa-circle-play"></i>
+                     <i class="fa-solid fa-play"></i>
                   </span>
                   <div class="lesson-text">
                      ${lessonHTML}

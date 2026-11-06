@@ -1,5 +1,5 @@
 /* ==========================================================================
-   MODERN COURSE CURRICULUM STYLING - INDOCHINE LMS
+   MODERN UNIFIED COURSE CURRICULUM BOX - INDOCHINE LMS
    ========================================================================== */
 
 .course-curriculum {
@@ -11,17 +11,33 @@
   --curriculum-border: #e2e8f0;
   --curriculum-title: #0C121D;
   --curriculum-muted: #64748b;
-  --curriculum-radius: 14px;
+  --curriculum-radius: 16px;
 }
 
-/* Header & Metadata Bar */
-.course-curriculum-header {
+/* Khối tổng thể thống nhất (1 khối) */
+.course-curriculum-box {
   background: #ffffff;
-  padding: 18px 22px;
-  border-radius: var(--curriculum-radius);
   border: 1px solid var(--curriculum-border);
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
-  transition: all 0.2s ease;
+  border-radius: var(--curriculum-radius);
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.course-curriculum-box:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.06);
+}
+
+/* Phần Header trên cùng của khối */
+.course-curriculum-header {
+  background: #fafdfc;
+  padding: 20px 24px;
+  border: none;
+  border-bottom: 1px solid var(--curriculum-border);
+  border-radius: 0;
+  box-shadow: none;
+  margin-bottom: 0 !important;
 }
 
 .course-curriculum-header .it-details-title {
@@ -49,15 +65,15 @@
   font-size: 14px;
 }
 
-/* Toggle All Button */
+/* Nút Mở rộng tất cả / Thu gọn tất cả */
 .btn-curriculum-toggle {
-  background: var(--curriculum-primary-light);
+  background: #ffffff;
   color: var(--curriculum-primary);
-  border: 1px solid rgba(3, 89, 78, 0.22);
+  border: 1px solid rgba(3, 89, 78, 0.25);
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   font-weight: 600;
-  padding: 8px 18px;
+  padding: 7px 16px;
   border-radius: 30px;
   display: inline-flex;
   align-items: center;
@@ -65,6 +81,7 @@
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
 .btn-curriculum-toggle:hover,
@@ -72,38 +89,34 @@
   background: var(--curriculum-primary);
   color: #ffffff;
   border-color: var(--curriculum-primary);
-  box-shadow: 0 4px 14px rgba(3, 89, 78, 0.25);
+  box-shadow: 0 4px 12px rgba(3, 89, 78, 0.22);
   transform: translateY(-1px);
 }
 
-/* Custom Accordion Container */
+/* Custom Accordion liền mạch trong 1 khối */
 .course-curriculum .it-custom-accordion-2 {
   border: none !important;
   border-radius: 0 !important;
   background: transparent !important;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0 !important;
 }
 
-/* Accordion Item Card */
+/* Từng dòng chương học */
 .course-curriculum .it-custom-accordion-2 .accordion-items {
-  border: 1px solid var(--curriculum-border) !important;
-  border-radius: var(--curriculum-radius) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--curriculum-border) !important;
+  border-radius: 0 !important;
   background-color: #ffffff;
   overflow: hidden;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  box-shadow: none !important;
   margin-bottom: 0 !important;
+  transition: background-color 0.2s ease;
 }
 
-.course-curriculum .it-custom-accordion-2 .accordion-items:hover {
-  border-color: #cbd5e1 !important;
-}
-
-.course-curriculum .it-custom-accordion-2 .accordion-items.active-chapter {
-  border-color: rgba(3, 89, 78, 0.4) !important;
-  box-shadow: 0 6px 18px rgba(3, 89, 78, 0.08);
+.course-curriculum .it-custom-accordion-2 .accordion-items:last-child {
+  border-bottom: none !important;
 }
 
 .course-curriculum .it-custom-accordion-2 .accordion-header {
@@ -111,11 +124,11 @@
   padding: 0;
 }
 
-/* Accordion Header Button */
+/* Nút tiêu đề chương */
 .course-curriculum .it-custom-accordion-2 .accordion-buttons {
   position: relative;
   text-align: left;
-  padding: 16px 20px;
+  padding: 18px 24px;
   width: 100%;
   font-size: 15px;
   display: flex;
@@ -133,17 +146,17 @@
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-/* Disable old pseudo-element */
+/* Vô hiệu hóa pseudo-element cũ */
 .course-curriculum .it-custom-accordion-2 .accordion-buttons::after,
 .course-curriculum .it-custom-accordion-2 .accordion-buttons::before {
   display: none !important;
   content: none !important;
 }
 
-/* Expanded state of header */
+/* Trạng thái khi chương đang mở */
 .course-curriculum .it-custom-accordion-2 .accordion-buttons:not(.collapsed) {
   background-color: var(--curriculum-primary-light);
-  border-bottom: 1px solid rgba(3, 89, 78, 0.12) !important;
+  border-bottom: 1px solid rgba(3, 89, 78, 0.1) !important;
   color: var(--curriculum-primary);
 }
 
@@ -155,7 +168,7 @@
   background-color: #e8f4f0;
 }
 
-/* Header Left (Icon + Title) */
+/* Bên trái Header chương: Icon mũi tên + Tên chương */
 .course-curriculum .chapter-info-left {
   display: flex;
   align-items: center;
@@ -164,7 +177,7 @@
   min-width: 0;
 }
 
-/* Circular Arrow Icon */
+/* Icon mũi tên xoay tròn */
 .course-curriculum .chapter-arrow-icon {
   width: 30px;
   height: 30px;
@@ -187,7 +200,7 @@
   border-color: var(--curriculum-primary);
 }
 
-/* Chapter Title Text */
+/* Tên chương học */
 .course-curriculum .chapter-title-text {
   font-size: 15.5px;
   font-weight: 600;
@@ -207,7 +220,7 @@
   font-weight: 700;
 }
 
-/* Header Right (Lesson count badge) */
+/* Bên phải Header chương: Badge bài học */
 .course-curriculum .chapter-info-right {
   flex-shrink: 0;
 }
@@ -233,9 +246,9 @@
   border-color: var(--curriculum-primary);
 }
 
-/* Accordion Body & Lessons */
+/* Nội dung danh sách bài học bên trong chương */
 .course-curriculum .it-custom-accordion-2 .accordion-body {
-  padding: 12px 18px 16px 18px;
+  padding: 8px 12px 14px 12px;
   background-color: #ffffff;
 }
 
@@ -245,21 +258,22 @@
   padding: 0 !important;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
 }
 
-/* Individual Lesson Item */
+/* Từng bài học - Căn giữa, cân đối chuẩn tỉ lệ */
 .course-curriculum .curriculum-lesson-item {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  padding: 11px 14px !important;
-  border-radius: 10px;
+  min-height: 48px;
+  padding: 10px 14px !important;
+  border-radius: 8px;
   background-color: #ffffff;
-  border: 1px solid transparent;
+  border: none !important;
   border-bottom: 1px solid #f1f5f9 !important;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  gap: 12px;
+  transition: background-color 0.15s ease;
+  gap: 16px;
   margin: 0 !important;
 }
 
@@ -269,49 +283,57 @@
 
 .course-curriculum .curriculum-lesson-item:hover {
   background-color: #f8fafc;
-  border-color: #e2e8f0;
-  transform: translateX(4px);
+  transform: none !important;
 }
 
-/* Lesson Left */
+/* Bên trái bài học: Căn giữa tuyệt đối trục ngang */
 .course-curriculum .lesson-left {
-  display: flex;
-  align-items: flex-start;
+  display: flex !important;
+  align-items: center !important;
   gap: 12px;
   flex: 1;
   min-width: 0;
 }
 
-/* Lesson Play Icon */
+/* Icon Play bài học - Hình tròn đơn, tam giác căn quang học */
 .course-curriculum .lesson-play-icon {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  max-width: 26px;
   border-radius: 50%;
   background-color: var(--curriculum-primary-light);
   color: var(--curriculum-primary);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  margin-top: 1px;
-  transition: all 0.2s ease;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 9.5px;
+  margin: 0 !important;
   flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.course-curriculum .lesson-play-icon i {
+  margin-left: 1.5px;
+  line-height: 1;
 }
 
 .course-curriculum .curriculum-lesson-item:hover .lesson-play-icon {
   background-color: var(--curriculum-primary);
   color: #ffffff;
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
-/* Lesson Title / Text */
+/* Tiêu đề bài học - Căn giữa trục dọc và cỡ chữ chuẩn */
 .course-curriculum .lesson-text {
   font-size: 14.5px;
   font-weight: 500;
   color: #334155;
-  line-height: 1.55;
+  line-height: 1.45;
   flex: 1;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
   transition: color 0.2s ease;
 }
 
@@ -319,26 +341,39 @@
   margin: 0 !important;
   padding: 0 !important;
   display: inline !important;
+  line-height: inherit !important;
 }
 
 .course-curriculum .curriculum-lesson-item:hover .lesson-text {
   color: var(--curriculum-primary);
 }
 
-/* Lesson Right Tag */
+/* Bên phải bài học: Tag bài học thanh mảnh, cân xứng */
 .course-curriculum .lesson-right {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 .course-curriculum .lesson-type-tag {
   font-size: 11.5px;
-  font-weight: 600;
-  color: var(--curriculum-muted);
-  background-color: #f1f5f9;
-  padding: 3px 10px;
-  border-radius: 6px;
+  font-weight: 500;
+  color: #64748b;
+  background-color: #f8fafc;
+  padding: 3px 9px;
+  border-radius: 4px;
   white-space: nowrap;
-  border: 1px solid var(--curriculum-border);
+  border: 1px solid #e2e8f0;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.25;
+  transition: all 0.2s ease;
+}
+
+.course-curriculum .curriculum-lesson-item:hover .lesson-type-tag {
+  color: var(--curriculum-primary);
+  background-color: #ffffff;
+  border-color: rgba(3, 89, 78, 0.25);
 }
 
 /* ==========================================================================
@@ -350,7 +385,7 @@
   border: 1px solid var(--curriculum-border);
   border-radius: var(--curriculum-radius);
   padding: 24px 26px;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
   transition: all 0.2s ease;
 }
 
@@ -361,12 +396,20 @@
   margin-bottom: 16px;
 }
 
+.postbox-dsc .course-summary-content,
 .course-summary-card .course-summary-content {
-  font-size: 15px;
-  line-height: 1.75;
+  font-size: 15.5px;
+  line-height: 1.8;
   color: #334155;
 }
 
+.postbox-dsc .course-summary-content p,
+.course-summary-card .course-summary-content p {
+  margin-bottom: 16px;
+  line-height: 1.8;
+}
+
+.postbox-dsc .course-summary-content p:last-child,
 .course-summary-card .course-summary-content p:last-child {
   margin-bottom: 0;
 }
@@ -376,7 +419,7 @@
   border: 1px solid #d4ece5;
   border-radius: var(--curriculum-radius);
   padding: 24px 26px;
-  box-shadow: 0 2px 10px rgba(3, 89, 78, 0.03);
+  box-shadow: 0 4px 18px rgba(3, 89, 78, 0.04);
 }
 
 .what-to-learn-card .it-details-title {
@@ -391,7 +434,7 @@
   border: 1px solid var(--curriculum-border);
   border-radius: var(--curriculum-radius);
   padding: 24px 26px;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
 }
 
 .course-includes-card .it-details-title {
@@ -407,7 +450,6 @@
 
 .gitiho-course-panel .course-curriculum-header {
   padding: 14px 16px;
-  margin-bottom: 14px;
 }
 
 .gitiho-course-panel .course-curriculum-header .it-details-title {
@@ -457,7 +499,7 @@
   }
 
   .course-curriculum .it-custom-accordion-2 .accordion-buttons {
-    padding: 13px 14px;
+    padding: 14px 16px;
     gap: 10px;
   }
 
@@ -482,7 +524,7 @@
   }
 
   .course-curriculum .it-custom-accordion-2 .accordion-body {
-    padding: 8px 10px 12px 10px;
+    padding: 10px 14px 14px 14px;
   }
 
   .course-curriculum .curriculum-lesson-item {

@@ -239,13 +239,6 @@
                            </ul>
                         </nav>
                      </div>
-                     {{-- Nội dung học (Chương trình học) được chuyển lên đầu --}}
-                     @if ($post->content)
-                     <div id="curriculum" class="mb-50">                     
-                        @include('frontend.partials.course-curriculum')
-                     </div>
-                     @endif
-
                      <div id="summary-section">
                         @if ($post->summary)
                         <div class="course-summary-card mb-50">
@@ -259,6 +252,12 @@
                         </div>
                         @endif
                      </div>
+
+                     @if ($post->content)
+                     <div id="curriculum" class="mb-50">                     
+                        @include('frontend.partials.course-curriculum')
+                     </div>
+                     @endif
 
                      <div id="overview">
                         @if ($post->what_to_learn)
