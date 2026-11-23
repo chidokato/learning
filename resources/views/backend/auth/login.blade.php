@@ -111,8 +111,8 @@
                                             <form action="{{ route('backend.admin.authenticate') }}" method="POST">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label for="email" class="form-label">Email hoac ten dang nhap</label>
-                                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', 'tuan.pn92@gmail.com') }}" placeholder="admin@nhadatvn.org">
+                                                    <label for="email" class="form-label">Mã nhân viên / Email / Số điện thoại</label>
+                                                    <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', 'tuan.pn92@gmail.com') }}" placeholder="Nhập Mã NV, Email hoặc SĐT">
                                                     @error('email')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror

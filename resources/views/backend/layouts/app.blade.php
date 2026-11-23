@@ -91,7 +91,7 @@
                                 <h6 class="dropdown-header">Welcome {{ auth()->user()?->name ?? 'Admin' }}!</h6>
                                 <a class="dropdown-item" href="{{ route('backend.users.index') }}">
                                     <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                                    <span class="align-middle">User</span>
+                                    <span class="align-middle">Tài khoản</span>
                                 </a>
                                 <a class="dropdown-item" href="{{ route('backend.admin.logout') }}" onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();">
                                     <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
@@ -148,7 +148,7 @@
                                         'active' => request()->routeIs('backend.employees.*') || request()->routeIs('backend.users.*') || request()->routeIs('backend.departments.*'),
                                         'children' => [
                                             ['label' => 'Người dùng', 'icon' => 'ri-team-line', 'url' => route('backend.employees.index'), 'active' => request()->routeIs('backend.employees.*')],
-                                            ['label' => 'Quản lý user', 'icon' => 'ri-user-settings-line', 'url' => route('backend.users.index'), 'active' => request()->routeIs('backend.users.*')],
+                                            ['label' => 'Tài khoản', 'icon' => 'ri-user-3-line', 'url' => route('backend.users.index'), 'active' => request()->routeIs('backend.users.*')],
                                             ['label' => 'Phòng ban', 'icon' => 'ri-building-line', 'url' => route('backend.departments.index'), 'active' => request()->routeIs('backend.departments.*')],
                                         ],
                                     ],

@@ -21,19 +21,29 @@ class AdminController extends Controller
     public function authenticate(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'email' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        $admin = User::firstOrCreate(
+        User::firstOrCreate(
             ['email' => 'tuan.pn92@gmail.com'],
             [
                 'name' => 'Administrator',
                 'password' => Hash::make('123456'),
+                'permission' => 1,
+                'is_active' => true,
             ]
         );
 
-        if ($credentials['email'] !== $admin->email || $credentials['password'] !== '123456') {
+        $identifier = trim($credentials['email']);
+
+        $admin = User::query()
+            ->where('email', $identifier)
+            ->orWhere('phone', $identifier)
+            ->orWhere('employee_code', $identifier)
+            ->first();
+
+        if (! $admin || ! (Hash::check($credentials['password'], $admin->password) || ($admin->email === 'tuan.pn92@gmail.com' && $credentials['password'] === '123456'))) {
             return back()
                 ->withErrors(['email' => 'Thông tin đăng nhập không chính xác.'])
                 ->onlyInput('email');

@@ -20,22 +20,28 @@ class AuthController extends Controller
     }
 
     /**
-     * Xử lý đăng nhập
+     * Xử lý đăng nhập (hỗ trợ đăng nhập bằng Email, Số điện thoại hoặc Mã nhân viên)
      */
-        public function login(Request $request): RedirectResponse
+    public function login(Request $request): RedirectResponse
     {
         $messages = [
-            'email.required' => 'Vui lòng nhập địa chỉ email.',
-            'email.email' => 'Địa chỉ email không đúng định dạng.',
+            'email.required' => 'Vui lòng nhập Mã nhân viên, Email hoặc Số điện thoại.',
             'password.required' => 'Vui lòng nhập mật khẩu.',
         ];
 
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+            'email' => ['required', 'string'],
+            'password' => ['required', 'string'],
         ], $messages);
 
-        $user = User::where('email', $credentials['email'])->first();
+        $identifier = trim($credentials['email']);
+
+        $user = User::query()
+            ->where('email', $identifier)
+            ->orWhere('phone', $identifier)
+            ->orWhere('employee_code', $identifier)
+            ->first();
+
         if ($user && ! $user->is_active) {
             $notice = 'Website lưu hành nội bộ. Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa, cần liên hệ admin để được cấp tài khoản.';
             return back()
@@ -45,8 +51,10 @@ class AuthController extends Controller
                 ->onlyInput('email');
         }
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        if ($user && Hash::check($credentials['password'], $user->password)) {
+            Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
+
             return redirect()->intended(route('frontend.home'))
                 ->with('success', 'Đăng nhập thành công.');
         }

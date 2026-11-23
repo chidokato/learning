@@ -110,12 +110,12 @@
                         <form action="{{ route('frontend.login.post') }}" method="POST">
                            @csrf
 
-                           <!-- Email Input -->
+                           <!-- Email / Employee Code / Phone Input -->
                            <div class="auth-field">
-                              <label class="auth-label">Email hoặc tên đăng nhập <span class="required">*</span></label>
+                              <label class="auth-label">Mã nhân viên / Email / Số điện thoại <span class="required">*</span></label>
                               <div class="auth-input-group">
-                                 <i class="far fa-envelope auth-input-icon"></i>
-                                 <input type="email" name="email" value="{{ old('email') }}" class="auth-input-control" placeholder="name@example.com" required autofocus>
+                                 <i class="far fa-user auth-input-icon"></i>
+                                 <input type="text" name="email" value="{{ old('email') }}" class="auth-input-control" placeholder="Nhập Mã NV, Email hoặc SĐT" required autofocus>
                               </div>
                            </div>
 

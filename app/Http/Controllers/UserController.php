@@ -5,85 +5,227 @@ namespace App\Http\Controllers;
 use App\Exports\UserSampleExport;
 use App\Imports\UserImport;
 use App\Models\Department;
+use App\Models\SharedDbConfig;
 use App\Models\User;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
-    public function index(Request $request): View
+    /**
+     * Lấy danh sách nhân sự và phòng ban từ DB dùng chung (bảng employees & departments)
+     */
+    protected function getSharedEmployeesData(): array
     {
-        $query = User::query()->with('department');
+        $employees = collect();
+        $employeesByCode = [];
+        $departmentsMap = [];
 
-        if ($request->filled('department_id')) {
-            $department = Department::find($request->input('department_id'));
-            if ($department) {
-                $deptIds = array_merge([$department->id], $department->getAllDescendantIds());
-                $query->whereIn('department_id', $deptIds);
+        try {
+            $config = SharedDbConfig::findActiveForTable('employees');
+            if ($config) {
+                $connection = $config->connectSharedDb();
+                $schema = Schema::connection($config->getConnectionNameKey());
+                $empTable = $config->hasSharedTable('employees') ? 'employees' : ($config->getTableNames()[0] ?? 'employees');
+
+                if ($schema->hasTable('departments')) {
+                    $departmentsMap = $connection->table('departments')
+                        ->pluck('name', 'id')
+                        ->toArray();
+                }
+
+                if ($schema->hasTable($empTable)) {
+                    $empColumns = $schema->getColumnListing($empTable);
+                    $query = $connection->table($empTable);
+
+                    if (in_array('deleted_at', $empColumns, true)) {
+                        $query->whereNull('deleted_at');
+                    }
+
+                    $rows = $query->orderBy('name')->get();
+
+                    foreach ($rows as $row) {
+                        $deptId = $row->department_id ?? null;
+                        $row->department_name = ($deptId && isset($departmentsMap[$deptId]))
+                            ? $departmentsMap[$deptId]
+                            : null;
+
+                        $employees->push($row);
+
+                        $code = trim((string) ($row->employee_code ?? ''));
+                        if ($code !== '') {
+                            $employeesByCode[$code] = $row;
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // Bỏ qua nếu kết nối DB chung gặp sự cố
+        }
+
+        return [
+            'employees' => $employees,
+            'employeesByCode' => $employeesByCode,
+            'departmentsMap' => $departmentsMap,
+        ];
+    }
+
+    /**
+     * Tự động liên kết các tài khoản đã có với bảng employees bên DB chung
+     * dựa theo: employee_code, username (nếu lưu mã NV ở cột username), email hoặc họ tên.
+     */
+    protected function autoLinkUsersWithSharedEmployees(Collection $employees, array $employeesByCode): void
+    {
+        if ($employees->isEmpty()) {
+            return;
+        }
+
+        // Danh sách mã NV đã được gắn trong bảng users
+        $usedCodes = User::query()
+            ->whereNotNull('employee_code')
+            ->where('employee_code', '!=', '')
+            ->pluck('employee_code', 'id')
+            ->map(fn ($v) => trim((string) $v))
+            ->toArray();
+
+        $usedCodesSet = array_flip($usedCodes);
+
+        // Map phụ theo email và theo họ tên (chữ thường)
+        $empByEmail = [];
+        $empByName = [];
+        foreach ($employees as $emp) {
+            $code = trim((string) ($emp->employee_code ?? ''));
+            if ($code === '') {
+                continue;
+            }
+            $mail = mb_strtolower(trim((string) ($emp->email ?? '')), 'UTF-8');
+            if ($mail !== '') {
+                $empByEmail[$mail] = $code;
+            }
+            $normName = mb_strtolower(trim((string) ($emp->name ?? '')), 'UTF-8');
+            if ($normName !== '') {
+                $empByName[$normName][] = $code;
             }
         }
 
-        if ($request->filled('search')) {
-            $keyword = trim($request->input('search'));
-            $query->where(function ($q) use ($keyword) {
-                $q->where('name', 'like', "%{$keyword}%")
-                    ->orWhere('email', 'like', "%{$keyword}%")
-                    ->orWhere('phone', 'like', "%{$keyword}%")
-                    ->orWhere('job_title', 'like', "%{$keyword}%");
+        $unlinkedUsers = User::query()
+            ->where(function ($q) {
+                $q->whereNull('employee_code')->orWhere('employee_code', '');
+            })
+            ->get();
+
+        foreach ($unlinkedUsers as $u) {
+            $matchedCode = null;
+
+            // 1. Nếu cột username đang chứa mã nhân viên trùng với DB chung
+            $uname = trim((string) ($u->username ?? ''));
+            if ($uname !== '' && isset($employeesByCode[$uname])) {
+                $matchedCode = $uname;
+            }
+
+            // 2. Nếu email trùng với email của nhân sự bên DB chung
+            if (! $matchedCode && ! empty($u->email)) {
+                $uMail = mb_strtolower(trim((string) $u->email), 'UTF-8');
+                if (isset($empByEmail[$uMail])) {
+                    $matchedCode = $empByEmail[$uMail];
+                } elseif (str_contains($uMail, '@')) {
+                    // Trường hợp email dạng 990200000489@hcc.local
+                    $localPart = explode('@', $uMail)[0];
+                    if (isset($employeesByCode[$localPart])) {
+                        $matchedCode = $localPart;
+                    }
+                }
+            }
+
+            // 3. Nếu họ tên trùng khớp duy nhất với nhân sự bên DB chung
+            if (! $matchedCode && ! empty($u->name)) {
+                $uName = mb_strtolower(trim((string) $u->name), 'UTF-8');
+                if (isset($empByName[$uName]) && count($empByName[$uName]) === 1) {
+                    $matchedCode = $empByName[$uName][0];
+                }
+            }
+
+            if ($matchedCode && ! isset($usedCodesSet[$matchedCode])) {
+                $u->update(['employee_code' => $matchedCode]);
+                $usedCodesSet[$matchedCode] = $u->id;
+            }
+        }
+    }
+
+    public function index(Request $request): View
+    {
+        $search = trim((string) $request->input('search', ''));
+        $sharedData = $this->getSharedEmployeesData();
+        $employeesByCode = $sharedData['employeesByCode'];
+
+        $this->autoLinkUsersWithSharedEmployees($sharedData['employees'], $employeesByCode);
+
+        $query = User::query()->with('department');
+
+        if ($search !== '') {
+            // Tìm các mã nhân viên bên DB chung có tên hoặc mã khớp từ khóa
+            $matchedCodes = collect($sharedData['employees'])
+                ->filter(function ($emp) use ($search) {
+                    return stripos((string) ($emp->employee_code ?? ''), $search) !== false
+                        || stripos((string) ($emp->name ?? ''), $search) !== false;
+                })
+                ->pluck('employee_code')
+                ->filter()
+                ->values()
+                ->toArray();
+
+            $query->where(function ($q) use ($search, $matchedCodes) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('employee_code', 'like', "%{$search}%");
+
+                if (! empty($matchedCodes)) {
+                    $q->orWhereIn('employee_code', $matchedCodes);
+                }
             });
         }
 
-        if ($request->filled('permission')) {
-            $query->where('permission', $request->input('permission'));
-        }
+        $users = $query->latest()->paginate(15)->withQueryString();
 
-        if ($request->filled('status')) {
-            $query->where('is_active', $request->input('status') === 'active');
-        }
-
-        $perPage = (int) $request->input('per_page', 20);
-        if ($perPage <= 0 || $perPage > 200) {
-            $perPage = 20;
-        }
-
-        $users = $query->latest()->paginate($perPage)->withQueryString();
-        $departmentOptions = Department::getTreeOptions();
-
-        return view('backend.users.index', compact('users', 'departmentOptions'));
+        return view('backend.users.index', compact('users', 'search', 'employeesByCode'));
     }
 
     public function create(): View
     {
-        $departmentOptions = Department::getTreeOptions();
+        $sharedData = $this->getSharedEmployeesData();
+        $employees = $sharedData['employees'];
 
-        return view('backend.users.create', compact('departmentOptions'));
+        return view('backend.users.create', compact('employees'));
     }
 
     public function store(Request $request): RedirectResponse
     {
+        $request->merge([
+            'employee_code' => trim((string) $request->input('employee_code', '')) ?: null,
+        ]);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'employee_code' => ['nullable', 'string', 'max:100'],
-            'username' => ['nullable', 'string', 'max:100'],
-            'department_id' => ['nullable', 'exists:departments,id'],
-            'job_title' => ['nullable', 'string', 'max:255'],
-            'bio' => ['nullable', 'string'],
-            'address' => ['nullable', 'string', 'max:255'],
+            'employee_code' => ['nullable', 'string', 'max:100', 'unique:users,employee_code'],
             'phone' => ['nullable', 'string', 'max:50'],
-            'secondary_phone' => ['nullable', 'string', 'max:50'],
-            'whatsapp_phone' => ['nullable', 'string', 'max:50'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'avatar_file' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:2048'],
             'remove_avatar' => ['nullable'],
             'permission' => ['required', 'integer', 'in:1,2,3,4,5,6'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
+        ], [
+            'employee_code.unique' => 'Nhân viên này (Mã NV) đã được liên kết với một tài khoản khác.',
+            'email.unique' => 'Email này đã tồn tại trên hệ thống.',
         ]);
 
         $avatarPath = null;
@@ -95,46 +237,48 @@ class UserController extends Controller
         User::create([
             'name' => $validated['name'],
             'employee_code' => $validated['employee_code'] ?? null,
-            'username' => $validated['username'] ?? null,
-            'department_id' => $validated['department_id'] ?? null,
-            'job_title' => $validated['job_title'] ?? null,
-            'bio' => $validated['bio'] ?? null,
-            'address' => $validated['address'] ?? null,
             'phone' => $validated['phone'] ?? null,
-            'secondary_phone' => $validated['secondary_phone'] ?? null,
-            'whatsapp_phone' => $validated['whatsapp_phone'] ?? null,
             'avatar' => $avatarPath,
             'permission' => $validated['permission'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'is_active' => $request->boolean('is_active', true),
+            'is_active' => true,
         ]);
 
         return redirect()
             ->route('backend.users.index')
-            ->with('success', 'Them user thanh cong.');
+            ->with('success', 'Thêm tài khoản thành công.');
     }
 
     public function edit(User $user): View
     {
-        $departmentOptions = Department::getTreeOptions();
+        $sharedData = $this->getSharedEmployeesData();
+        $employees = $sharedData['employees'];
+        $employeesByCode = $sharedData['employeesByCode'];
 
-        return view('backend.users.edit', compact('user', 'departmentOptions'));
+        if (empty($user->employee_code)) {
+            $this->autoLinkUsersWithSharedEmployees($employees, $employeesByCode);
+            $user->refresh();
+        }
+
+        return view('backend.users.edit', compact('user', 'employees'));
     }
 
     public function update(Request $request, User $user): RedirectResponse
     {
+        $request->merge([
+            'employee_code' => trim((string) $request->input('employee_code', '')) ?: null,
+        ]);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'employee_code' => ['nullable', 'string', 'max:100'],
-            'username' => ['nullable', 'string', 'max:100'],
-            'department_id' => ['nullable', 'exists:departments,id'],
-            'job_title' => ['nullable', 'string', 'max:255'],
-            'bio' => ['nullable', 'string'],
-            'address' => ['nullable', 'string', 'max:255'],
+            'employee_code' => [
+                'nullable',
+                'string',
+                'max:100',
+                Rule::unique('users', 'employee_code')->ignore($user->id),
+            ],
             'phone' => ['nullable', 'string', 'max:50'],
-            'secondary_phone' => ['nullable', 'string', 'max:50'],
-            'whatsapp_phone' => ['nullable', 'string', 'max:50'],
             'email' => [
                 'required',
                 'email',
@@ -145,6 +289,9 @@ class UserController extends Controller
             'remove_avatar' => ['nullable'],
             'permission' => ['required', 'integer', 'in:1,2,3,4,5,6'],
             'password' => ['nullable', 'string', 'min:6', 'confirmed'],
+        ], [
+            'employee_code.unique' => 'Nhân viên này (Mã NV) đã được liên kết với một tài khoản khác.',
+            'email.unique' => 'Email này đã tồn tại trên hệ thống.',
         ]);
 
         $avatarPath = $user->avatar;
@@ -162,18 +309,10 @@ class UserController extends Controller
         $data = [
             'name' => $validated['name'],
             'employee_code' => $validated['employee_code'] ?? null,
-            'username' => $validated['username'] ?? null,
-            'department_id' => $validated['department_id'] ?? null,
-            'job_title' => $validated['job_title'] ?? null,
-            'bio' => $validated['bio'] ?? null,
-            'address' => $validated['address'] ?? null,
             'phone' => $validated['phone'] ?? null,
-            'secondary_phone' => $validated['secondary_phone'] ?? null,
-            'whatsapp_phone' => $validated['whatsapp_phone'] ?? null,
             'avatar' => $avatarPath,
             'permission' => $validated['permission'],
             'email' => $validated['email'],
-            'is_active' => ($user->id === auth()->id()) ? true : $request->boolean('is_active', true),
         ];
 
         if (! empty($validated['password'])) {
@@ -182,13 +321,9 @@ class UserController extends Controller
 
         $user->update($data);
 
-        if (! $user->is_active && method_exists($user, 'tokens')) {
-            $user->tokens()->delete();
-        }
-
         return redirect()
             ->route('backend.users.index')
-            ->with('success', 'Cap nhat user thanh cong.');
+            ->with('success', 'Cập nhật tài khoản thành công.');
     }
 
     public function destroy(User $user): RedirectResponse
@@ -196,7 +331,7 @@ class UserController extends Controller
         if (auth()->id() === $user->id) {
             return redirect()
                 ->route('backend.users.index')
-                ->with('error', 'Khong the xoa tai khoan dang dang nhap.');
+                ->with('error', 'Không thể xóa tài khoản đang đăng nhập.');
         }
 
         $this->deleteAvatarIfExists($user->avatar);
@@ -204,7 +339,7 @@ class UserController extends Controller
 
         return redirect()
             ->route('backend.users.index')
-            ->with('success', 'Xoa user thanh cong.');
+            ->with('success', 'Xóa tài khoản thành công.');
     }
 
     protected function storeAvatar($file): string
@@ -242,9 +377,9 @@ class UserController extends Controller
 
         $user = User::create([
             'name' => $validated['name'],
-            'email' => 'user_' . Str::random(10) . '@example.com', // Auto generated email
+            'email' => 'user_' . Str::random(10) . '@example.com',
             'password' => Hash::make(Str::random(16)),
-            'permission' => 4, // Instructor
+            'permission' => 4,
         ]);
 
         return response()->json([
@@ -269,12 +404,6 @@ class UserController extends Controller
             $departmentId = null;
         } else {
             $departmentId = (int) $departmentId;
-            if (! Department::where('id', $departmentId)->exists()) {
-                if ($request->wantsJson()) {
-                    return response()->json(['success' => false, 'message' => 'Phòng ban không tồn tại.'], 422);
-                }
-                return redirect()->back()->with('error', 'Phòng ban được chọn không tồn tại.');
-            }
         }
 
         $userIds = $validated['user_ids'];
@@ -284,8 +413,7 @@ class UserController extends Controller
 
         $dept = $departmentId ? Department::find($departmentId) : null;
         $deptName = $dept ? $dept->name : 'Không có phòng ban (Đã gỡ)';
-
-        $message = "Đã cập nhật phòng ban [{$deptName}] cho {$count} người dùng thành công.";
+        $message = "Đã cập nhật phòng ban [{$deptName}] cho {$count} tài khoản thành công.";
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -310,10 +438,6 @@ class UserController extends Controller
     {
         $request->validate([
             'file' => ['required', 'file', 'mimes:xlsx,xls,csv', 'max:10240'],
-        ], [
-            'file.required' => 'Vui lòng chọn file Excel để tải lên.',
-            'file.mimes' => 'File phải có định dạng .xlsx, .xls hoặc .csv.',
-            'file.max' => 'Dung lượng file tối đa là 10MB.',
         ]);
 
         try {
