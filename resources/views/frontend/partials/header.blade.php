@@ -36,7 +36,7 @@
                      <a href="{{ route('frontend.profile') }}" class="user-profile-link" title="Xem hồ sơ cá nhân">
                         <span class="user-avatar-mini">
                            @if(!empty(Auth::user()->avatar))
-                              <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                              <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" onerror="this.onerror=null; this.src='{{ asset('assets/img/avatar/avatar-default.png') }}';">
                            @else
                               <i class="fas fa-user"></i>
                            @endif

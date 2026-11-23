@@ -306,7 +306,7 @@ class FrontendLearningReportController extends Controller
                     if ($totalAttempts === 0) {
                         $rawRows[] = [
                             'user_id' => $user->id,
-                            'user_avatar' => $user->avatar,
+                            'user_avatar' => $user->avatar_url,
                             'post_id' => $post->id,
                             'test_id' => $test->id,
                             'employee_code' => $user->employee_code ?: '',
@@ -346,7 +346,7 @@ class FrontendLearningReportController extends Controller
                             }
                             $rawRows[] = [
                                 'user_id' => $user->id,
-                                'user_avatar' => $user->avatar,
+                                'user_avatar' => $user->avatar_url,
                                 'post_id' => $post->id,
                                 'test_id' => $test->id,
                                 'employee_code' => $user->employee_code ?: '',
@@ -376,7 +376,7 @@ class FrontendLearningReportController extends Controller
                             $latestAtt = $attempts[$lastIndex];
                             $rawRows[] = [
                                 'user_id' => $user->id,
-                                'user_avatar' => $user->avatar,
+                                'user_avatar' => $user->avatar_url,
                                 'post_id' => $post->id,
                                 'test_id' => $test->id,
                                 'employee_code' => $user->employee_code ?: '',
@@ -405,7 +405,7 @@ class FrontendLearningReportController extends Controller
                             foreach ($attempts as $idx => $att) {
                                 $rawRows[] = [
                                     'user_id' => $user->id,
-                                    'user_avatar' => $user->avatar,
+                                    'user_avatar' => $user->avatar_url,
                                     'post_id' => $post->id,
                                     'test_id' => $test->id,
                                     'employee_code' => $user->employee_code ?: '',
@@ -439,7 +439,7 @@ class FrontendLearningReportController extends Controller
                 $deptInfo = $resolveDeptInfo($user);
                 $rawRows[] = [
                     'user_id' => $user->id,
-                    'user_avatar' => $user->avatar,
+                    'user_avatar' => $user->avatar_url,
                     'post_id' => $post->id,
                     'test_id' => null,
                     'employee_code' => $user->employee_code ?: '',
@@ -531,7 +531,7 @@ class FrontendLearningReportController extends Controller
                 }
                 $rawRows[] = [
                     'user_id' => $user->id,
-                    'user_avatar' => $user->avatar,
+                    'user_avatar' => $user->avatar_url,
                     'post_id' => $post ? $post->id : null,
                     'test_id' => $test->id,
                     'employee_code' => $user->employee_code ?: '',
@@ -561,7 +561,7 @@ class FrontendLearningReportController extends Controller
                 $latestAtt = $attempts[$lastIndex];
                 $rawRows[] = [
                     'user_id' => $user->id,
-                    'user_avatar' => $user->avatar,
+                    'user_avatar' => $user->avatar_url,
                     'post_id' => $post ? $post->id : null,
                     'test_id' => $test->id,
                     'employee_code' => $user->employee_code ?: '',
@@ -590,7 +590,7 @@ class FrontendLearningReportController extends Controller
                 foreach ($attempts as $idx => $att) {
                     $rawRows[] = [
                         'user_id' => $user->id,
-                        'user_avatar' => $user->avatar,
+                        'user_avatar' => $user->avatar_url,
                         'post_id' => $post ? $post->id : null,
                         'test_id' => $test->id,
                         'employee_code' => $user->employee_code ?: '',

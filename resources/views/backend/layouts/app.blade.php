@@ -133,40 +133,95 @@
                     <ul class="navbar-nav" id="navbar-nav">
                         @php
                             $menuGroups = [
-                                'Giao diện & Trang chủ' => [
-                                    ['label' => 'Slider', 'icon' => 'ri-image-line', 'route' => 'backend.sliders.index', 'active' => request()->routeIs('backend.sliders.*')],
-                                    ['label' => 'Homepage Categories', 'icon' => 'ri-layout-grid-line', 'route' => 'backend.homepage_categories.index', 'active' => request()->routeIs('backend.homepage_categories.*')],
-                                    ['label' => 'Menu', 'icon' => 'ri-menu-line', 'route' => 'backend.menus.index', 'active' => request()->routeIs('backend.menus.*')],
-                                ],
                                 'Khóa học & Nội dung' => [
-                                    ['label' => 'Category', 'icon' => 'ri-folder-2-line', 'route' => 'backend.categories.index', 'active' => request()->routeIs('backend.categories.*')],
-                                    ['label' => 'Topic', 'icon' => 'ri-price-tag-3-line', 'route' => 'backend.topics.index', 'active' => request()->routeIs('backend.topics.*')],
-                                    ['label' => 'Course', 'icon' => 'ri-book-open-line', 'route' => 'backend.courses.index', 'active' => request()->routeIs('backend.courses.*') || request()->routeIs('backend.products.*')],
+                                    ['label' => 'Danh mục', 'icon' => 'ri-folder-2-line', 'route' => 'backend.categories.index', 'active' => request()->routeIs('backend.categories.*')],
+                                    ['label' => 'Bài thi', 'icon' => 'ri-price-tag-3-line', 'route' => 'backend.topics.index', 'active' => request()->routeIs('backend.topics.*')],
+                                    ['label' => 'Khóa học', 'icon' => 'ri-book-open-line', 'route' => 'backend.courses.index', 'active' => request()->routeIs('backend.courses.*') || request()->routeIs('backend.products.*')],
                                     ['label' => 'Bài kiểm tra', 'icon' => 'ri-file-list-3-line', 'route' => 'backend.tests.index', 'active' => request()->routeIs('backend.tests.*')],
-                                    ['label' => 'Báo cáo đào tạo & thi', 'icon' => 'ri-file-excel-2-line', 'route' => 'frontend.admin.reports.learning', 'active' => request()->routeIs('frontend.admin.reports.learning*') || request()->routeIs('backend.reports.learning*')],
-                                    ['label' => 'News', 'icon' => 'ri-newspaper-line', 'route' => 'backend.news.index', 'active' => request()->routeIs('backend.news.*')],
+                                    ['label' => 'Tin tức', 'icon' => 'ri-newspaper-line', 'route' => 'backend.news.index', 'active' => request()->routeIs('backend.news.*')],
                                 ],
-                                'Chăm sóc khách hàng' => [
-                                    ['label' => 'Customer inquiry', 'icon' => 'ri-customer-service-2-line', 'route' => 'backend.customer-inquiries.index', 'active' => request()->routeIs('backend.customer-inquiries.*')],
-                                    ['label' => 'AI ChatBot', 'icon' => 'ri-robot-line', 'route' => 'backend.chatbot.edit', 'active' => request()->routeIs('backend.chatbot.*')],
+                                'Tài khoản' => [
+                                    [
+                                        'label' => 'Người dùng',
+                                        'icon' => 'ri-user-3-line',
+                                        'route' => 'backend.employees.index',
+                                        'active' => request()->routeIs('backend.employees.*') || request()->routeIs('backend.users.*') || request()->routeIs('backend.departments.*'),
+                                        'children' => [
+                                            ['label' => 'Người dùng', 'icon' => 'ri-team-line', 'url' => route('backend.employees.index'), 'active' => request()->routeIs('backend.employees.*')],
+                                            ['label' => 'Quản lý user', 'icon' => 'ri-user-settings-line', 'url' => route('backend.users.index'), 'active' => request()->routeIs('backend.users.*')],
+                                            ['label' => 'Phòng ban', 'icon' => 'ri-building-line', 'url' => route('backend.departments.index'), 'active' => request()->routeIs('backend.departments.*')],
+                                        ],
+                                    ],
+                                ],
+                                'Giao diện & Trang chủ' => [
+                                    [
+                                        'label' => 'Giao diện',
+                                        'icon' => 'ri-layout-4-line',
+                                        'route' => 'backend.sliders.index',
+                                        'active' => request()->routeIs('backend.sliders.*') || request()->routeIs('backend.homepage_categories.*') || request()->routeIs('backend.menus.*'),
+                                        'children' => [
+                                            ['label' => 'Slider', 'icon' => 'ri-image-line', 'url' => route('backend.sliders.index'), 'active' => request()->routeIs('backend.sliders.*')],
+                                            ['label' => 'Categories HOT', 'icon' => 'ri-layout-grid-line', 'url' => route('backend.homepage_categories.index'), 'active' => request()->routeIs('backend.homepage_categories.*')],
+                                            ['label' => 'Menu', 'icon' => 'ri-menu-line', 'url' => route('backend.menus.index'), 'active' => request()->routeIs('backend.menus.*')],
+                                        ],
+                                    ],
                                 ],
                                 'Hệ thống' => [
-                                    ['label' => 'SEO', 'icon' => 'ri-search-eye-line', 'route' => 'backend.seo.edit', 'active' => request()->routeIs('backend.seo.*')],
-                                    ['label' => 'Setting', 'icon' => 'ri-settings-3-line', 'route' => 'backend.settings.edit', 'active' => request()->routeIs('backend.settings.*')],
-                                    ['label' => 'Cấu hình Google', 'icon' => 'ri-google-fill', 'route' => 'backend.google-auth.index', 'active' => request()->routeIs('backend.google-auth.*')],
-                                    ['label' => 'Phòng ban', 'icon' => 'ri-building-line', 'route' => 'backend.departments.index', 'active' => request()->routeIs('backend.departments.*')],
-                                    ['label' => 'User', 'icon' => 'ri-user-3-line', 'route' => 'backend.users.index', 'active' => request()->routeIs('backend.users.*')],
+                                    [
+                                        'label' => 'Hệ thống',
+                                        'icon' => 'ri-settings-3-line',
+                                        'route' => 'backend.settings.edit',
+                                        'active' => request()->routeIs('backend.settings.*') || request()->routeIs('backend.seo.*') || request()->routeIs('backend.chatbot.*') || request()->routeIs('backend.google-auth.*') || request()->routeIs('backend.shared-db-configs.*'),
+                                        'children' => [
+                                            ['label' => 'Setting', 'icon' => 'ri-settings-3-line', 'url' => route('backend.settings.edit'), 'active' => request()->routeIs('backend.settings.*')],
+                                            ['label' => 'AI ChatBot', 'icon' => 'ri-robot-line', 'url' => route('backend.chatbot.edit'), 'active' => request()->routeIs('backend.chatbot.*')],
+                                            ['label' => 'SEO', 'icon' => 'ri-search-eye-line', 'url' => route('backend.seo.edit'), 'active' => request()->routeIs('backend.seo.*')],
+                                            ['label' => 'Cấu hình google', 'icon' => 'ri-google-fill', 'url' => route('backend.google-auth.index'), 'active' => request()->routeIs('backend.google-auth.*')],
+                                            ['label' => 'DB chung', 'icon' => 'ri-database-2-line', 'url' => route('backend.shared-db-configs.index'), 'active' => request()->routeIs('backend.shared-db-configs.*')],
+                                        ],
+                                    ],
                                 ]
                             ];
                         @endphp
                         @foreach ($menuGroups as $groupName => $menuItems)
-                            <li class="menu-title"><span data-key="t-{{ \Illuminate\Support\Str::slug($groupName) }}">{{ $groupName }}</span></li>
                             @foreach ($menuItems as $item)
-                                <li class="nav-item">
+                                @php
+                                    $hasChildren = !empty($item['children']);
+                                @endphp
+                                <li class="nav-item {{ $hasChildren ? 'has-flyout-submenu' : '' }}" data-flyout-title="{{ $item['label'] }}">
                                     <a class="nav-link menu-link {{ $item['active'] ? 'active' : '' }}" href="{{ $item['route'] ? route($item['route']) : '#' }}">
                                         <i class="{{ $item['icon'] }}"></i>
                                         <span>{{ $item['label'] }}</span>
+                                        @if ($hasChildren)
+                                            <i class="ri-arrow-right-s-line flyout-chevron ms-auto"></i>
+                                        @endif
                                     </a>
+                                    @if ($hasChildren)
+                                        <template class="flyout-submenu-template">
+                                            <div class="flyout-submenu-header">
+                                                <i class="{{ $item['icon'] }} me-2"></i>
+                                                <span>{{ $item['label'] }}</span>
+                                            </div>
+                                            <ul class="flyout-submenu-list">
+                                                @foreach ($item['children'] as $child)
+                                                    @if (!empty($child['divider']))
+                                                        <li class="flyout-submenu-divider">
+                                                            @if (!empty($child['header']))
+                                                                <span>{{ $child['header'] }}</span>
+                                                            @endif
+                                                        </li>
+                                                    @else
+                                                        <li>
+                                                            <a href="{{ $child['url'] }}" class="flyout-submenu-link {{ !empty($child['active']) ? 'active' : '' }}">
+                                                                <i class="{{ $child['icon'] ?? 'ri-checkbox-blank-circle-line' }}"></i>
+                                                                <span>{{ $child['label'] }}</span>
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                @endforeach
+                                            </ul>
+                                        </template>
+                                    @endif
                                 </li>
                             @endforeach
                         @endforeach
@@ -175,6 +230,8 @@
             </div>
             <div class="sidebar-background"></div>
         </div>
+
+        <div id="admin-flyout-submenu-panel" class="admin-flyout-submenu-panel" aria-hidden="true"></div>
 
         <div class="vertical-overlay"></div>
 
@@ -203,7 +260,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
-                            {{ now()->year }} Â© NhaDatVN.
+                            {{ now()->year }} © NhaDatVN.
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
@@ -242,8 +299,7 @@
     <script src="{{ asset('admin-assets/js/customc-keditor.js') }}"></script>
     <script src="{{ asset('admin-assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
     <script src="{{ asset('admin-assets/js/app.js') }}"></script>
-    <script src="{{ asset('admin-assets/js/backend-admin.js') }}"></script>
+    <script src="{{ asset('admin-assets/js/backend-admin.js') }}?v={{ time() }}"></script>
     @stack('scripts')
 </body>
 </html>
-

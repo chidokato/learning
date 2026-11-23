@@ -172,4 +172,115 @@ document.addEventListener('DOMContentLoaded', function () {
     if (typeof initEditor === 'function') {
         initEditor();
     }
+
+    // Flyout Submenu Panel for Admin Sidebar
+    (function initAdminFlyoutSubmenu() {
+        var panel = document.getElementById('admin-flyout-submenu-panel');
+        var sidebar = document.querySelector('.app-menu.navbar-menu');
+        var items = document.querySelectorAll('.nav-item.has-flyout-submenu');
+
+        if (!panel || !sidebar || !items.length) {
+            return;
+        }
+
+        var hideTimer = null;
+        var activeItem = null;
+
+        function clearHideTimer() {
+            if (hideTimer) {
+                clearTimeout(hideTimer);
+                hideTimer = null;
+            }
+        }
+
+        function scheduleHide() {
+            clearHideTimer();
+            hideTimer = setTimeout(function () {
+                hidePanel();
+            }, 180);
+        }
+
+        function hidePanel() {
+            panel.classList.remove('is-visible');
+            panel.setAttribute('aria-hidden', 'true');
+            if (activeItem) {
+                activeItem.classList.remove('is-flyout-open');
+                activeItem = null;
+            }
+        }
+
+        function positionPanel(item) {
+            var sidebarRect = sidebar.getBoundingClientRect();
+            var itemRect = item.getBoundingClientRect();
+
+            var leftPos = Math.max(sidebarRect.right + 4, 70);
+            panel.style.left = leftPos + 'px';
+
+            var topPos = itemRect.top;
+            var panelHeight = panel.offsetHeight || 260;
+            var viewportHeight = window.innerHeight;
+
+            if (topPos + panelHeight > viewportHeight - 16) {
+                topPos = Math.max(76, viewportHeight - panelHeight - 16);
+            }
+            if (topPos < 70) {
+                topPos = 70;
+            }
+
+            panel.style.top = topPos + 'px';
+        }
+
+        function showPanelForItem(item) {
+            clearHideTimer();
+
+            var template = item.querySelector('.flyout-submenu-template');
+            if (!template) {
+                hidePanel();
+                return;
+            }
+
+            if (activeItem && activeItem !== item) {
+                activeItem.classList.remove('is-flyout-open');
+            }
+
+            activeItem = item;
+            activeItem.classList.add('is-flyout-open');
+
+            panel.innerHTML = template.innerHTML;
+            panel.classList.add('is-visible');
+            panel.setAttribute('aria-hidden', 'false');
+
+            positionPanel(item);
+        }
+
+        items.forEach(function (item) {
+            item.addEventListener('mouseenter', function () {
+                showPanelForItem(item);
+            });
+
+            item.addEventListener('mouseleave', function () {
+                scheduleHide();
+            });
+        });
+
+        panel.addEventListener('mouseenter', function () {
+            clearHideTimer();
+        });
+
+        panel.addEventListener('mouseleave', function () {
+            scheduleHide();
+        });
+
+        window.addEventListener('scroll', function () {
+            if (activeItem && panel.classList.contains('is-visible')) {
+                positionPanel(activeItem);
+            }
+        }, true);
+
+        window.addEventListener('resize', function () {
+            if (activeItem && panel.classList.contains('is-visible')) {
+                positionPanel(activeItem);
+            }
+        });
+    })();
 });

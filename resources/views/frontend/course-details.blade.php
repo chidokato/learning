@@ -283,46 +283,55 @@
                         </div>
                         @endif
                      </div>
-                     @if ($post->course_requirements)
-                     <div id="instructor">
-                        <h4 class="it-details-title">Yêu cầu khóa học</h4>
-                        <div class="it-details-list mb-60 ck-content-list style-1">
-                              {!! $post->course_requirements !!}
-                        </div>
-                     </div>
-                     @endif
-                     @if ($post->seller?->name || $post->instructor || $post->seller?->bio)
-                     <div id="reviews">
-                        <div class="postbox-comment-item course-style mb-30">
-                           <h4 class="it-details-title">Giảng viên phụ trách</h4>
-                           <div class="postbox-comment-content mt-25">
-                              <ul>
-                                 <li>
-                                    <div class="postbox-comment-user d-flex">
-                                       <div class="postbox-user-thumb">
-                                          @if (!empty($post->seller?->avatar) && file_exists(public_path($post->seller->avatar)))
-                                             <img src="{{ asset($post->seller->avatar) }}" alt="{{ $post->seller->name ?? 'Giảng viên' }}" onerror="this.onerror=null; this.src='{{ asset('assets/img/avatar/avatar-default.png') }}';">
-                                          @else
-                                             <img src="{{ asset('assets/img/avatar/avatar-default.png') }}" alt="{{ $post->seller?->name ?? 'Giảng viên' }}">
-                                          @endif
-                                       </div>
-                                       <div class="mt-20">
-                                          <div class="postbox-user-info mb-20">
-                                             <h4 class="user-title">{{ $post->seller?->name ?? ($post->instructor ?? '') }}</h4>
-                                          </div>
-                                          @if (filled($post->seller?->bio))
-                                             <div class="postbox-user-info mb-25">
-                                                <p style="white-space: pre-line; overflow-wrap: anywhere;">{{ $post->seller->bio }}</p>
-                                             </div>
-                                          @endif
-                                       </div>
-                                    </div>
-                                 </li>
-                              </ul>
-                           </div>
-                        </div>
-                     </div>
-                     @endif
+                      @if ($post->course_requirements)
+                      <div id="instructor" class="mb-50">
+                         <div class="course-requirements-card">
+                            <h4 class="it-details-title mb-20 d-flex align-items-center gap-2">
+                               <i class="fa-solid fa-clipboard-check text-primary-color" style="color: #03594E;"></i>
+                               <span>Yêu cầu khóa học</span>
+                            </h4>
+                            <div class="it-details-list-box ck-content-list style-1">
+                               {!! $post->course_requirements !!}
+                            </div>
+                         </div>
+                      </div>
+                      @endif
+                      @if ($post->seller?->name || $post->instructor || $post->seller?->bio)
+                      <div id="reviews" class="mb-40">
+                         <div class="course-instructor-card">
+                            <h4 class="it-details-title mb-20 d-flex align-items-center gap-2">
+                               <i class="fa-solid fa-chalkboard-user text-primary-color" style="color: #03594E;"></i>
+                               <span>Giảng viên phụ trách</span>
+                            </h4>
+                            <div class="postbox-comment-content">
+                               <ul>
+                                  <li>
+                                     <div class="postbox-comment-user d-flex align-items-start gap-4">
+                                        <div class="postbox-user-thumb flex-shrink-0">
+                                           @if (!empty($post->seller?->avatar) && file_exists(public_path($post->seller->avatar)))
+                                              <img src="{{ asset($post->seller->avatar) }}" alt="{{ $post->seller->name ?? 'Giảng viên' }}" onerror="this.onerror=null; this.src='{{ asset('assets/img/avatar/avatar-default.png') }}';">
+                                           @else
+                                              <img src="{{ asset('assets/img/avatar/avatar-default.png') }}" alt="{{ $post->seller?->name ?? 'Giảng viên' }}">
+                                           @endif
+                                        </div>
+                                        <div class="flex-grow-1">
+                                           <div class="postbox-user-info mb-10">
+                                              <h4 class="user-title mb-1">{{ $post->seller?->name ?? ($post->instructor ?? '') }}</h4>
+                                              <span class="text-muted" style="font-size: 13.5px;"><i class="fa-solid fa-badge-check text-success me-1"></i>Giảng viên chuyên môn</span>
+                                           </div>
+                                           @if (filled($post->seller?->bio))
+                                              <div class="postbox-user-bio">
+                                                 <p style="white-space: pre-line; overflow-wrap: anywhere; line-height: 1.7; color: #475569; font-size: 14.5px; margin: 0;">{{ $post->seller->bio }}</p>
+                                              </div>
+                                           @endif
+                                        </div>
+                                     </div>
+                                  </li>
+                               </ul>
+                            </div>
+                         </div>
+                      </div>
+                      @endif
                   </div>
                </div>
                <div class="col-lg-4">

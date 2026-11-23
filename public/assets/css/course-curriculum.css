@@ -443,6 +443,68 @@
   color: var(--curriculum-title);
   margin-bottom: 18px;
 }
+.course-requirements-card {
+  background: #ffffff;
+  border: 1px solid var(--curriculum-border);
+  border-radius: var(--curriculum-radius);
+  padding: 24px 26px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+}
+
+.course-requirements-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.06);
+}
+
+.course-requirements-card .it-details-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--curriculum-title);
+  margin-bottom: 20px;
+}
+
+.course-instructor-card {
+  background: #ffffff;
+  border: 1px solid var(--curriculum-border);
+  border-radius: var(--curriculum-radius);
+  padding: 26px 28px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+}
+
+.course-instructor-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.06);
+}
+
+.course-instructor-card .it-details-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--curriculum-title);
+  margin-bottom: 20px;
+}
+
+.course-instructor-card .postbox-user-thumb img {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #eef7f5;
+  box-shadow: 0 4px 12px rgba(3, 89, 78, 0.12);
+}
+
+.course-instructor-card .user-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--curriculum-title);
+}
+
+.course-instructor-card ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
 
 /* ==========================================================================
    LEARNING PANEL OVERLAY (For course-learn screen)

@@ -94,4 +94,20 @@ class User extends Authenticatable
         }
         return $this->department->company_name ?: '-';
     }
+
+    /**
+     * Lấy đường dẫn ảnh đại diện tuyệt đối đồng bộ trên mọi cấp URL
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if (empty($this->avatar)) {
+            return asset('assets/img/avatar/avatar-default.png');
+        }
+
+        if (\Illuminate\Support\Str::startsWith($this->avatar, ['http://', 'https://'])) {
+            return $this->avatar;
+        }
+
+        return asset(ltrim($this->avatar, '/'));
+    }
 }

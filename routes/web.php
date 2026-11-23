@@ -309,6 +309,10 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::patch('departments/{department}/sort-order', 'updateSortOrder')->name('departments.update-sort-order');
     });
 
+    Route::controller(\App\Http\Controllers\EmployeeController::class)->group(function () {
+        Route::get('employees', 'index')->name('employees.index');
+    });
+
     Route::controller(UserController::class)->group(function () {
         Route::get('users', 'index')->name('users.index');
         Route::get('users/create', 'create')->name('users.create');
@@ -348,6 +352,17 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::get('homepage-categories/{homepageCategory}/edit', 'edit')->name('homepage_categories.edit');
         Route::put('homepage-categories/{homepageCategory}', 'update')->name('homepage_categories.update');
         Route::delete('homepage-categories/{homepageCategory}', 'destroy')->name('homepage_categories.destroy');
+    });
+
+    Route::controller(\App\Http\Controllers\SharedDbConfigController::class)->group(function () {
+        Route::get('shared-db-configs', 'index')->name('shared-db-configs.index');
+        Route::get('shared-db-configs/create', 'create')->name('shared-db-configs.create');
+        Route::post('shared-db-configs', 'store')->name('shared-db-configs.store');
+        Route::post('shared-db-configs/test-connection', 'testConnection')->name('shared-db-configs.test-connection');
+        Route::get('shared-db-configs/{sharedDbConfig}/edit', 'edit')->name('shared-db-configs.edit');
+        Route::put('shared-db-configs/{sharedDbConfig}', 'update')->name('shared-db-configs.update');
+        Route::delete('shared-db-configs/{sharedDbConfig}', 'destroy')->name('shared-db-configs.destroy');
+        Route::patch('shared-db-configs/{sharedDbConfig}/toggle-status', 'toggleStatus')->name('shared-db-configs.toggle-status');
     });
 });
 
