@@ -76,6 +76,11 @@
                                 <td>
                                     @if ($linkedEmp)
                                         <span class="fw-medium text-dark">{{ $linkedEmp->name }}</span>
+                                        @if (!empty($linkedEmp->deleted_at))
+                                            <span class="badge bg-danger-subtle text-danger border border-danger border-opacity-25 ms-1" style="font-size: 10px;">Đã xóa</span>
+                                        @elseif (in_array(strtolower(trim((string) ($linkedEmp->status ?? ''))), ['resigned', 'inactive'], true))
+                                            <span class="badge bg-warning-subtle text-warning border border-warning border-opacity-25 ms-1" style="font-size: 10px;">Nghỉ việc</span>
+                                        @endif
                                     @else
                                         <span class="text-muted small">—</span>
                                     @endif
@@ -107,6 +112,7 @@
                                         class="status-toggle {{ $user->is_active ? 'is-active' : 'is-inactive' }}"
                                         data-toggle-status
                                         data-url="{{ route('backend.users.toggle-status', $user) }}"
+                                        data-blocked-reason="{{ $linkedEmp->inactive_reason ?? '' }}"
                                         aria-pressed="{{ $user->is_active ? 'true' : 'false' }}"
                                         @if (auth()->id() === $user->id) disabled title="Không thể tự khóa tài khoản của chính mình" @endif
                                     ></button>

@@ -2,11 +2,11 @@
 <html lang="vi" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable" data-theme="default" data-theme-colors="default">
 <head>
     <meta charset="utf-8" />
-    <title>Dang nhap Admin | NhaDatVN</title>
+    <title>Đăng nhập Quản trị | INDOCHINE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Trang dang nhap khu vuc quan tri NhaDatVN." />
-    <meta name="author" content="NhaDatVN" />
-    <link rel="shortcut icon" href="{{ asset('admin-assets/images/favicon.ico') }}">
+    <meta name="description" content="Trang đăng nhập khu vực quản trị hệ thống đào tạo INDOCHINE." />
+    <meta name="author" content="INDOCHINE" />
+    <link rel="shortcut icon" href="{{ $siteSetting->favicon_url ?? asset('admin-assets/images/favicon.ico') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -19,17 +19,17 @@
     <link href="{{ asset('admin-assets/css/backend-admin.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
 
     <style>
-        .nhadat-brand {
+        .indochine-brand {
             letter-spacing: 0.08em;
         }
 
-        .nhadat-brand span {
+        .indochine-brand span {
             color: #0ab39c;
         }
 
         .auth-one-bg {
             background-image:
-                linear-gradient(135deg, rgba(10, 179, 156, 0.92), rgba(64, 81, 137, 0.86)),
+                linear-gradient(135deg, rgba(10, 179, 156, 0.92), rgba(64, 81, 137, 0.88)),
                 url('{{ asset('images/slider/slider-5.jpg') }}');
             background-size: cover;
             background-position: center;
@@ -60,39 +60,39 @@
                                         <div class="position-relative h-100 d-flex flex-column">
                                             <div class="mb-4">
                                                 <a href="{{ route('frontend.home') }}" class="d-inline-block text-white text-decoration-none">
-                                                    <h2 class="nhadat-brand mb-0 text-white fw-bold">NhaDat<span>VN</span></h2>
+                                                    <h2 class="indochine-brand mb-0 text-white fw-bold">INDO<span>CHINE</span></h2>
                                                 </a>
                                             </div>
 
                                             <div class="mt-auto text-white">
-                                                <span class="badge bg-light-subtle text-success text-uppercase mb-3">Velzon inspired</span>
-                                                <h1 class="display-6 fw-semibold text-white mb-3">Quan ly he thong bat dong san tap trung</h1>
+                                                <span class="badge bg-light-subtle text-success text-uppercase mb-3">HỆ THỐNG ĐÀO TẠO NỘI BỘ</span>
+                                                <h1 class="display-6 fw-semibold text-white mb-3">Hệ thống quản lý đào tạo & đánh giá năng lực</h1>
                                                 <p class="fs-15 text-white text-opacity-75 mb-4">
-                                                    Khu vuc nay danh cho quan tri vien theo doi bai dang, duyet noi dung, quan ly khach hang va van hanh du an.
+                                                    Khu vực dành cho quản trị viên quản lý khóa học, bài thi, bài kiểm tra, theo dõi tiến độ học tập và đồng bộ hồ sơ nhân sự INDOCHINE.
                                                 </p>
 
                                                 <div class="feature-note mb-4">
                                                     <div class="d-flex align-items-start gap-3">
                                                         <i class="ri-shield-check-line fs-3"></i>
                                                         <div>
-                                                            <h5 class="text-white mb-2">Bao mat va ro rang</h5>
-                                                            <p class="mb-0">Giao dien dang nhap duoc tach rieng cho backend, san sang noi voi `auth` va phan quyen o buoc tiep theo.</p>
+                                                            <h5 class="text-white mb-2">Bảo mật và an toàn</h5>
+                                                            <p class="mb-0">Hệ thống chỉ cho phép các tài khoản nội bộ INDOCHINE có phân quyền được phép truy cập và vận hành dữ liệu.</p>
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 <div class="row text-center g-3">
                                                     <div class="col-4">
-                                                        <h4 class="text-white mb-1">128+</h4>
-                                                        <p class="mb-0 text-white text-opacity-75 small">Bat dong san</p>
+                                                        <h4 class="text-white mb-1"><i class="ri-book-open-line"></i></h4>
+                                                        <p class="mb-0 text-white text-opacity-75 small">Khóa học</p>
                                                     </div>
                                                     <div class="col-4">
-                                                        <h4 class="text-white mb-1">24</h4>
-                                                        <p class="mb-0 text-white text-opacity-75 small">Nhan su</p>
+                                                        <h4 class="text-white mb-1"><i class="ri-file-list-3-line"></i></h4>
+                                                        <p class="mb-0 text-white text-opacity-75 small">Bài kiểm tra</p>
                                                     </div>
                                                     <div class="col-4">
-                                                        <h4 class="text-white mb-1">486</h4>
-                                                        <p class="mb-0 text-white text-opacity-75 small">Khach hang</p>
+                                                        <h4 class="text-white mb-1"><i class="ri-team-line"></i></h4>
+                                                        <p class="mb-0 text-white text-opacity-75 small">Nhân sự</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -103,28 +103,49 @@
                                 <div class="col-lg-6">
                                     <div class="p-lg-5 p-4">
                                         <div>
-                                            <h5 class="text-primary">Dang nhap quan tri</h5>
-                                            <p class="text-muted">Nhap thong tin de vao trang admin cua NhaDatVN.</p>
+                                            <h5 class="text-primary">Đăng nhập quản trị</h5>
+                                            <p class="text-muted">Nhập thông tin tài khoản để vào hệ thống quản trị INDOCHINE.</p>
                                         </div>
 
                                         <div class="mt-4">
+                                            @if ($errors->any())
+                                                <div class="alert alert-danger mb-3" role="alert">
+                                                    <i class="ri-error-warning-line me-1 align-middle"></i>
+                                                    {{ $errors->first() ?: 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.' }}
+                                                </div>
+                                            @endif
+
                                             <form action="{{ route('backend.admin.authenticate') }}" method="POST">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label for="email" class="form-label">Mã nhân viên / Email / Số điện thoại</label>
-                                                    <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', 'tuan.pn92@gmail.com') }}" placeholder="Nhập Mã NV, Email hoặc SĐT">
+                                                    <label for="email" class="form-label">Mã nhân viên, Email hoặc Số điện thoại</label>
+                                                    <input
+                                                        type="text"
+                                                        class="form-control @error('email') is-invalid @enderror"
+                                                        id="email"
+                                                        name="email"
+                                                        value="{{ old('email') }}"
+                                                        placeholder="Nhập mã nhân viên, email hoặc số điện thoại..."
+                                                        autocomplete="username"
+                                                        required
+                                                    >
                                                     @error('email')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                 </div>
 
                                                 <div class="mb-3">
-                                                    <div class="float-end">
-                                                        <a href="#" class="text-muted">Quen mat khau?</a>
-                                                    </div>
-                                                    <label class="form-label" for="password-input">Mat khau</label>
+                                                    <label class="form-label" for="password-input">Mật khẩu</label>
                                                     <div class="position-relative auth-pass-inputgroup mb-3">
-                                                        <input type="password" class="form-control pe-5 password-input @error('password') is-invalid @enderror" id="password-input" name="password" value="123456" placeholder="Nhap mat khau">
+                                                        <input
+                                                            type="password"
+                                                            class="form-control pe-5 password-input @error('password') is-invalid @enderror"
+                                                            id="password-input"
+                                                            name="password"
+                                                            autocomplete="current-password"
+                                                            placeholder="Nhập mật khẩu"
+                                                            required
+                                                        >
                                                         <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon shadow-none" type="button" id="password-addon">
                                                             <i class="ri-eye-fill align-middle"></i>
                                                         </button>
@@ -136,29 +157,33 @@
 
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" value="1" id="auth-remember-check" name="remember">
-                                                    <label class="form-check-label" for="auth-remember-check">Ghi nho dang nhap</label>
+                                                    <label class="form-check-label" for="auth-remember-check">Ghi nhớ đăng nhập</label>
                                                 </div>
 
                                                 <div class="mt-4">
-                                                    <button class="btn btn-success w-100" type="submit">Dang nhap vao admin</button>
+                                                    <button class="btn btn-success w-100" type="submit">Đăng nhập vào hệ thống</button>
                                                 </div>
                                             </form>
-                                        </div>
 
-                                        <div class="mt-4">
-                                            @if ($errors->any())
-                                                <div class="alert alert-danger mb-0" role="alert">
-                                                    Dang nhap that bai. Vui long kiem tra email va mat khau.
+                                            @if (\App\Services\GoogleAuthConfigService::get('is_enabled', true))
+                                                <div class="d-flex align-items-center mt-3">
+                                                    <hr class="flex-grow-1">
+                                                    <span class="px-3 text-muted small text-uppercase">Hoặc đăng nhập bằng</span>
+                                                    <hr class="flex-grow-1">
                                                 </div>
-                                            @else
-                                                <div class="alert alert-info mb-0" role="alert">
-                                                    Tai khoan admin mac dinh: tuan.pn92@gmail.com / 123456
+                                                <div class="mt-3 text-center">
+                                                    <a href="{{ route('auth.google') }}" class="text-decoration-none">
+                                                        <button type="button" class="btn btn-light w-100 d-flex justify-content-center align-items-center shadow-sm border rounded-pill" style="height: 46px;">
+                                                            <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google Logo" class="me-2" width="22" height="22">
+                                                            <span class="fw-semibold text-dark">Đăng nhập bằng GOOGLE</span>
+                                                        </button>
+                                                    </a>
                                                 </div>
                                             @endif
                                         </div>
 
-                                        <div class="mt-5 text-center">
-                                            <p class="mb-0">Can quay lai website? <a href="{{ route('frontend.home') }}" class="fw-semibold text-primary text-decoration-underline">Ve trang chu</a></p>
+                                        <div class="mt-4 text-center">
+                                            <p class="mb-0">Quay lại trang học tập? <a href="{{ route('frontend.home') }}" class="fw-semibold text-primary text-decoration-underline">Về trang chủ INDOCHINE</a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -175,7 +200,7 @@
                     <div class="col-lg-12">
                         <div class="text-center">
                             <p class="mb-0 text-muted">
-                                &copy; <script>document.write(new Date().getFullYear())</script> NhaDatVN Admin
+                                &copy; <script>document.write(new Date().getFullYear())</script> INDOCHINE Admin
                             </p>
                         </div>
                     </div>

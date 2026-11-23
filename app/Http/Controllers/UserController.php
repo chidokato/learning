@@ -44,20 +44,15 @@ class UserController extends Controller
                 }
 
                 if ($schema->hasTable($empTable)) {
-                    $empColumns = $schema->getColumnListing($empTable);
-                    $query = $connection->table($empTable);
-
-                    if (in_array('deleted_at', $empColumns, true)) {
-                        $query->whereNull('deleted_at');
-                    }
-
-                    $rows = $query->orderBy('name')->get();
+                    $rows = $connection->table($empTable)->orderBy('name')->get();
 
                     foreach ($rows as $row) {
                         $deptId = $row->department_id ?? null;
                         $row->department_name = ($deptId && isset($departmentsMap[$deptId]))
                             ? $departmentsMap[$deptId]
                             : null;
+
+                        $row->inactive_reason = $this->getEmployeeInactiveReason($row);
 
                         $employees->push($row);
 
@@ -77,6 +72,60 @@ class UserController extends Controller
             'employeesByCode' => $employeesByCode,
             'departmentsMap' => $departmentsMap,
         ];
+    }
+
+    /**
+     * Kiểm tra nhân sự bên DB dùng chung có bị xóa hoặc nghỉ việc hay không.
+     * Trả về thông báo lý do nếu không đủ điều kiện bật tài khoản, ngược lại trả về null.
+     */
+    protected function getEmployeeInactiveReason(?object $emp): ?string
+    {
+        if (! $emp) {
+            return null;
+        }
+
+        $empLabel = trim(($emp->employee_code ?? '') . ' - ' . ($emp->name ?? ''), ' -');
+
+        if (! empty($emp->deleted_at)) {
+            return "Nhân sự [{$empLabel}] đã bị xóa bên hệ thống Nhân sự (DB dùng chung), không thể bật hoạt động cho tài khoản này.";
+        }
+
+        $status = strtolower(trim((string) ($emp->status ?? '')));
+        if (in_array($status, ['resigned', 'inactive'], true)) {
+            return "Nhân sự [{$empLabel}] đang ở tình trạng Nghỉ việc bên hệ thống Nhân sự (DB dùng chung), không thể bật hoạt động cho tài khoản này.";
+        }
+
+        return null;
+    }
+
+    /**
+     * Tự động tắt (is_active = false) các tài khoản có liên kết với nhân sự đã xóa hoặc đã nghỉ việc bên DB dùng chung.
+     */
+    protected function syncDeactivatedUsersFromSharedEmployees(array $employeesByCode): void
+    {
+        if (empty($employeesByCode)) {
+            return;
+        }
+
+        $inactiveCodes = [];
+        foreach ($employeesByCode as $code => $emp) {
+            if (! empty($emp->inactive_reason)) {
+                $inactiveCodes[] = (string) $code;
+            }
+        }
+
+        if (empty($inactiveCodes)) {
+            return;
+        }
+
+        User::query()
+            ->where('is_active', true)
+            ->when(auth()->id(), fn ($q) => $q->where('id', '!=', auth()->id()))
+            ->where(function ($q) use ($inactiveCodes) {
+                $q->whereIn('employee_code', $inactiveCodes)
+                    ->orWhereIn('username', $inactiveCodes);
+            })
+            ->update(['is_active' => false]);
     }
 
     /**
@@ -168,6 +217,7 @@ class UserController extends Controller
         $employeesByCode = $sharedData['employeesByCode'];
 
         $this->autoLinkUsersWithSharedEmployees($sharedData['employees'], $employeesByCode);
+        $this->syncDeactivatedUsersFromSharedEmployees($employeesByCode);
 
         $query = User::query()->with('department');
 
@@ -234,6 +284,15 @@ class UserController extends Controller
             $avatarPath = $this->storeAvatar($request->file('avatar_file'));
         }
 
+        $isActive = true;
+        if (! empty($validated['employee_code'])) {
+            $sharedData = $this->getSharedEmployeesData();
+            $linkedEmp = $sharedData['employeesByCode'][$validated['employee_code']] ?? null;
+            if ($this->getEmployeeInactiveReason($linkedEmp) !== null) {
+                $isActive = false;
+            }
+        }
+
         User::create([
             'name' => $validated['name'],
             'employee_code' => $validated['employee_code'] ?? null,
@@ -242,7 +301,7 @@ class UserController extends Controller
             'permission' => $validated['permission'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'is_active' => true,
+            'is_active' => $isActive,
         ]);
 
         return redirect()
@@ -317,6 +376,14 @@ class UserController extends Controller
 
         if (! empty($validated['password'])) {
             $data['password'] = Hash::make($validated['password']);
+        }
+
+        if (! empty($validated['employee_code']) && $user->id !== auth()->id()) {
+            $sharedData = $this->getSharedEmployeesData();
+            $linkedEmp = $sharedData['employeesByCode'][$validated['employee_code']] ?? null;
+            if ($this->getEmployeeInactiveReason($linkedEmp) !== null) {
+                $data['is_active'] = false;
+            }
         }
 
         $user->update($data);
@@ -470,6 +537,24 @@ class UserController extends Controller
                 'success' => false,
                 'message' => 'Bạn không thể tự khóa tài khoản đang đăng nhập của chính mình.',
             ], 422);
+        }
+
+        // Nếu tài khoản đang tắt và Admin bấm bật lại -> kiểm tra trạng thái nhân sự bên DB dùng chung
+        if (! $user->is_active) {
+            $sharedData = $this->getSharedEmployeesData();
+            $employeesByCode = $sharedData['employeesByCode'];
+            $empCode = trim((string) ($user->employee_code ?: $user->username ?: ''));
+            $linkedEmp = ($empCode !== '' && isset($employeesByCode[$empCode])) ? $employeesByCode[$empCode] : null;
+            $inactiveReason = $this->getEmployeeInactiveReason($linkedEmp);
+
+            if ($inactiveReason !== null) {
+                return response()->json([
+                    'success' => false,
+                    'blocked' => true,
+                    'is_active' => false,
+                    'message' => $inactiveReason,
+                ], 422);
+            }
         }
 
         $user->update(['is_active' => ! $user->is_active]);

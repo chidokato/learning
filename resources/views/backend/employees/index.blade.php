@@ -15,6 +15,7 @@
     $statusLabels = [
         'active' => ['label' => 'Chính thức / Đang làm', 'class' => 'bg-success-subtle text-success border-success'],
         'probation' => ['label' => 'Thử việc', 'class' => 'bg-warning-subtle text-warning border-warning'],
+        'resigned' => ['label' => 'Đã nghỉ việc', 'class' => 'bg-danger-subtle text-danger border-danger'],
         'inactive' => ['label' => 'Nghỉ việc / Tạm ngưng', 'class' => 'bg-danger-subtle text-danger border-danger'],
     ];
 
@@ -115,6 +116,9 @@
                                         {{ $statusLabels[$st]['label'] ?? $st }}
                                     </option>
                                 @endforeach
+                                @if (in_array('deleted_at', $columns ?? [], true))
+                                    <option value="deleted" {{ (string) request('status') === 'deleted' ? 'selected' : '' }}>Đã xóa</option>
+                                @endif
                             </select>
                         </div>
                     @endif
@@ -155,6 +159,7 @@
                                 <th>Liên hệ</th>
                                 <th>Ngày vào làm</th>
                                 <th style="width: 150px;">Trạng thái</th>
+                                <th style="width: 110px;">Đã xóa</th>
                                 <th class="text-end" style="width: 90px;">Chi tiết</th>
                             </tr>
                         </thead>
@@ -262,6 +267,15 @@
                                             {{ $stConfig['label'] }}
                                         </span>
                                     </td>
+                                    <td>
+                                        @if (!empty($emp->deleted_at))
+                                            <span class="badge bg-danger-subtle text-danger border border-danger border-opacity-25 px-2 py-1" title="Xóa lúc: {{ \Illuminate\Support\Carbon::parse($emp->deleted_at)->format('d/m/Y H:i') }}">
+                                                Đã xóa
+                                            </span>
+                                        @else
+                                            <span class="text-muted small">—</span>
+                                        @endif
+                                    </td>
                                     <td class="text-end">
                                         <button
                                             type="button"
@@ -278,7 +292,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="10" class="text-center text-muted py-5">
+                                    <td colspan="11" class="text-center text-muted py-5">
                                         <i class="ri-user-search-line fs-2 mb-2 d-block text-secondary"></i>
                                         Không tìm thấy nhân sự nào phù hợp trong bảng <code>{{ $tableName }}</code>.
                                     </td>
@@ -346,7 +360,8 @@ document.addEventListener('DOMContentLoaded', function () {
         status: 'Trạng thái',
         annual_leave_balance: 'Số ngày phép năm còn lại',
         created_at: 'Ngày tạo bản ghi',
-        updated_at: 'Cập nhật lần cuối'
+        updated_at: 'Cập nhật lần cuối',
+        deleted_at: 'Đã xóa'
     };
 
     function escapeHtml(str) {
@@ -380,12 +395,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var rowsHtml = '';
             Object.keys(emp).forEach(function (key) {
-                if (key === 'deleted_at') return;
                 var label = fieldLabels[key] || key;
                 var val = emp[key];
                 var displayVal = '';
 
-                if (key === 'department_id') {
+                if (key === 'deleted_at') {
+                    displayVal = val
+                        ? '<span class="badge bg-danger-subtle text-danger border border-danger border-opacity-25">Đã xóa</span> <span class="text-muted small ms-1">(' + escapeHtml(val) + ')</span>'
+                        : '<span class="text-muted fst-italic">—</span>';
+                } else if (key === 'department_id') {
                     displayVal = escapeHtml(deptName) + (val ? ' <span class="text-muted small">(ID: ' + escapeHtml(val) + ')</span>' : '');
                 } else if (key === 'manager_id') {
                     displayVal = escapeHtml(manager1) + (val ? ' <span class="text-muted small">(ID: ' + escapeHtml(val) + ')</span>' : '');

@@ -64,8 +64,24 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             var url = button.getAttribute('data-url');
             var label = button.parentElement ? button.parentElement.querySelector('[data-status-label]') : null;
+            var blockedReason = button.getAttribute('data-blocked-reason');
 
             if (!url) {
+                return;
+            }
+
+            if (blockedReason && button.classList.contains('is-inactive')) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Không thể bật tài khoản',
+                        text: blockedReason,
+                        confirmButtonText: 'Đã hiểu',
+                        confirmButtonColor: '#405189'
+                    });
+                } else {
+                    alert(blockedReason);
+                }
                 return;
             }
 
@@ -82,11 +98,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify({})
             })
                 .then(function (response) {
-                    if (!response.ok) {
-                        throw new Error('Toggle status failed');
-                    }
-
-                    return response.json();
+                    return response.json().then(function (data) {
+                        if (!response.ok) {
+                            var err = new Error(data.message || 'Không thể cập nhật trạng thái.');
+                            err.blocked = data.blocked || false;
+                            throw err;
+                        }
+                        return data;
+                    });
                 })
                 .then(function (data) {
                     var isActive = typeof data.is_active !== 'undefined' ? data.is_active : (typeof data.is_special !== 'undefined' ? data.is_special : data.is_featured);
@@ -102,8 +121,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     showToast('success', 'Đã cập nhật', data.message);
                 })
-                .catch(function () {
-                    showToast('error', 'Khong cap nhat duoc', 'Vui long thu lai.');
+                .catch(function (err) {
+                    if (err && err.blocked && typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Không thể bật tài khoản',
+                            text: err.message,
+                            confirmButtonText: 'Đã hiểu',
+                            confirmButtonColor: '#405189'
+                        });
+                    } else {
+                        showToast('error', 'Không cập nhật được', (err && err.message) ? err.message : 'Vui lòng thử lại.');
+                    }
                 })
                 .finally(function () {
                     button.disabled = false;

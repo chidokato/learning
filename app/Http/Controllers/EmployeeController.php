@@ -50,11 +50,6 @@ class EmployeeController extends Controller
                 $columns = $schema->getColumnListing($tableName);
                 $query = $connection->table($tableName);
 
-                // Mặc định bỏ qua các bản ghi đã xóa mềm nếu có cột deleted_at
-                if (in_array('deleted_at', $columns, true)) {
-                    $query->whereNull('deleted_at');
-                }
-
                 // Lấy map phòng ban từ DB dùng chung nếu có bảng departments
                 if ($schema->hasTable('departments')) {
                     $departmentsMap = $connection->table('departments')
@@ -65,7 +60,6 @@ class EmployeeController extends Controller
                 // Lấy danh sách chức vụ & trạng thái để lọc
                 if (in_array('position', $columns, true)) {
                     $positionsList = $connection->table($tableName)
-                        ->when(in_array('deleted_at', $columns, true), fn ($q) => $q->whereNull('deleted_at'))
                         ->whereNotNull('position')
                         ->where('position', '!=', '')
                         ->distinct()
@@ -75,7 +69,6 @@ class EmployeeController extends Controller
 
                 if (in_array('status', $columns, true)) {
                     $statusesList = $connection->table($tableName)
-                        ->when(in_array('deleted_at', $columns, true), fn ($q) => $q->whereNull('deleted_at'))
                         ->whereNotNull('status')
                         ->where('status', '!=', '')
                         ->distinct()
@@ -111,8 +104,13 @@ class EmployeeController extends Controller
                 }
 
                 // Lọc theo trạng thái
-                if ($request->filled('status') && in_array('status', $columns, true)) {
-                    $query->where('status', $request->input('status'));
+                if ($request->filled('status')) {
+                    $statusFilter = $request->input('status');
+                    if ($statusFilter === 'deleted' && in_array('deleted_at', $columns, true)) {
+                        $query->whereNotNull('deleted_at');
+                    } elseif (in_array('status', $columns, true)) {
+                        $query->where('status', $statusFilter);
+                    }
                 }
 
                 $perPage = (int) $request->input('per_page', 20);
